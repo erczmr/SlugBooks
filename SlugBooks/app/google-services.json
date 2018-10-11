@@ -1,0 +1,42 @@
+{
+  "project_info": {
+    "project_number": "494407846237",
+    "firebase_url": "https://slug-books.firebaseio.com",
+    "project_id": "slug-books",
+    "storage_bucket": "slug-books.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:494407846237:android:a4b2c9341092ba08",
+        "android_client_info": {
+          "package_name": "com.example.slugbooks.slugbooks"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "494407846237-031bvrua60nrsb8ek9ve37f4f53im2sh.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD8sIIGoMZ2Gu2c6ZgV-93LM7KyAZ_bSNc"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
