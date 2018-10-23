@@ -41,8 +41,6 @@ public class ForgotPasswordActivity extends AppCompatActivity {
                 }
             }
         });
-
-
     }
 
     private void resetPassword(final String em) {
