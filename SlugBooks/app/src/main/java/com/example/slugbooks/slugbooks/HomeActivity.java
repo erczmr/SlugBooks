@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 
+import com.facebook.login.LoginManager;
 import com.google.firebase.auth.FirebaseAuth;
 
 public class HomeActivity extends AppCompatActivity {
@@ -30,6 +31,7 @@ public class HomeActivity extends AppCompatActivity {
     }
 
     public void logoutUser(){
+        LoginManager.getInstance().logOut();
         firebaseAuth.signOut();
         if(firebaseAuth.getCurrentUser() == null);
         startActivity(new Intent(HomeActivity.this, MainActivity.class));
