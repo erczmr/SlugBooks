@@ -16,6 +16,7 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseAuthException;
+import com.google.firebase.auth.FirebaseUser;
 
 public class RegisterEmailActivity extends AppCompatActivity {
 
@@ -98,6 +99,7 @@ public class RegisterEmailActivity extends AppCompatActivity {
                                 // we will start profile activity here
                                 Toast.makeText(RegisterEmailActivity.this, "Registered Successfully", Toast.LENGTH_SHORT).show();
 
+                                FirebaseUser user = mAuth.getCurrentUser();
                                 startActivity(new Intent(RegisterEmailActivity.this, PreProfileActivity.class));
                             } else {
                                 Toast.makeText(RegisterEmailActivity.this, "Could not Register...  Please try again", Toast.LENGTH_SHORT).show();

@@ -31,7 +31,10 @@ public class HomeActivity extends AppCompatActivity {
     }
 
     public void logoutUser(){
+        //logout from the facebook
         LoginManager.getInstance().logOut();
+
+        //logout from the firebase
         firebaseAuth.signOut();
         if(firebaseAuth.getCurrentUser() == null);
         startActivity(new Intent(HomeActivity.this, MainActivity.class));
