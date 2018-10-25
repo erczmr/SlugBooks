@@ -8,6 +8,94 @@
     android:theme="@android:style/Theme.Holo.Light"
     tools:context=".RegisterActivity">
 
+    <LinearLayout
+        android:id="@+id/horizantalId"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="40dp"
+        android:layout_marginRight="45dp"
+        android:layout_marginBottom="16dp"
+        android:baselineAligned="true"
+        android:orientation="horizontal"
+        app:layout_constraintBottom_toTopOf="@+id/userNameEditTextID"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.505"
+        app:layout_constraintStart_toStartOf="parent">
+
+        <EditText
+            android:id="@+id/firstNameEditText"
+            android:layout_width="133dp"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="20dp"
+            android:hint="First Name:"
+            android:inputType="textPersonName"
+            app:layout_constraintEnd_toStartOf="@+id/lastNameEditTextId"
+            app:layout_constraintStart_toStartOf="parent"
+            tools:layout_editor_absoluteY="173dp" />
+
+        <EditText
+            android:id="@+id/lastNameEditTextId"
+            android:layout_width="135dp"
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:hint="Last Name:"
+            android:inputType="textPersonName"
+            app:layout_constraintEnd_toEndOf="parent"
+
+            tools:layout_editor_absoluteY="173dp" />
+    </LinearLayout>
+
+    <EditText
+        android:id="@+id/emailEditTextID"
+        android:layout_width="wrap_content"
+        android:layout_height="49dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginRight="8dp"
+        android:layout_marginBottom="12dp"
+        android:ems="10"
+        android:hint="Email:"
+        android:inputType="textEmailAddress"
+
+        app:layout_constraintBottom_toTopOf="@+id/passwordEditTextID"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.496"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <EditText
+        android:id="@+id/passwordEditTextID"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="16dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="8dp"
+        android:layout_marginStart="8dp"
+        android:ems="10"
+        android:hint="Password:"
+        android:inputType="textPassword"
+        app:layout_constraintBottom_toTopOf="@+id/repeatPasswordEditTextId"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.503"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <EditText
+        android:id="@+id/repeatPasswordEditTextId"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginRight="8dp"
+        android:layout_marginBottom="12dp"
+        android:ems="10"
+        android:hint="Reapeat Password:"
+        android:inputType="textPassword"
+        app:layout_constraintBottom_toTopOf="@+id/registerButtonID"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.503"
+        app:layout_constraintStart_toStartOf="parent" />
 
     <Button
         android:id="@+id/registerButtonID"
@@ -15,31 +103,60 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
         android:layout_marginLeft="8dp"
-        android:layout_marginTop="96dp"
         android:layout_marginEnd="8dp"
         android:layout_marginRight="8dp"
-        android:layout_marginBottom="8dp"
-        android:text="Register With Email"
+        android:layout_marginBottom="16dp"
+        android:text="Register"
         android:textAllCaps="false"
-        app:layout_constraintBottom_toTopOf="@+id/facebookConnectButtonId"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.24" />
+        app:layout_constraintStart_toStartOf="parent" />
 
-    <Button
-        android:id="@+id/facebookConnectButtonId"
+    <TextView
+        android:id="@+id/uploadPicTextViewID"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
         android:layout_marginLeft="8dp"
         android:layout_marginEnd="8dp"
         android:layout_marginRight="8dp"
-        android:layout_marginBottom="244dp"
-        android:text="Register with Facebook"
-        android:textAllCaps="false"
-        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_marginBottom="28dp"
+        android:text="Click To Upload Profile Picture"
+        app:layout_constraintBottom_toTopOf="@+id/horizantalId"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.538"
         app:layout_constraintStart_toStartOf="parent" />
+
+    <ImageView
+        android:id="@+id/uploadIPicImageViewID"
+        android:layout_width="wrap_content"
+        android:layout_height="85dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginRight="8dp"
+        android:layout_marginBottom="8dp"
+        app:layout_constraintBottom_toTopOf="@+id/uploadPicTextViewID"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="1.0"
+        app:srcCompat="@mipmap/ic_launcher_round" />
+
+    <EditText
+        android:id="@+id/userNameEditTextID"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginRight="8dp"
+        android:layout_marginBottom="8dp"
+        android:ems="10"
+        android:hint="User Name:"
+        android:inputType="textPersonName"
+        app:layout_constraintBottom_toTopOf="@+id/emailEditTextID"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
 </android.support.constraint.ConstraintLayout>

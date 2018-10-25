@@ -6,6 +6,7 @@ import com.google.firebase.database.FirebaseDatabase;
 public class DataModel {
 
     public String username;
+    public String userID;
     public String email;
     public String firstName;
     public String lastName;
@@ -14,11 +15,12 @@ public class DataModel {
         // Default constructor required for calls to DataSnapshot.getValue(DataModel.class)
     }
 
-    public DataModel(String username, String email, String firstName, String lastName) {
+    public DataModel(String userID, String username, String email, String firstName, String lastName) {
         this.username = username;
         this.email = email;
         this.firstName = firstName;
         this.lastName = lastName;
+        this.userID = userID;
     }
 
 

@@ -36,9 +36,6 @@
             android:name=".ProfileActivity"
             android:parentActivityName=".HomeActivity"
             android:screenOrientation="portrait" />
-        <activity
-            android:name=".PreProfileActivity"
-            android:screenOrientation="portrait" />
 
         <meta-data
             android:name="com.facebook.sdk.ApplicationId"
@@ -62,9 +59,6 @@
             </intent-filter>
         </activity>
 
-        <activity android:name=".RegisterEmailActivity"
-            android:screenOrientation="portrait"
-            android:parentActivityName=".RegisterActivity" />
     </application>
 
 </manifest>
