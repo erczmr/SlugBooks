@@ -2,9 +2,11 @@ package com.example.slugbooks.slugbooks;
 
 import android.content.Intent;
 import android.support.annotation.NonNull;
+import android.support.v4.app.NavUtils;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -40,7 +42,6 @@ public class RegisterEmailActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register_email);
 
-
         //initialize the edit texts and the button
         emailEditText = (EditText)findViewById(R.id.emailEditTextID);
         passwordEditText = (EditText)findViewById(R.id.passwordEditTextID);
@@ -64,6 +65,9 @@ public class RegisterEmailActivity extends AppCompatActivity {
                 System.out.println("email: " + emailStr + "=========== password: " + passwordStr + " =============== repeat Password: " + repeatPasswordStr);
 
                 registerUser(emailStr, passwordStr, repeatPasswordStr);
+
+                startActivity(new Intent(RegisterEmailActivity.this, PreProfileActivity.class));
+
             }
         });
     }
@@ -83,7 +87,7 @@ public class RegisterEmailActivity extends AppCompatActivity {
             Toast.makeText(this, "Please repeat the password", Toast.LENGTH_SHORT).show();
         }
 
-        //progressDialog.setMessage("Register User...");
+        //progressDialog.setMessage("Register DataModel...");
         //progressDialog.show();
 
         else if (repeatPasswordStr.equals(passwordStr)) {
@@ -192,4 +196,6 @@ public class RegisterEmailActivity extends AppCompatActivity {
             Toast.makeText(this, "The Passwords Were Not A Mach! Try Again!", Toast.LENGTH_SHORT).show();
 
         }}
+
+
 }

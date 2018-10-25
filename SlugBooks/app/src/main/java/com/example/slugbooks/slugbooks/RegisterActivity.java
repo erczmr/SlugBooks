@@ -56,29 +56,21 @@ public class RegisterActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
 
-
-
         mAuth = FirebaseAuth.getInstance();
         facebookConnectButton = (Button) findViewById(R.id.facebookConnectButtonId);
         registerButton = (Button) findViewById(R.id.registerButtonID);
 
         //getActionBar().setDisplayHomeAsUpEnabled(true);
 
-        //facebook
-        FacebookSdk.sdkInitialize(getApplicationContext());
-        AppEventsLogger.activateApp(this);
-
         callbackManager = CallbackManager.Factory.create();
 
 
        // loginButton.setReadPermissions(EMAIL,"public_profile");
 
-        // If you are using in a fragment, call loginButton.setFragment(this);
-
         facebookConnectButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                
+
                 LoginManager.getInstance().logInWithReadPermissions(RegisterActivity.this, Arrays.asList(EMAIL, "public_profile"));
                 LoginManager.getInstance().registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
                     @Override

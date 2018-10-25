@@ -10,7 +10,74 @@
         android:id="@+id/textView2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Pre Profile"
-        tools:layout_editor_absoluteX="163dp"
-        tools:layout_editor_absoluteY="196dp" />
+        android:layout_marginStart="8dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginTop="36dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginRight="8dp"
+        android:text="Welcome To Slug Books"
+        android:textSize="27dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <LinearLayout
+        android:id="@+id/verticalId"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="36dp"
+        android:orientation="vertical"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.511"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textView2">
+
+        <LinearLayout
+            android:id="@+id/horizantalId"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:baselineAligned="true"
+            android:orientation="horizontal"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent">
+
+            <EditText
+                android:id="@+id/firstNameEditText"
+                android:layout_width="146dp"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="20dp"
+                android:hint="First Name:"
+                android:inputType="textPersonName"
+                app:layout_constraintEnd_toStartOf="@+id/lastNameEditTextId"
+                app:layout_constraintStart_toStartOf="parent"
+                tools:layout_editor_absoluteY="173dp" />
+
+            <EditText
+                android:id="@+id/lastNameEditTextId"
+                android:layout_width="146dp"
+                android:layout_height="wrap_content"
+                android:ems="10"
+                android:hint="Last Name:"
+                android:inputType="textPersonName"
+                app:layout_constraintEnd_toEndOf="parent"
+
+                tools:layout_editor_absoluteY="173dp" />
+        </LinearLayout>
+    </LinearLayout>
+
+    <Button
+        android:id="@+id/saveButtonId"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginRight="8dp"
+        android:layout_marginBottom="128dp"
+        android:text="Save"
+        android:textAllCaps="false"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
 </android.support.constraint.ConstraintLayout>

@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 
+import com.facebook.AccessToken;
 import com.facebook.login.LoginManager;
 import com.google.firebase.auth.FirebaseAuth;
 
@@ -31,9 +32,14 @@ public class HomeActivity extends AppCompatActivity {
     }
 
     public void logoutUser(){
-        //logout from the facebook
-        LoginManager.getInstance().logOut();
 
+        //if the user loged in with thier facebook or not
+        if(isLoggedIn())
+        {
+            //logout from the facebook
+            LoginManager.getInstance().logOut();
+
+        }
         //logout from the firebase
         firebaseAuth.signOut();
         if(firebaseAuth.getCurrentUser() == null);
@@ -41,6 +47,11 @@ public class HomeActivity extends AppCompatActivity {
         finish();
     }
 
+    // check to see if user is logged in with facebook
+    public boolean isLoggedIn() {
+        AccessToken accessToken = AccessToken.getCurrentAccessToken();
+        return accessToken != null;
+    }
     //disable back button
     @Override
     public void onBackPressed() {
