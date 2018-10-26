@@ -56,9 +56,7 @@ public class RegisterActivity extends AppCompatActivity {
     ImageView bookImage;
     TextView uploadPicTextView;
 
-    public static String titlestr = "null";
-    public static String pricestr = "null";
-    public static String imageURLstr = "null";
+    public static String imageURLstr = "N/A";
 
     private static final int PICK_IMAGE = 100;
 
@@ -98,47 +96,54 @@ public class RegisterActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
-                //First store the values of the edit text in the strings
-                emailStr = emailEditText.getText().toString();
-                passwordStr = passwordEditText.getText().toString();
-                repeatPasswordStr = repeatPasswordEditText.getText().toString();
-                usernameStr = usernameEditText.getText().toString();
-                fNameStr = fNameEditText.getText().toString();
-                lNameStr = lNameEditText.getText().toString();
-
+                EditTextToString(fNameEditText, lNameEditText, usernameEditText, emailEditText, passwordEditText, repeatPasswordEditText);
                 //test to see if we got the right email
                 System.out.println("email: " + emailStr + "=========== password: " + passwordStr + " =============== repeat Password: " + repeatPasswordStr);
 
-                registerUser(emailStr, passwordStr, repeatPasswordStr, usernameStr, fNameStr,lNameStr);
+                registerUser(emailStr, passwordStr, repeatPasswordStr, usernameStr, fNameStr,lNameStr, imageURLstr);
 
 
             }
         });
     }
 
-    private void registerUser(final String emailStr, String passwordStr, String repeatPasswordStr, final String usernameStr, final String fNameStr, final String lNameStr) {
+    //this function turns edittexts to strings
+    private void EditTextToString(EditText firstName, EditText lastName, EditText userName, EditText email, EditText pass, EditText repass)
+    {
+        //First store the values of the edit text in the strings
+        emailStr = email.getText().toString();
+        passwordStr = pass.getText().toString();
+        repeatPasswordStr = repass.getText().toString();
+        usernameStr = userName.getText().toString();
+        fNameStr = firstName.getText().toString();
+        lNameStr = lastName.getText().toString();
 
-        if (TextUtils.isEmpty(emailStr)) {
+
+    }
+
+    private void registerUser(final String emailString, String passwordString, String repeatPasswordString, final String usernameString, final String fNameString, final String lNameString, final String imageString) {
+
+        if (TextUtils.isEmpty(fNameString)){Toast.makeText(this, "Please enter First Name", Toast.LENGTH_SHORT).show();}
+        else if (TextUtils.isEmpty(lNameString)){Toast.makeText(this, "Please enter Last Name", Toast.LENGTH_SHORT).show();}
+        else if (TextUtils.isEmpty(usernameString)){Toast.makeText(this, "Please enter User Name", Toast.LENGTH_SHORT).show();}
+        else if (TextUtils.isEmpty(emailString)) {
             //email is empty
             Toast.makeText(this, "Please enter email", Toast.LENGTH_SHORT).show();
             // stopping the function execution further
         }
-        else if (TextUtils.isEmpty(passwordStr)) {
+        else if (TextUtils.isEmpty(passwordString)) {
             //password is empty
             Toast.makeText(this, "Please enter password", Toast.LENGTH_SHORT).show();
             // stopping the function execution further
         }
-        else if (TextUtils.isEmpty(repeatPasswordStr)) {
+        else if (TextUtils.isEmpty(repeatPasswordString)) {
             Toast.makeText(this, "Please repeat the password", Toast.LENGTH_SHORT).show();
         }
 
-        //progressDialog.setMessage("Register DataModel...");
-        //progressDialog.show();
-
-        else if (repeatPasswordStr.equals(passwordStr)) {
+        else if (repeatPasswordString.equals(passwordString)) {
 
 
-            mAuth.createUserWithEmailAndPassword(emailStr, passwordStr)
+            mAuth.createUserWithEmailAndPassword(emailString, passwordString)
                     .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
                         @Override
                         public void onComplete(@NonNull Task<AuthResult> task) {
@@ -148,7 +153,9 @@ public class RegisterActivity extends AppCompatActivity {
                                 // we will start profile activity here
                                 Toast.makeText(RegisterActivity.this, "Registered Successfully", Toast.LENGTH_SHORT).show();
                                 FirebaseUser user = mAuth.getCurrentUser();
-                                writeNewUser(mAuth.getUid().toString(), usernameStr,emailStr,fNameStr,lNameStr);
+
+                                DataModel dataModel = new DataModel(mAuth.getUid().toString(), usernameString,emailString,fNameString,lNameString,imageString);
+                                writeNewUser(dataModel);
                                 startActivity(new Intent(RegisterActivity.this, HomeActivity.class));
                             } else {
                                 Toast.makeText(RegisterActivity.this, "Could not Register...  Please try again", Toast.LENGTH_SHORT).show();
@@ -268,10 +275,9 @@ public class RegisterActivity extends AppCompatActivity {
         }
     }
 
-    private void writeNewUser(String userId, String username, String email, String fName, String lName) {
-        DataModel dataModel = new DataModel(userId, username, email,fName,lName);
-        databaseReference.child("users").child(userId).setValue(dataModel);
+    private void writeNewUser(DataModel dataM) {
+
+        databaseReference.child("users").child(dataM.getUserID()).setValue(dataM);
     }
 
 }
-
