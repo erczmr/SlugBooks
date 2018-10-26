@@ -23,18 +23,18 @@
         app:layout_constraintStart_toStartOf="parent">
 
         <EditText
-            android:id="@+id/firstNameEditText"
+            android:id="@+id/firstNameID"
             android:layout_width="133dp"
             android:layout_height="wrap_content"
             android:layout_marginRight="20dp"
             android:hint="First Name:"
             android:inputType="textPersonName"
-            app:layout_constraintEnd_toStartOf="@+id/lastNameEditTextId"
+            app:layout_constraintEnd_toStartOf="@+id/lastNameID"
             app:layout_constraintStart_toStartOf="parent"
             tools:layout_editor_absoluteY="173dp" />
 
         <EditText
-            android:id="@+id/lastNameEditTextId"
+            android:id="@+id/lastNameID"
             android:layout_width="135dp"
             android:layout_height="wrap_content"
             android:ems="10"

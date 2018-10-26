@@ -23,6 +23,8 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseAuthException;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 
 public class RegisterActivity extends AppCompatActivity {
@@ -30,6 +32,9 @@ public class RegisterActivity extends AppCompatActivity {
     private EditText emailEditText;
     private EditText passwordEditText;
     private EditText repeatPasswordEditText;
+    private EditText usernameEditText;
+    private EditText fNameEditText;
+    private EditText lNameEditText;
 
 
     private Button registerButton;
@@ -39,7 +44,13 @@ public class RegisterActivity extends AppCompatActivity {
     private String emailStr;
     private String passwordStr;
     private String repeatPasswordStr;
+    private String usernameStr;
+    private String fNameStr;
+    private String lNameStr;
     private FirebaseAuth mAuth;
+    private FirebaseDatabase firebaseDatabase;
+    private DatabaseReference databaseReference;
+
 
 
     ImageView bookImage;
@@ -56,10 +67,16 @@ public class RegisterActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
 
+        firebaseDatabase = FirebaseDatabase.getInstance();
+        databaseReference = firebaseDatabase.getReference();
+
         //initialize the edit texts and the button
         emailEditText = (EditText)findViewById(R.id.emailEditTextID);
+        usernameEditText = (EditText)findViewById(R.id.userNameEditTextID);
         passwordEditText = (EditText)findViewById(R.id.passwordEditTextID);
         repeatPasswordEditText = (EditText)findViewById(R.id.repeatPasswordEditTextId);
+        fNameEditText = (EditText)findViewById(R.id.firstNameID);
+        lNameEditText = (EditText)findViewById(R.id.lastNameID);
 
         registerButton = (Button) findViewById(R.id.registerButtonID);
 
@@ -85,32 +102,21 @@ public class RegisterActivity extends AppCompatActivity {
                 emailStr = emailEditText.getText().toString();
                 passwordStr = passwordEditText.getText().toString();
                 repeatPasswordStr = repeatPasswordEditText.getText().toString();
+                usernameStr = usernameEditText.getText().toString();
+                fNameStr = fNameEditText.getText().toString();
+                lNameStr = lNameEditText.getText().toString();
 
                 //test to see if we got the right email
                 System.out.println("email: " + emailStr + "=========== password: " + passwordStr + " =============== repeat Password: " + repeatPasswordStr);
 
-                registerUser(emailStr, passwordStr, repeatPasswordStr);
+                registerUser(emailStr, passwordStr, repeatPasswordStr, usernameStr, fNameStr,lNameStr);
+
 
             }
         });
     }
 
-    //saving data
-                /*\
-
-                firebaseRef = FirebaseDatabase.getInstance.getReferance();
-                writenewUser(firebaseAuth.getUid().toString(), "username", "email" , "fname", "lname"
-
-
-                private void writeUser(String userID, String username, String nemai, String fName, String lName) {
-
-                    DataModel datamodel = new Datamodel (userID, .... );
-
-                    databaseReference.child (userID). setValue(dataModel)
-                }
-                 */
-
-    private void registerUser(String emailStr, String passwordStr, String repeatPasswordStr) {
+    private void registerUser(final String emailStr, String passwordStr, String repeatPasswordStr, final String usernameStr, final String fNameStr, final String lNameStr) {
 
         if (TextUtils.isEmpty(emailStr)) {
             //email is empty
@@ -141,8 +147,8 @@ public class RegisterActivity extends AppCompatActivity {
                                 //user is successfully registered and logged in
                                 // we will start profile activity here
                                 Toast.makeText(RegisterActivity.this, "Registered Successfully", Toast.LENGTH_SHORT).show();
-
                                 FirebaseUser user = mAuth.getCurrentUser();
+                                writeNewUser(mAuth.getUid().toString(), usernameStr,emailStr,fNameStr,lNameStr);
                                 startActivity(new Intent(RegisterActivity.this, HomeActivity.class));
                             } else {
                                 Toast.makeText(RegisterActivity.this, "Could not Register...  Please try again", Toast.LENGTH_SHORT).show();
@@ -260,6 +266,11 @@ public class RegisterActivity extends AppCompatActivity {
             bookImage.setImageURI(selectedImage);
 
         }
+    }
+
+    private void writeNewUser(String userId, String username, String email, String fName, String lName) {
+        DataModel dataModel = new DataModel(userId, username, email,fName,lName);
+        databaseReference.child("users").child(userId).setValue(dataModel);
     }
 
 }
