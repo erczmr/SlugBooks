@@ -61,4 +61,10 @@ public class HomeActivity extends AppCompatActivity {
             super.onBackPressed();
         }
     }
+
+    public void launchProfileActivity(View view){
+        Intent intent = new Intent (this, ProfileActivity.class);
+        startActivity(intent);
+    }
+
 }
