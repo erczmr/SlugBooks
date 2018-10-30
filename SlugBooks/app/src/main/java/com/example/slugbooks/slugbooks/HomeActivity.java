@@ -14,6 +14,7 @@ public class HomeActivity extends AppCompatActivity {
 
     private Button logoutButton;
     private FirebaseAuth firebaseAuth;
+    public String userIDNum;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -29,6 +30,9 @@ public class HomeActivity extends AppCompatActivity {
                 logoutUser();
             }
         });
+
+        userIDNum = firebaseAuth.getUid();
+
     }
 
     public void logoutUser(){
@@ -38,7 +42,6 @@ public class HomeActivity extends AppCompatActivity {
         {
             //logout from the facebook
             LoginManager.getInstance().logOut();
-
         }
         //logout from the firebase
         firebaseAuth.signOut();
@@ -61,4 +64,10 @@ public class HomeActivity extends AppCompatActivity {
             super.onBackPressed();
         }
     }
+
+    public void launchProfileActivity(View view){
+        Intent intent = new Intent (this, ProfileActivity.class);
+        startActivity(intent);
+    }
+
 }
