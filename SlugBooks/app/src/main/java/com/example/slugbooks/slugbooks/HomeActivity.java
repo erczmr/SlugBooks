@@ -5,12 +5,23 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.SearchView;
+import android.widget.TextView;
 
 import com.facebook.AccessToken;
 import com.facebook.login.LoginManager;
 import com.google.firebase.auth.FirebaseAuth;
 
+
 public class HomeActivity extends AppCompatActivity {
+
+    SearchView searchBar;
+    TextView bookName;
+    TextView author;
+    TextView className;
+    Button MESSAGE;
+    Button profile;
+    Button Home;
 
     private Button logoutButton;
     private FirebaseAuth firebaseAuth;
@@ -21,6 +32,13 @@ public class HomeActivity extends AppCompatActivity {
         setContentView(R.layout.activity_home);
 
         logoutButton = (Button) findViewById(R.id.logoutButtonId);
+        searchBar = (SearchView) findViewById(R.id.searchBarID);
+        bookName = (TextView) findViewById(R.id.bookNameID);
+        author = (TextView) findViewById(R.id.bookName2ID);
+        className = (TextView) findViewById(R.id.classID);
+        MESSAGE = (Button) findViewById(R.id.messageButtonID);
+        profile = (Button) findViewById(R.id.profileButtonID);
+        Home = (Button) findViewById(R.id.homeButtonID);
 
         firebaseAuth = FirebaseAuth.getInstance();
 
