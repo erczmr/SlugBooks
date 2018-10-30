@@ -1,6 +1,7 @@
 package com.example.slugbooks.slugbooks;
 
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.net.Uri;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
@@ -18,6 +19,8 @@ import android.widget.Toast;
 
 import com.facebook.login.widget.LoginButton;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
@@ -25,6 +28,12 @@ import com.google.firebase.auth.FirebaseAuthException;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
+
+import java.io.File;
+import java.io.IOException;
 
 
 public class RegisterActivity extends AppCompatActivity {
@@ -47,19 +56,18 @@ public class RegisterActivity extends AppCompatActivity {
     private String usernameStr;
     private String fNameStr;
     private String lNameStr;
+    public String imageURLstr = "N/A";
+
     private FirebaseAuth mAuth;
     private FirebaseDatabase firebaseDatabase;
     private DatabaseReference databaseReference;
 
 
-
+    private Uri selectedImage;
     ImageView bookImage;
     TextView uploadPicTextView;
 
-    public static String imageURLstr = "N/A";
-
     private static final int PICK_IMAGE = 100;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -84,6 +92,7 @@ public class RegisterActivity extends AppCompatActivity {
         //initialize the firebase auth
         mAuth = FirebaseAuth.getInstance();
 
+
         //upload pics from the phone
         uploadPicTextView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -95,37 +104,21 @@ public class RegisterActivity extends AppCompatActivity {
         registerButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
                 EditTextToString(fNameEditText, lNameEditText, usernameEditText, emailEditText, passwordEditText, repeatPasswordEditText);
                 //test to see if we got the right email
                 System.out.println("email: " + emailStr + "=========== password: " + passwordStr + " =============== repeat Password: " + repeatPasswordStr);
-
                 registerUser(emailStr, passwordStr, repeatPasswordStr, usernameStr, fNameStr,lNameStr, imageURLstr);
-
-
             }
         });
     }
 
-    //this function turns edittexts to strings
-    private void EditTextToString(EditText firstName, EditText lastName, EditText userName, EditText email, EditText pass, EditText repass)
-    {
-        //First store the values of the edit text in the strings
-        emailStr = email.getText().toString();
-        passwordStr = pass.getText().toString();
-        repeatPasswordStr = repass.getText().toString();
-        usernameStr = userName.getText().toString();
-        fNameStr = firstName.getText().toString();
-        lNameStr = lastName.getText().toString();
-
-
-    }
 
     private void registerUser(final String emailString, String passwordString, String repeatPasswordString, final String usernameString, final String fNameString, final String lNameString, final String imageString) {
 
         if (TextUtils.isEmpty(fNameString)){Toast.makeText(this, "Please enter First Name", Toast.LENGTH_SHORT).show();}
         else if (TextUtils.isEmpty(lNameString)){Toast.makeText(this, "Please enter Last Name", Toast.LENGTH_SHORT).show();}
         else if (TextUtils.isEmpty(usernameString)){Toast.makeText(this, "Please enter User Name", Toast.LENGTH_SHORT).show();}
+        else if (TextUtils.isEmpty(imageString)){Toast.makeText(this, "Please Select an image", Toast.LENGTH_SHORT).show();}
         else if (TextUtils.isEmpty(emailString)) {
             //email is empty
             Toast.makeText(this, "Please enter email", Toast.LENGTH_SHORT).show();
@@ -142,7 +135,6 @@ public class RegisterActivity extends AppCompatActivity {
 
         else if (repeatPasswordString.equals(passwordString)) {
 
-
             mAuth.createUserWithEmailAndPassword(emailString, passwordString)
                     .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
                         @Override
@@ -156,10 +148,10 @@ public class RegisterActivity extends AppCompatActivity {
 
                                 DataModel dataModel = new DataModel(mAuth.getUid().toString(), usernameString,emailString,fNameString,lNameString,imageString);
                                 writeNewUser(dataModel);
+
                                 startActivity(new Intent(RegisterActivity.this, HomeActivity.class));
                             } else {
                                 Toast.makeText(RegisterActivity.this, "Could not Register...  Please try again", Toast.LENGTH_SHORT).show();
-
 
                                 String errorCode = ((FirebaseAuthException) task.getException()).getErrorCode();
 
@@ -239,23 +231,19 @@ public class RegisterActivity extends AppCompatActivity {
                                         break;
                                 }
                             }
-                            // ...
                         }
                     });
 
         }
         else{
             Toast.makeText(this, "The Passwords Were Not A Mach! Try Again!", Toast.LENGTH_SHORT).show();
-
         }}
 
     //get the image from gllery
     private void openGallery()
     {
-
         Intent gallery = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.INTERNAL_CONTENT_URI);
         startActivityForResult(gallery,PICK_IMAGE);
-
     }
 
 
@@ -263,21 +251,39 @@ public class RegisterActivity extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-
         //Detects request codes
         if(resultCode==RESULT_OK && requestCode == PICK_IMAGE) {
-            Uri selectedImage = data.getData();
-            imageURLstr = selectedImage.toString();
-            System.out.println("URL is : " + imageURLstr);
+            selectedImage = data.getData();
+            try {
+                Bitmap bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), selectedImage);
+                bookImage.setImageBitmap(bitmap);
+                imageURLstr = bitmap.toString();
+                System.out.println("URL is : " + imageURLstr);
 
-            bookImage.setImageURI(selectedImage);
+                System.out.println("==================" + bitmap.toString());
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
 
+            // bookImage.setImageURI(selectedImage);
         }
     }
 
     private void writeNewUser(DataModel dataM) {
-
         databaseReference.child("users").child(dataM.getUserID()).setValue(dataM);
     }
+
+    //this function turns edittexts to strings
+    private void EditTextToString(EditText firstName, EditText lastName, EditText userName, EditText email, EditText pass, EditText repass)
+    {
+        //First store the values of the edit text in the strings
+        emailStr = email.getText().toString();
+        passwordStr = pass.getText().toString();
+        repeatPasswordStr = repass.getText().toString();
+        usernameStr = userName.getText().toString();
+        fNameStr = firstName.getText().toString();
+        lNameStr = lastName.getText().toString();
+    }
+
 
 }
