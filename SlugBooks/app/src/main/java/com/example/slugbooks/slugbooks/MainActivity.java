@@ -66,16 +66,14 @@ public class MainActivity extends AppCompatActivity {
 
         emailEditText = (EditText) findViewById(R.id.emailEditTextId);
         passwordEditText = (EditText) findViewById(R.id.passwordEditTextId);
-
         loginButton = (Button)findViewById(R.id.loginButtonId);
         registerButton = (Button) findViewById(R.id.registerButtonId);
-
         forgotPassTextView = (TextView) findViewById(R.id.forgotpasswordTextViewId);
-
         callbackManager = CallbackManager.Factory.create();
-
         //all about facebook button
         facebookConnectButton = (Button) findViewById(R.id.facebookConnectButtonId);
+
+
 
         facebookConnectButton.setOnClickListener(new View.OnClickListener() {
         @Override
@@ -88,7 +86,6 @@ public class MainActivity extends AppCompatActivity {
                     startActivity(new Intent(MainActivity.this, HomeActivity.class));
                     finish();
                     // App code
-
                     handleFacebookAccessToken(loginResult.getAccessToken());
                 }
 
@@ -104,28 +101,6 @@ public class MainActivity extends AppCompatActivity {
             });
         }
     });
-
-        // Callback registration
-      /* loginButton.registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
-            @Override
-            public void onSuccess(LoginResult loginResult) {
-                startActivity(new Intent(RegisterActivity.this, HomeActivity.class));
-                // App code
-
-                handleFacebookAccessToken(loginResult.getAccessToken());
-            }
-
-            @Override
-            public void onCancel() {
-                // App code
-            }
-
-            @Override
-            public void onError(FacebookException exception) {
-                // App code
-            }
-        });
-*/
 
 
         //check to see if the user is already loged in then go stright to the homepage
@@ -164,7 +139,6 @@ public class MainActivity extends AppCompatActivity {
                 //call the function that logs in the user if the email pass is right
                 userLogin(emailstr, passwordstr);
 
-
             }
         });
 
@@ -173,14 +147,12 @@ public class MainActivity extends AppCompatActivity {
     //log in if the user and passwrrd are correct
     private void userLogin(String em, final String pass){
 
-
         firebaseAuth.signInWithEmailAndPassword(em, pass)
                 .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         //if login was a success then go to home page
                         if(task.isSuccessful()){
-
                             startActivity(new Intent(getApplicationContext(), HomeActivity.class));
                         }
                         else{

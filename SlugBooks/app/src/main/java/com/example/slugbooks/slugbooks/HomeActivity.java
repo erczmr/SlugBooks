@@ -26,6 +26,8 @@ public class HomeActivity extends AppCompatActivity {
     private Button logoutButton;
     private FirebaseAuth firebaseAuth;
     public String userIDNum;
+
+    private static String userIdNum = "";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -49,9 +51,18 @@ public class HomeActivity extends AppCompatActivity {
             }
         });
 
-        userIDNum = firebaseAuth.getUid();
+        setUserIdNum(firebaseAuth.getUid());
 
     }
+
+    public static void setUserIdNum(String userIdNum) {
+        HomeActivity.userIdNum = userIdNum;
+    }
+
+    public static String getUserIdNum() {
+        return userIdNum;
+    }
+
 
     public void logoutUser(){
 

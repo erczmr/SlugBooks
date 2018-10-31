@@ -1,8 +1,10 @@
 package com.example.slugbooks.slugbooks;
 
+import android.content.ContentResolver;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
+import android.os.Handler;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
@@ -11,13 +13,16 @@ import android.text.TextUtils;
 
 import android.util.Log;
 import android.view.View;
+import android.webkit.MimeTypeMap;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.facebook.login.widget.LoginButton;
+import com.google.android.gms.tasks.Continuation;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -29,11 +34,13 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.OnProgressListener;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
 import java.io.File;
 import java.io.IOException;
+import java.net.URI;
 
 
 public class RegisterActivity extends AppCompatActivity {
@@ -61,11 +68,15 @@ public class RegisterActivity extends AppCompatActivity {
     private FirebaseAuth mAuth;
     private FirebaseDatabase firebaseDatabase;
     private DatabaseReference databaseReference;
+    private FirebaseStorage firebaseStorage;
+    private StorageReference storageReference;
+    private ProgressBar progressBar;
 
 
     private Uri selectedImage;
     ImageView bookImage;
     TextView uploadPicTextView;
+
 
     private static final int PICK_IMAGE = 100;
     @Override
@@ -91,6 +102,8 @@ public class RegisterActivity extends AppCompatActivity {
 
         //initialize the firebase auth
         mAuth = FirebaseAuth.getInstance();
+        firebaseStorage = FirebaseStorage.getInstance();
+        storageReference = firebaseStorage.getReference("profile_pic");
 
 
         //upload pics from the phone
@@ -110,7 +123,13 @@ public class RegisterActivity extends AppCompatActivity {
                 registerUser(emailStr, passwordStr, repeatPasswordStr, usernameStr, fNameStr,lNameStr, imageURLstr);
             }
         });
+
+
+
+        //pushToCloud(imageURLstr);
     }
+
+
 
 
     private void registerUser(final String emailString, String passwordString, String repeatPasswordString, final String usernameString, final String fNameString, final String lNameString, final String imageString) {
@@ -254,17 +273,15 @@ public class RegisterActivity extends AppCompatActivity {
         //Detects request codes
         if(resultCode==RESULT_OK && requestCode == PICK_IMAGE) {
             selectedImage = data.getData();
-            try {
-                Bitmap bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), selectedImage);
-                bookImage.setImageBitmap(bitmap);
-                imageURLstr = bitmap.toString();
-                System.out.println("URL is : " + imageURLstr);
+            String ali = selectedImage.getPath();
 
-                System.out.println("==================" + bitmap.toString());
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+            System.out.println("=-=-=-=-=---=-=-=-=-=-= " + ali );
 
+            imageURLstr = selectedImage.getPath();
+            bookImage.setImageURI(selectedImage);
+            System.out.println("URL is : " + imageURLstr);
+
+            pushToCloud();
             // bookImage.setImageURI(selectedImage);
         }
     }
@@ -285,5 +302,40 @@ public class RegisterActivity extends AppCompatActivity {
         lNameStr = lastName.getText().toString();
     }
 
+    private String getFileExtension(Uri uri){
+        ContentResolver contentResolver = getContentResolver();
+        MimeTypeMap mimeTypeMap = MimeTypeMap.getSingleton();
+        return mimeTypeMap.getExtensionFromMimeType(contentResolver.getType(uri));
+    }
 
+    private void pushToCloud() {
+        if(selectedImage != null)
+        {
+            final StorageReference fileRef = storageReference.child(System.currentTimeMillis() + "." + getFileExtension(selectedImage));
+
+            fileRef.putFile(selectedImage).continueWithTask(new Continuation<UploadTask.TaskSnapshot, Task<Uri>>() {
+                @Override
+                public Task<Uri> then(@NonNull Task<UploadTask.TaskSnapshot> task) throws Exception {
+                    if (!task.isSuccessful()) {
+                        throw task.getException();
+                    }
+                    return fileRef.getDownloadUrl();
+                }
+            }).addOnCompleteListener(new OnCompleteListener<Uri>() {
+                @Override
+                public void onComplete(@NonNull Task<Uri> task) {
+                    if (task.isSuccessful()) {
+                        Uri downloadUri = task.getResult();
+
+
+                    } else {
+                        Toast.makeText(RegisterActivity.this, "upload failed: " + task.getException().getMessage(), Toast.LENGTH_SHORT).show();
+                    }
+                }
+            });
+        }else {
+            Toast.makeText(this,"No file selected", Toast.LENGTH_SHORT).show();
+        }
+
+    }
 }

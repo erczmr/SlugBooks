@@ -75,4 +75,9 @@ public class DataModel {
     public void setImageUrl(String imageUrl) {
         this.imageUrl = imageUrl;
     }
+
+    public void displayTest() {
+
+        System.out.println(firstName + " " + lastName + " " + username + " " + userID + " " + email + " " + imageUrl);
+    }
 }
