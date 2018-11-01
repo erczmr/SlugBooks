@@ -102,8 +102,6 @@ public class RegisterActivity extends AppCompatActivity {
 
         //initialize the firebase auth
         mAuth = FirebaseAuth.getInstance();
-        firebaseStorage = FirebaseStorage.getInstance();
-        storageReference = firebaseStorage.getReference("profile_pic");
 
 
         //upload pics from the phone
@@ -120,13 +118,19 @@ public class RegisterActivity extends AppCompatActivity {
                 EditTextToString(fNameEditText, lNameEditText, usernameEditText, emailEditText, passwordEditText, repeatPasswordEditText);
                 //test to see if we got the right email
                 System.out.println("email: " + emailStr + "=========== password: " + passwordStr + " =============== repeat Password: " + repeatPasswordStr);
-                registerUser(emailStr, passwordStr, repeatPasswordStr, usernameStr, fNameStr,lNameStr, imageURLstr);
+
+
+                if (selectedImage != null){
+                    registerUser(emailStr, passwordStr, repeatPasswordStr, usernameStr, fNameStr,lNameStr, imageURLstr);
+
+                }
+                else{
+                    Toast.makeText(RegisterActivity.this, "Please select a picture", Toast.LENGTH_SHORT ).show();
+                }
+
             }
         });
 
-
-
-        //pushToCloud(imageURLstr);
     }
 
 
@@ -163,12 +167,14 @@ public class RegisterActivity extends AppCompatActivity {
                                 //user is successfully registered and logged in
                                 // we will start profile activity here
                                 Toast.makeText(RegisterActivity.this, "Registered Successfully", Toast.LENGTH_SHORT).show();
-                                FirebaseUser user = mAuth.getCurrentUser();
 
                                 DataModel dataModel = new DataModel(mAuth.getUid().toString(), usernameString,emailString,fNameString,lNameString,imageString);
                                 writeNewUser(dataModel);
 
+                                storageReference = FirebaseStorage.getInstance().getReference(mAuth.getUid()).child("Profile_pic");
                                 startActivity(new Intent(RegisterActivity.this, HomeActivity.class));
+
+                                pushToCloud(selectedImage);
                             } else {
                                 Toast.makeText(RegisterActivity.this, "Could not Register...  Please try again", Toast.LENGTH_SHORT).show();
 
@@ -281,7 +287,6 @@ public class RegisterActivity extends AppCompatActivity {
             bookImage.setImageURI(selectedImage);
             System.out.println("URL is : " + imageURLstr);
 
-            pushToCloud();
             // bookImage.setImageURI(selectedImage);
         }
     }
@@ -308,12 +313,12 @@ public class RegisterActivity extends AppCompatActivity {
         return mimeTypeMap.getExtensionFromMimeType(contentResolver.getType(uri));
     }
 
-    private void pushToCloud() {
-        if(selectedImage != null)
+    private void pushToCloud(Uri img) {
+        if(img != null)
         {
             final StorageReference fileRef = storageReference.child(System.currentTimeMillis() + "." + getFileExtension(selectedImage));
 
-            fileRef.putFile(selectedImage).continueWithTask(new Continuation<UploadTask.TaskSnapshot, Task<Uri>>() {
+            fileRef.putFile(img).continueWithTask(new Continuation<UploadTask.TaskSnapshot, Task<Uri>>() {
                 @Override
                 public Task<Uri> then(@NonNull Task<UploadTask.TaskSnapshot> task) throws Exception {
                     if (!task.isSuccessful()) {
@@ -326,7 +331,6 @@ public class RegisterActivity extends AppCompatActivity {
                 public void onComplete(@NonNull Task<Uri> task) {
                     if (task.isSuccessful()) {
                         Uri downloadUri = task.getResult();
-
 
                     } else {
                         Toast.makeText(RegisterActivity.this, "upload failed: " + task.getException().getMessage(), Toast.LENGTH_SHORT).show();

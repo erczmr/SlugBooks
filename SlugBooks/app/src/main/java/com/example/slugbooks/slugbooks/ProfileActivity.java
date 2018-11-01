@@ -1,6 +1,8 @@
 package com.example.slugbooks.slugbooks;
 
 import android.content.Intent;
+import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
@@ -10,8 +12,13 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.ChildEventListener;
@@ -23,8 +30,18 @@ import com.google.firebase.database.ValueEventListener;
 
 
 import com.example.slugbooks.slugbooks.HomeActivity;
+import com.google.firebase.storage.FileDownloadTask;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.squareup.picasso.Picasso;
 
+import java.io.File;
+import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.ArrayList;
+
+import static java.security.AccessController.getContext;
 
 public class ProfileActivity extends AppCompatActivity {
     FirebaseDatabase firebaseDatabase;
@@ -32,17 +49,17 @@ public class ProfileActivity extends AppCompatActivity {
     DataModel dataModel;
     FirebaseAuth firebaseAuth;
     FirebaseUser user;
+    StorageReference storageReference;
 
     TextView name;
     TextView username;
-    TextView bookName2;
-    TextView author2;
-    TextView className2;
     Button MESSAGE2;
     Button profile2;
     Button Home2;
+    ImageView profilePic;
 
     String userIDnum;
+    File localFile;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -50,15 +67,14 @@ public class ProfileActivity extends AppCompatActivity {
 
         userIDnum = HomeActivity.getUserIdNum();
 
+        profilePic = findViewById(R.id.profilePicImageViewId);
         firebaseDatabase = FirebaseDatabase.getInstance();
         ref = firebaseDatabase.getReference();
         firebaseAuth = FirebaseAuth.getInstance();
         user = firebaseAuth.getCurrentUser();
+        storageReference = FirebaseStorage.getInstance().getReference();
 
         name = (TextView) findViewById(R.id.nameID);
-        bookName2 = (TextView) findViewById(R.id.bookName2ID);
-        author2 = (TextView) findViewById(R.id.authorID2);
-        className2 = (TextView) findViewById(R.id.classID2);
         MESSAGE2 = (Button) findViewById(R.id.messageButton2ID);
         profile2 = (Button) findViewById(R.id.profileButton2ID);
         Home2 = (Button) findViewById(R.id.homeButton2ID);
@@ -68,8 +84,31 @@ public class ProfileActivity extends AppCompatActivity {
 
         storeDataInObject(ref);
 
+        getImageDisplay(storageReference);
+
+    }
+
+    private void getImageDisplay(StorageReference st) {
+
+        Task<Uri> str = st.child(firebaseAuth.getUid()+ "/Profile_pic/1541097947868.png").getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+            @Override
+            public void onSuccess(Uri uri) {
 
 
+                //System.out.println("========================--=-=-= " + ali.toString());
+
+                Picasso.get().load(uri).into(profilePic);
+
+                System.out.println("========================--=-=-= " + uri.toString());
+                Toast.makeText(ProfileActivity.this, "Yay worked", Toast.LENGTH_SHORT).show();
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                Toast.makeText(ProfileActivity.this, "Couldn't get file from Cloud", Toast.LENGTH_SHORT).show();
+
+            }
+        });
     }
 
     //this function gets the info from database and store it here
@@ -83,8 +122,8 @@ public class ProfileActivity extends AppCompatActivity {
                 name.setText(dataModel.getFirstName() + " " + dataModel.getLastName());
                 username.setText(dataModel.getUsername());
 
-                System.out.println(" +++++++++++ " +dataModel.getFirstName() + " +++++++++++++ " + dataModel.getImageUrl());
-
+                System.out.println(" +++++++++++ " +dataModel.getFirstName() + " +++++++++++++ "
+                        + dataModel.getImageUrl());
             }
 
             @Override
@@ -108,13 +147,15 @@ public class ProfileActivity extends AppCompatActivity {
             }
         });
 
-
     }
-
 
     public void launchHomeActivity(View view){
         Intent intent = new Intent (this, HomeActivity.class);
         startActivity(intent);
 
+    }
+
+    public void addBook(View view) {
+        startActivity(new Intent(this, AddBookActivity.class));
     }
 }
