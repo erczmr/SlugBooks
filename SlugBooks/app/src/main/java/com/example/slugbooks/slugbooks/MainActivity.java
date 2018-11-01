@@ -7,10 +7,15 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.facebook.GraphRequest;
+import com.facebook.GraphResponse;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
@@ -36,6 +41,11 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FacebookAuthProvider;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.Arrays;
 
@@ -53,11 +63,15 @@ public class MainActivity extends AppCompatActivity {
 
     private FirebaseAuth firebaseAuth;
 
+    private DatabaseReference databaseReference;
+
     private Button facebookConnectButton;
 
     private static final String EMAIL = "email";
 
     private CallbackManager callbackManager;
+
+    private DataModel dataModel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -74,7 +88,7 @@ public class MainActivity extends AppCompatActivity {
         facebookConnectButton = (Button) findViewById(R.id.facebookConnectButtonId);
 
 
-
+        databaseReference = FirebaseDatabase.getInstance().getReference();
         facebookConnectButton.setOnClickListener(new View.OnClickListener() {
         @Override
         public void onClick(View v) {
@@ -87,6 +101,7 @@ public class MainActivity extends AppCompatActivity {
                     finish();
                     // App code
                     handleFacebookAccessToken(loginResult.getAccessToken());
+                    getUserInfo(loginResult);
                 }
 
                 @Override
@@ -218,4 +233,68 @@ public class MainActivity extends AppCompatActivity {
                     }
                 });
     }
+
+    protected void getUserInfo(final LoginResult login_result){
+
+        GraphRequest data_request = GraphRequest.newMeRequest(
+                login_result.getAccessToken(),
+                new GraphRequest.GraphJSONObjectCallback() {
+                    @Override
+                    public void onCompleted(
+                            JSONObject object,
+                            GraphResponse response) {
+                        try {
+                            String facebook_id = object.getString("id");
+                            String f_name = object.getString("name");
+                            String email_id = object.getString("email");
+                            //String username = object.getString("username");
+                            String token = login_result.getAccessToken().getToken();
+                            System.out.println("+++_=_+_=_+_=_=_+ " + token );
+                            String picUrl = "https://graph.facebook.com/me/picture?type=normal&method=GET&access_token="+ token;
+
+                            dataModel = new DataModel(facebook_id,"alibaba",email_id,f_name, "Babaei",picUrl);
+
+                            saveFacebookCredentialsInFirebase(login_result.getAccessToken(),dataModel);
+
+                        } catch (JSONException e) {
+                            // TODO Auto-generated catch block
+                            Toast.makeText(MainActivity.this,e.getMessage(),Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                });
+        Bundle permission_param = new Bundle();
+        permission_param.putString("fields", "id,name,email,picture.width(120).height(120)");
+        data_request.setParameters(permission_param);
+        data_request.executeAsync();
+        data_request.executeAsync();
+    }
+
+    private void saveFacebookCredentialsInFirebase(AccessToken accessToken, final DataModel dm){
+        AuthCredential credential = FacebookAuthProvider.getCredential(accessToken.getToken());
+
+
+        firebaseAuth.signInWithCredential(credential).addOnSuccessListener(new OnSuccessListener<AuthResult>() {
+            @Override
+            public void onSuccess(AuthResult authResult) {
+                Toast.makeText(MainActivity.this,"Facebook Data has been saved", Toast.LENGTH_SHORT).show();
+                databaseReference.child("users").child(FirebaseAuth.getInstance().getUid()).setValue(dm);
+            }
+
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                Toast.makeText(MainActivity.this,"Facebook Data Didnt save", Toast.LENGTH_SHORT).show();
+            }
+        }).addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
+            @Override
+            public void onComplete(@NonNull Task<AuthResult> task) {
+                if(!task.isSuccessful()){
+                    Toast.makeText(getApplicationContext(),"Error logging in", Toast.LENGTH_LONG).show();
+                }else{
+                    Toast.makeText(getApplicationContext(),"Login in Successful", Toast.LENGTH_LONG).show();
+                }
+            }
+        });
+    }
+
 }

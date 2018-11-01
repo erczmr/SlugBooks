@@ -1,6 +1,7 @@
 package com.example.slugbooks.slugbooks;
 
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.support.annotation.NonNull;
@@ -16,6 +17,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.facebook.AccessToken;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
@@ -58,6 +60,7 @@ public class ProfileActivity extends AppCompatActivity {
     Button Home2;
     ImageView profilePic;
 
+
     String userIDnum;
     File localFile;
     @Override
@@ -85,45 +88,68 @@ public class ProfileActivity extends AppCompatActivity {
         storeDataInObject(ref);
 
         getImageDisplay(storageReference);
+        //new DownloadImageTask((ImageView) findViewById(R.id.profilePicImageViewId)).execute(dataModel.getImageUrl());
 
     }
+    // check to see if user is logged in with facebook
+    public boolean isLoggedIn() {
+        AccessToken accessToken = AccessToken.getCurrentAccessToken();
+        return accessToken != null;
+    }
+   private void getImageDisplay(StorageReference st) {
+       System.out.println("====++++++++====================--=-=-= yooooooooooooo" );
+        if(isLoggedIn())
+        {
+            //System.out.println("====++++++++====================--=-=-= " + dataModel.getImageUrl());
+        //new DownloadImageTask((ImageView) findViewById(R.id.profilePicImageViewId)).execute(dataModel.getImageUrl());
+        }
 
-    private void getImageDisplay(StorageReference st) {
+        else {
+            Task<Uri> str = st.child(firebaseAuth.getUid() + "/Profile_pic/profilepic.png").getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+                @Override
+                public void onSuccess(Uri uri) {
 
-        Task<Uri> str = st.child(firebaseAuth.getUid()+ "/Profile_pic/1541097947868.png").getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
-            @Override
-            public void onSuccess(Uri uri) {
 
 
-                //System.out.println("========================--=-=-= " + ali.toString());
 
-                Picasso.get().load(uri).into(profilePic);
+                    Picasso.get().load(uri).into(profilePic);
 
-                System.out.println("========================--=-=-= " + uri.toString());
-                Toast.makeText(ProfileActivity.this, "Yay worked", Toast.LENGTH_SHORT).show();
-            }
-        }).addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception e) {
-                Toast.makeText(ProfileActivity.this, "Couldn't get file from Cloud", Toast.LENGTH_SHORT).show();
 
-            }
-        });
+                    Toast.makeText(ProfileActivity.this, "Yay worked", Toast.LENGTH_SHORT).show();
+                }
+            }).addOnFailureListener(new OnFailureListener() {
+                @Override
+                public void onFailure(@NonNull Exception e) {
+                    Toast.makeText(ProfileActivity.this, "Couldn't get file from Cloud", Toast.LENGTH_SHORT).show();
+
+                }
+            });
+        }
     }
 
     //this function gets the info from database and store it here
         private void storeDataInObject(DatabaseReference refrence) {
 
-        refrence.addChildEventListener(new ChildEventListener() {
+            System.out.println("====================== +++++++= " + userIDnum);
+
+            refrence.addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
 
+
                 dataModel = dataSnapshot.child(userIDnum).getValue(DataModel.class);
+                
+                if(isLoggedIn()){
+                    name.setText(dataModel.getFirstName());
+                    new DownloadImageTask((ImageView) findViewById(R.id.profilePicImageViewId)).execute(dataModel.getImageUrl());
+                }
+                else
                 name.setText(dataModel.getFirstName() + " " + dataModel.getLastName());
+
                 username.setText(dataModel.getUsername());
 
-                System.out.println(" +++++++++++ " +dataModel.getFirstName() + " +++++++++++++ "
-                        + dataModel.getImageUrl());
+               System.out.println(" +++++++++++ " +dataModel.getFirstName() + " +++++++++++++ "
+                     + dataModel.getImageUrl());
             }
 
             @Override
