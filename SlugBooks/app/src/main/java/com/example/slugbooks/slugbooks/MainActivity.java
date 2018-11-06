@@ -88,11 +88,20 @@ public class MainActivity extends AppCompatActivity {
         facebookConnectButton = (Button) findViewById(R.id.facebookConnectButtonId);
 
 
+       /* @Override
+        public void onStart() {
+            super.onStart();
+            // Check if user is signed in (non-null) and update UI accordingly.
+            FirebaseUser currentUser = firebaseAuth.getCurrentUser();
+            updateUI(currentUser);
+        }
+*/
+
         databaseReference = FirebaseDatabase.getInstance().getReference();
         facebookConnectButton.setOnClickListener(new View.OnClickListener() {
         @Override
         public void onClick(View v) {
-
+            //firebaseAuth = FirebaseAuth.getInstance();
             LoginManager.getInstance().logInWithReadPermissions(MainActivity.this, Arrays.asList(EMAIL, "public_profile"));
             LoginManager.getInstance().registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
                 @Override
@@ -244,15 +253,42 @@ public class MainActivity extends AppCompatActivity {
                             JSONObject object,
                             GraphResponse response) {
                         try {
-                            String facebook_id = object.getString("id");
-                            String f_name = object.getString("name");
-                            String email_id = object.getString("email");
-                            //String username = object.getString("username");
-                            String token = login_result.getAccessToken().getToken();
-                            System.out.println("+++_=_+_=_+_=_=_+ " + token );
-                            String picUrl = "https://graph.facebook.com/me/picture?type=normal&method=GET&access_token="+ token;
 
-                            dataModel = new DataModel(facebook_id,"alibaba",email_id,f_name, "Babaei",picUrl);
+                            String facebook_id = "N/A";
+                            String f_name = "N/A";
+                            String l_name = "N/A";
+                            String userName = "N/A";
+                            String email_id = "N/A";
+                            String picUrl = "N/A";
+
+                            if(object.has("id"))
+                                facebook_id = object.getString("id");
+
+                            if(object.has("first_name"))
+                            {
+                                f_name = object.getString("first_name");
+                            }
+                             else{
+                                f_name = object.getString("name");
+                            }
+
+                            if(object.has("last_name"))
+                             l_name = object.getString("last_name");
+
+                            if(object.has("name"))
+                             userName = object.getString("name");
+
+                            if(object.has("email"))
+                             email_id = object.getString("email");
+                            //String username = object.getString("username");
+
+                            String token = login_result.getAccessToken().getToken();
+
+                            System.out.println("+++_=_+_=_+_=_=_+ " + token );
+
+                             picUrl = "https://graph.facebook.com/me/picture?type=normal&method=GET&access_token="+ token;
+
+                            dataModel = new DataModel(facebook_id,"@" +userName,email_id,f_name, l_name,picUrl);
 
                             saveFacebookCredentialsInFirebase(login_result.getAccessToken(),dataModel);
 
@@ -271,7 +307,6 @@ public class MainActivity extends AppCompatActivity {
 
     private void saveFacebookCredentialsInFirebase(AccessToken accessToken, final DataModel dm){
         AuthCredential credential = FacebookAuthProvider.getCredential(accessToken.getToken());
-
 
         firebaseAuth.signInWithCredential(credential).addOnSuccessListener(new OnSuccessListener<AuthResult>() {
             @Override

@@ -87,8 +87,10 @@ public class ProfileActivity extends AppCompatActivity {
 
         storeDataInObject(ref);
 
-        getImageDisplay(storageReference);
-        //new DownloadImageTask((ImageView) findViewById(R.id.profilePicImageViewId)).execute(dataModel.getImageUrl());
+        if(isLoggedIn()){}
+
+        else{
+        getImageDisplay(storageReference);}
 
     }
     // check to see if user is logged in with facebook
@@ -98,22 +100,13 @@ public class ProfileActivity extends AppCompatActivity {
     }
    private void getImageDisplay(StorageReference st) {
        System.out.println("====++++++++====================--=-=-= yooooooooooooo" );
-        if(isLoggedIn())
-        {
-            //System.out.println("====++++++++====================--=-=-= " + dataModel.getImageUrl());
-        //new DownloadImageTask((ImageView) findViewById(R.id.profilePicImageViewId)).execute(dataModel.getImageUrl());
-        }
 
-        else {
+
             Task<Uri> str = st.child(firebaseAuth.getUid() + "/Profile_pic/profilepic.png").getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
                 @Override
                 public void onSuccess(Uri uri) {
 
-
-
-
                     Picasso.get().load(uri).into(profilePic);
-
 
                     Toast.makeText(ProfileActivity.this, "Yay worked", Toast.LENGTH_SHORT).show();
                 }
@@ -124,7 +117,7 @@ public class ProfileActivity extends AppCompatActivity {
 
                 }
             });
-        }
+
     }
 
     //this function gets the info from database and store it here
@@ -139,13 +132,14 @@ public class ProfileActivity extends AppCompatActivity {
 
                 dataModel = dataSnapshot.child(userIDnum).getValue(DataModel.class);
                 
-                if(isLoggedIn()){
+               if(isLoggedIn()){
+                    //if you are on with the facebook button upload the profile picture here
                     name.setText(dataModel.getFirstName());
-                    new DownloadImageTask((ImageView) findViewById(R.id.profilePicImageViewId)).execute(dataModel.getImageUrl());
+                   new DownloadImageTask(profilePic).execute(dataModel.getImageUrl());
+
                 }
                 else
                 name.setText(dataModel.getFirstName() + " " + dataModel.getLastName());
-
                 username.setText(dataModel.getUsername());
 
                System.out.println(" +++++++++++ " +dataModel.getFirstName() + " +++++++++++++ "
@@ -154,22 +148,18 @@ public class ProfileActivity extends AppCompatActivity {
 
             @Override
             public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-
             }
 
             @Override
             public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {
-
             }
 
             @Override
             public void onChildMoved(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-
             }
 
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
-
             }
         });
 
