@@ -21,6 +21,7 @@ public class AddBookActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_book);
 
+
         addImage = (Button) findViewById(R.id.addImageButtonID);
     }
 
@@ -43,7 +44,7 @@ public class AddBookActivity extends AppCompatActivity {
             System.out.println("=-=-=-=-=---=-=-=-=-=-= " + path );
 
             imageURLstring = chosenImage.getPath();
-            bookImage.setImageURI(selectedImage);
+            //bookImage.setImageURI(selectedImage);
             System.out.println("URL is : " + imageURLstring);
 
             // bookImage.setImageURI(selectedImage);
@@ -51,3 +52,4 @@ public class AddBookActivity extends AppCompatActivity {
     }
 
 }
+

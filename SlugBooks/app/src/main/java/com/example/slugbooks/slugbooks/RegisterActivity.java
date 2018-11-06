@@ -175,6 +175,7 @@ public class RegisterActivity extends AppCompatActivity {
                                 startActivity(new Intent(RegisterActivity.this, HomeActivity.class));
 
                                 pushToCloud(selectedImage);
+
                             } else {
                                 Toast.makeText(RegisterActivity.this, "Could not Register...  Please try again", Toast.LENGTH_SHORT).show();
 
@@ -285,6 +286,7 @@ public class RegisterActivity extends AppCompatActivity {
 
             imageURLstr = selectedImage.getPath();
             bookImage.setImageURI(selectedImage);
+
             System.out.println("URL is : " + imageURLstr);
 
             // bookImage.setImageURI(selectedImage);
@@ -316,7 +318,7 @@ public class RegisterActivity extends AppCompatActivity {
     private void pushToCloud(Uri img) {
         if(img != null)
         {
-            final StorageReference fileRef = storageReference.child(System.currentTimeMillis() + "." + getFileExtension(selectedImage));
+            final StorageReference fileRef = storageReference.child( "profilepic." + getFileExtension(selectedImage));
 
             fileRef.putFile(img).continueWithTask(new Continuation<UploadTask.TaskSnapshot, Task<Uri>>() {
                 @Override
@@ -324,6 +326,7 @@ public class RegisterActivity extends AppCompatActivity {
                     if (!task.isSuccessful()) {
                         throw task.getException();
                     }
+
                     return fileRef.getDownloadUrl();
                 }
             }).addOnCompleteListener(new OnCompleteListener<Uri>() {
@@ -342,4 +345,5 @@ public class RegisterActivity extends AppCompatActivity {
         }
 
     }
+
 }

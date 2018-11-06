@@ -37,10 +37,10 @@ public class ForgotPasswordActivity extends AppCompatActivity {
                 }
                 else{
                     resetPassword(emailEditText.getText().toString());
-
                 }
             }
         });
+
     }
 
     private void resetPassword(final String em) {

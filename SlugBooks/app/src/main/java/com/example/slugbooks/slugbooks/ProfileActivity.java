@@ -1,6 +1,7 @@
 package com.example.slugbooks.slugbooks;
 
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.support.annotation.NonNull;
@@ -16,6 +17,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.facebook.AccessToken;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
@@ -58,6 +60,7 @@ public class ProfileActivity extends AppCompatActivity {
     Button Home2;
     ImageView profilePic;
 
+
     String userIDnum;
     File localFile;
     @Override
@@ -65,7 +68,7 @@ public class ProfileActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profile);
 
-        userIDnum = HomeActivity.getUserIdNum();
+
 
         profilePic = findViewById(R.id.profilePicImageViewId);
         firebaseDatabase = FirebaseDatabase.getInstance();
@@ -80,70 +83,83 @@ public class ProfileActivity extends AppCompatActivity {
         Home2 = (Button) findViewById(R.id.homeButton2ID);
         username = (TextView) findViewById(R.id.usernameID);
 
-        System.out.println("3234123l4kjlkdjsa;klfjsdkfjals;dfja" + firebaseAuth.getUid() + " +============ "  + HomeActivity.getUserIdNum());
+        System.out.println("3234123l4kjlkdjsa;klfjsdkfjals;dfja" + firebaseAuth.getUid() + " +============ "  + MainActivity.getUID());
 
         storeDataInObject(ref);
 
-        getImageDisplay(storageReference);
+        if(isLoggedIn()){}
+
+        else{
+        getImageDisplay(storageReference);}
 
     }
+    // check to see if user is logged in with facebook
+    public boolean isLoggedIn() {
+        AccessToken accessToken = AccessToken.getCurrentAccessToken();
+        return accessToken != null;
+    }
+   private void getImageDisplay(StorageReference st) {
+       System.out.println("====++++++++====================--=-=-= yooooooooooooo" );
 
-    private void getImageDisplay(StorageReference st) {
 
-        Task<Uri> str = st.child(firebaseAuth.getUid()+ "/Profile_pic/1541097947868.png").getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
-            @Override
-            public void onSuccess(Uri uri) {
+            Task<Uri> str = st.child(firebaseAuth.getUid() + "/Profile_pic/profilepic.png").getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+                @Override
+                public void onSuccess(Uri uri) {
 
+                    Picasso.get().load(uri).into(profilePic);
 
-                //System.out.println("========================--=-=-= " + ali.toString());
+                    Toast.makeText(ProfileActivity.this, "Yay worked", Toast.LENGTH_SHORT).show();
+                }
+            }).addOnFailureListener(new OnFailureListener() {
+                @Override
+                public void onFailure(@NonNull Exception e) {
+                    Toast.makeText(ProfileActivity.this, "Couldn't get file from Cloud", Toast.LENGTH_SHORT).show();
 
-                Picasso.get().load(uri).into(profilePic);
+                }
+            });
 
-                System.out.println("========================--=-=-= " + uri.toString());
-                Toast.makeText(ProfileActivity.this, "Yay worked", Toast.LENGTH_SHORT).show();
-            }
-        }).addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception e) {
-                Toast.makeText(ProfileActivity.this, "Couldn't get file from Cloud", Toast.LENGTH_SHORT).show();
-
-            }
-        });
     }
 
     //this function gets the info from database and store it here
         private void storeDataInObject(DatabaseReference refrence) {
 
-        refrence.addChildEventListener(new ChildEventListener() {
+            System.out.println("====================== +++++++= " + userIDnum);
+
+            refrence.addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
 
-                dataModel = dataSnapshot.child(userIDnum).getValue(DataModel.class);
+
+                dataModel = dataSnapshot.child(MainActivity.getUID()).getValue(DataModel.class);
+                
+               if(isLoggedIn()){
+                    //if you are on with the facebook button upload the profile picture here
+                    name.setText(dataModel.getFirstName());
+                   new DownloadImageTask(profilePic).execute(dataModel.getImageUrl());
+
+                }
+                else
                 name.setText(dataModel.getFirstName() + " " + dataModel.getLastName());
                 username.setText(dataModel.getUsername());
 
-                System.out.println(" +++++++++++ " +dataModel.getFirstName() + " +++++++++++++ "
-                        + dataModel.getImageUrl());
+               System.out.println(" +++++++++++ " +dataModel.getFirstName() + " +++++++++++++ "
+                     + dataModel.getImageUrl());
             }
 
             @Override
             public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-
             }
 
             @Override
             public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {
-
             }
 
             @Override
             public void onChildMoved(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-
             }
 
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
-
             }
         });
 
