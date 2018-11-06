@@ -68,7 +68,7 @@ public class ProfileActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profile);
 
-        userIDnum = HomeActivity.getUserIdNum();
+
 
         profilePic = findViewById(R.id.profilePicImageViewId);
         firebaseDatabase = FirebaseDatabase.getInstance();
@@ -83,7 +83,7 @@ public class ProfileActivity extends AppCompatActivity {
         Home2 = (Button) findViewById(R.id.homeButton2ID);
         username = (TextView) findViewById(R.id.usernameID);
 
-        System.out.println("3234123l4kjlkdjsa;klfjsdkfjals;dfja" + firebaseAuth.getUid() + " +============ "  + HomeActivity.getUserIdNum());
+        System.out.println("3234123l4kjlkdjsa;klfjsdkfjals;dfja" + firebaseAuth.getUid() + " +============ "  + MainActivity.getUID());
 
         storeDataInObject(ref);
 
@@ -130,7 +130,7 @@ public class ProfileActivity extends AppCompatActivity {
             public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
 
 
-                dataModel = dataSnapshot.child(userIDnum).getValue(DataModel.class);
+                dataModel = dataSnapshot.child(MainActivity.getUID()).getValue(DataModel.class);
                 
                if(isLoggedIn()){
                     //if you are on with the facebook button upload the profile picture here

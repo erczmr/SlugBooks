@@ -12,6 +12,7 @@ import android.widget.Toast;
 import com.facebook.AccessToken;
 import com.facebook.login.LoginManager;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 
 
 public class HomeActivity extends AppCompatActivity {
@@ -26,8 +27,8 @@ public class HomeActivity extends AppCompatActivity {
 
     private Button logoutButton;
     private FirebaseAuth firebaseAuth;
-    public String userIDNum;
 
+    private FirebaseUser user;
     private static String userIdNum = "";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,16 +53,6 @@ public class HomeActivity extends AppCompatActivity {
             }
         });
 
-        setUserIdNum(firebaseAuth.getUid());
-
-    }
-
-    public static void setUserIdNum(String userIdNum) {
-        HomeActivity.userIdNum = userIdNum;
-    }
-
-    public static String getUserIdNum() {
-        return userIdNum;
     }
 
 

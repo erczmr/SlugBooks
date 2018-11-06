@@ -58,18 +58,30 @@ public class MainActivity extends AppCompatActivity {
     private Button registerButton;
     private TextView forgotPassTextView;
 
+
+    public static String getUID() {
+        return UID;
+    }
+
+    public static void setUID(String UID) {
+        MainActivity.UID = UID;
+    }
+
+    public static String UID;
+
     private String emailstr;
     private String passwordstr;
 
     private FirebaseAuth firebaseAuth;
 
-    private DatabaseReference databaseReference;
+    public static DatabaseReference databaseReference;
 
     private Button facebookConnectButton;
 
     private static final String EMAIL = "email";
 
     private CallbackManager callbackManager;
+
 
     private DataModel dataModel;
 
@@ -311,8 +323,11 @@ public class MainActivity extends AppCompatActivity {
         firebaseAuth.signInWithCredential(credential).addOnSuccessListener(new OnSuccessListener<AuthResult>() {
             @Override
             public void onSuccess(AuthResult authResult) {
-                Toast.makeText(MainActivity.this,"Facebook Data has been saved", Toast.LENGTH_SHORT).show();
+
                 databaseReference.child("users").child(FirebaseAuth.getInstance().getUid()).setValue(dm);
+                setUID(FirebaseAuth.getInstance().getUid());
+
+                //Toast.makeText(MainActivity.this,FirebaseAuth.getInstance().getUid(), Toast.LENGTH_SHORT).show();
             }
 
         }).addOnFailureListener(new OnFailureListener() {
