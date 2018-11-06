@@ -18,9 +18,9 @@ import com.google.firebase.auth.FirebaseUser;
 public class HomeActivity extends AppCompatActivity {
 
     SearchView searchBar;
-    TextView bookName;
-    TextView author;
-    TextView className;
+    //TextView bookName;
+    //TextView author;
+    //TextView className;
     Button MESSAGE;
     Button profile;
     Button Home;
@@ -37,9 +37,9 @@ public class HomeActivity extends AppCompatActivity {
 
         logoutButton = (Button) findViewById(R.id.logoutButtonId);
         searchBar = (SearchView) findViewById(R.id.searchBarID);
-        bookName = (TextView) findViewById(R.id.bookNameID);
-        author = (TextView) findViewById(R.id.bookName2ID);
-        className = (TextView) findViewById(R.id.classID);
+        //bookName = (TextView) findViewById(R.id.bookNameID);
+        //author = (TextView) findViewById(R.id.bookName2ID);
+        //className = (TextView) findViewById(R.id.classID);
         MESSAGE = (Button) findViewById(R.id.messageButtonID);
         profile = (Button) findViewById(R.id.profileButtonID);
         Home = (Button) findViewById(R.id.homeButtonID);
