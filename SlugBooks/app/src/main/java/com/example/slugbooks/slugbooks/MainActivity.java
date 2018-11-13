@@ -48,9 +48,11 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.Arrays;
-
+import java.util.List;
+import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity {
+
 
     private EditText emailEditText;
     private EditText passwordEditText;
@@ -84,6 +86,7 @@ public class MainActivity extends AppCompatActivity {
 
 
     private DataModel dataModel;
+    private BookObject bookObject;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -162,8 +165,10 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+
         //after clicking the login button, it will check to see if email password is write, then goes in if true else it wont
         //and will give an error toast
+
         loginButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -172,9 +177,14 @@ public class MainActivity extends AppCompatActivity {
                 emailstr = emailEditText.getText().toString();
                 passwordstr = passwordEditText.getText().toString();
 
-                //call the function that logs in the user if the email pass is right
-                userLogin(emailstr, passwordstr);
-
+                //make sure they enter a email or password
+                if(!emailEditText.getText().toString().isEmpty() && !passwordEditText.getText().toString().isEmpty()) {
+                    //call the function that logs in the user if the email pass is right
+                    userLogin(emailstr, passwordstr);
+                }
+                else{
+                    Toast.makeText(MainActivity.this,"Enter Email or Password", Toast.LENGTH_SHORT).show();
+                }
             }
         });
 
@@ -240,6 +250,7 @@ public class MainActivity extends AppCompatActivity {
                             // Sign in success, update UI with the signed-in user's information
                             System.err.println("signInWithCredential:success");
 
+                            setUID(firebaseAuth.getUid());
                             FirebaseUser user = firebaseAuth.getCurrentUser();
 
                         } else {
@@ -300,7 +311,10 @@ public class MainActivity extends AppCompatActivity {
 
                              picUrl = "https://graph.facebook.com/me/picture?type=normal&method=GET&access_token="+ token;
 
-                            dataModel = new DataModel(facebook_id,"@" +userName,email_id,f_name, l_name,picUrl);
+                             List<String> imageList = new ArrayList<String>();
+                             bookObject = new BookObject("N/A", "N/A", "N/A", "N/A", "N/A", "N/A", 0.0,imageList);
+
+                            dataModel = new DataModel(facebook_id,"@" +userName,email_id,f_name, l_name,picUrl,bookObject);
 
                             saveFacebookCredentialsInFirebase(login_result.getAccessToken(),dataModel);
 
@@ -324,8 +338,9 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onSuccess(AuthResult authResult) {
 
+                System.out.println("the firebase auth is: " + FirebaseAuth.getInstance().getUid());
+                System.out.println("the firebase auth is: " + firebaseAuth.getUid());
                 databaseReference.child("users").child(FirebaseAuth.getInstance().getUid()).setValue(dm);
-                setUID(FirebaseAuth.getInstance().getUid());
 
                 //Toast.makeText(MainActivity.this,FirebaseAuth.getInstance().getUid(), Toast.LENGTH_SHORT).show();
             }

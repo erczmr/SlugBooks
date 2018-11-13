@@ -11,19 +11,20 @@ public class DataModel {
     public String firstName;
     public String lastName;
     public String imageUrl;
+    public BookObject bookObject;
 
     public DataModel() {
         // Default constructor required for calls to DataSnapshot.getValue(DataModel.class)
     }
 
-
-    public DataModel(String userID, String username, String email, String firstName, String lastName, String imageUrl) {
+    public DataModel(String userID, String username, String email, String firstName, String lastName, String imageUrl , BookObject bookObject) {
         this.username = username;
         this.email = email;
         this.firstName = firstName;
         this.lastName = lastName;
         this.userID = userID;
         this.imageUrl = imageUrl;
+        this.bookObject = bookObject;
     }
 
 //getters
@@ -51,7 +52,11 @@ public class DataModel {
         return imageUrl;
     }
 
-//setters
+    public BookObject getBookObject() {
+        return bookObject;
+    }
+
+    //setters
     public void setUsername(String username) {
         this.username = username;
     }
@@ -79,5 +84,9 @@ public class DataModel {
     public void displayTest() {
 
         System.out.println(firstName + " " + lastName + " " + username + " " + userID + " " + email + " " + imageUrl);
+    }
+
+    public void setBookObject(BookObject bookObject) {
+        this.bookObject = bookObject;
     }
 }

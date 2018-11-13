@@ -41,6 +41,9 @@ import com.google.firebase.storage.UploadTask;
 import java.io.File;
 import java.io.IOException;
 import java.net.URI;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 
 public class RegisterActivity extends AppCompatActivity {
@@ -76,6 +79,16 @@ public class RegisterActivity extends AppCompatActivity {
     private Uri selectedImage;
     ImageView bookImage;
     TextView uploadPicTextView;
+
+    public static String getMyId() {
+        return myId;
+    }
+
+    public void setMyId(String myId) {
+        this.myId = myId;
+    }
+
+    public static String myId;
 
 
     private static final int PICK_IMAGE = 100;
@@ -168,10 +181,16 @@ public class RegisterActivity extends AppCompatActivity {
                                 // we will start profile activity here
                                 Toast.makeText(RegisterActivity.this, "Registered Successfully", Toast.LENGTH_SHORT).show();
 
-                                DataModel dataModel = new DataModel(mAuth.getUid().toString(), usernameString,emailString,fNameString,lNameString,imageString);
+                                List<String> imageList = new ArrayList<String>();
+                                BookObject bookObject = new BookObject("","","","","","",0,imageList);
+
+                                DataModel dataModel = new DataModel(mAuth.getUid().toString(), usernameString,emailString,fNameString,lNameString,imageString,bookObject);
                                 writeNewUser(dataModel);
 
+                                setMyId(mAuth.getUid());
+                                System.out.println("register page id: " + getMyId());
                                 storageReference = FirebaseStorage.getInstance().getReference(mAuth.getUid()).child("Profile_pic");
+
                                 startActivity(new Intent(RegisterActivity.this, HomeActivity.class));
 
                                 pushToCloud(selectedImage);

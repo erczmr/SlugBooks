@@ -85,6 +85,7 @@ public class ProfileActivity extends AppCompatActivity {
 
         System.out.println("3234123l4kjlkdjsa;klfjsdkfjals;dfja" + firebaseAuth.getUid() + " +============ "  + MainActivity.getUID());
 
+        System.out.println("idddddddddddddddddd : " + RegisterActivity.getMyId());
         storeDataInObject(ref);
 
         if(isLoggedIn()){}
@@ -102,7 +103,7 @@ public class ProfileActivity extends AppCompatActivity {
        System.out.println("====++++++++====================--=-=-= yooooooooooooo" );
 
 
-            Task<Uri> str = st.child(firebaseAuth.getUid() + "/Profile_pic/profilepic.png").getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+            Task<Uri> str = st.child(RegisterActivity.getMyId() + "/Profile_pic/profilepic.png").getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
                 @Override
                 public void onSuccess(Uri uri) {
 
@@ -130,16 +131,20 @@ public class ProfileActivity extends AppCompatActivity {
             public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
 
 
-                dataModel = dataSnapshot.child(MainActivity.getUID()).getValue(DataModel.class);
+
                 
                if(isLoggedIn()){
+                   dataModel = dataSnapshot.child(MainActivity.getUID()).getValue(DataModel.class);
                     //if you are on with the facebook button upload the profile picture here
                     name.setText(dataModel.getFirstName());
                    new DownloadImageTask(profilePic).execute(dataModel.getImageUrl());
 
                 }
-                else
-                name.setText(dataModel.getFirstName() + " " + dataModel.getLastName());
+                else{
+                   dataModel = dataSnapshot.child(RegisterActivity.getMyId()).getValue(DataModel.class);
+                   name.setText(dataModel.getFirstName() + " " + dataModel.getLastName());
+               }
+
                 username.setText(dataModel.getUsername());
 
                System.out.println(" +++++++++++ " +dataModel.getFirstName() + " +++++++++++++ "
