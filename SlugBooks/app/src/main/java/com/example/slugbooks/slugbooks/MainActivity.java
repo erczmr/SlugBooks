@@ -146,6 +146,7 @@ public class MainActivity extends AppCompatActivity {
         firebaseAuth = FirebaseAuth.getInstance();
         if(firebaseAuth.getCurrentUser() != null) {
             startActivity(new Intent(MainActivity.this, HomeActivity.class));
+            setUID(firebaseAuth.getUid());
         }
 
         //after clicking on register button, go to register page
@@ -200,6 +201,7 @@ public class MainActivity extends AppCompatActivity {
                         //if login was a success then go to home page
                         if(task.isSuccessful()){
                             startActivity(new Intent(getApplicationContext(), HomeActivity.class));
+                            setUID(firebaseAuth.getUid());
                         }
                         else{
                             //if login was not a success then give an error msg
@@ -341,6 +343,9 @@ public class MainActivity extends AppCompatActivity {
                 System.out.println("the firebase auth is: " + FirebaseAuth.getInstance().getUid());
                 System.out.println("the firebase auth is: " + firebaseAuth.getUid());
                 databaseReference.child("users").child(FirebaseAuth.getInstance().getUid()).setValue(dm);
+
+                    setUID(firebaseAuth.getUid());
+
 
                 //Toast.makeText(MainActivity.this,FirebaseAuth.getInstance().getUid(), Toast.LENGTH_SHORT).show();
             }

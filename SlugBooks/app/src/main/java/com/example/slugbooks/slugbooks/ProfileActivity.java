@@ -83,9 +83,11 @@ public class ProfileActivity extends AppCompatActivity {
         Home2 = (Button) findViewById(R.id.homeButton2ID);
         username = (TextView) findViewById(R.id.usernameID);
 
-        System.out.println("3234123l4kjlkdjsa;klfjsdkfjals;dfja" + firebaseAuth.getUid() + " +============ "  + MainActivity.getUID());
+        System.out.println("3234123l4kjlkdjsa;klfjsdkfjals;dfja   " + firebaseAuth.getUid() + " +============ "  + MainActivity.getUID());
 
         System.out.println("idddddddddddddddddd : " + RegisterActivity.getMyId());
+
+        //System.out.println("hommmeeeeeeeeeeeeeee: " + HomeActivity.getHomeId());
         storeDataInObject(ref);
 
         if(isLoggedIn()){}
@@ -124,17 +126,16 @@ public class ProfileActivity extends AppCompatActivity {
     //this function gets the info from database and store it here
         private void storeDataInObject(DatabaseReference refrence) {
 
-            System.out.println("====================== +++++++= " + userIDnum);
+            System.out.println("====================== +++++++= " + refrence);
 
             refrence.addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
 
 
-
-                
                if(isLoggedIn()){
-                   dataModel = dataSnapshot.child(MainActivity.getUID()).getValue(DataModel.class);
+                   System.out.println("I am loggggggggged in: " + firebaseAuth.getUid() );
+                   dataModel = dataSnapshot.child(firebaseAuth.getUid()).getValue(DataModel.class);
                     //if you are on with the facebook button upload the profile picture here
                     name.setText(dataModel.getFirstName());
                    new DownloadImageTask(profilePic).execute(dataModel.getImageUrl());
@@ -147,7 +148,7 @@ public class ProfileActivity extends AppCompatActivity {
 
                 username.setText(dataModel.getUsername());
 
-               System.out.println(" +++++++++++ " +dataModel.getFirstName() + " +++++++++++++ "
+               System.out.println(" +++++++++++ " + dataModel.getFirstName() + " +++++++++++++ "
                      + dataModel.getImageUrl());
             }
 

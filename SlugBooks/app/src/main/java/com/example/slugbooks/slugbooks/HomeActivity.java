@@ -28,6 +28,16 @@ public class HomeActivity extends AppCompatActivity {
     private Button logoutButton;
     private FirebaseAuth firebaseAuth;
 
+    private FirebaseUser firebaseUser;
+    public static String getHomeId() {
+        return homeId;
+    }
+
+    public static void setHomeId(String homeId) {
+        HomeActivity.homeId = homeId;
+    }
+
+    static String homeId;
     private FirebaseUser user;
     private static String userIdNum = "";
     @Override
@@ -46,6 +56,8 @@ public class HomeActivity extends AppCompatActivity {
 
         firebaseAuth = FirebaseAuth.getInstance();
 
+
+
         logoutButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -54,7 +66,6 @@ public class HomeActivity extends AppCompatActivity {
         });
 
     }
-
 
     public void logoutUser(){
 
