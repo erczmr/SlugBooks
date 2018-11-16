@@ -11,7 +11,6 @@
         android:id="@+id/profilePicImageViewId"
         android:layout_width="114dp"
         android:layout_height="99dp"
-        android:background="@drawable/com_facebook_profile_picture_blank_square"
         app:layout_constraintBottom_toTopOf="@+id/addBookButtonId"
         app:layout_constraintEnd_toStartOf="@+id/nameID"
         app:layout_constraintHorizontal_bias="0.285"

@@ -83,44 +83,16 @@ public class ProfileActivity extends AppCompatActivity {
         Home2 = (Button) findViewById(R.id.homeButton2ID);
         username = (TextView) findViewById(R.id.usernameID);
 
-        System.out.println("3234123l4kjlkdjsa;klfjsdkfjals;dfja   " + firebaseAuth.getUid() + " +============ "  + MainActivity.getUID());
-
-        System.out.println("idddddddddddddddddd : " + RegisterActivity.getMyId());
+        System.out.println("id:issssssssssssssssssssssssss:   " + firebaseAuth.getUid() + " +============ "  + MainActivity.getUID());
 
         //System.out.println("hommmeeeeeeeeeeeeeee: " + HomeActivity.getHomeId());
         storeDataInObject(ref);
-
-        if(isLoggedIn()){}
-
-        else{
-        getImageDisplay(storageReference);}
 
     }
     // check to see if user is logged in with facebook
     public boolean isLoggedIn() {
         AccessToken accessToken = AccessToken.getCurrentAccessToken();
         return accessToken != null;
-    }
-   private void getImageDisplay(StorageReference st) {
-       System.out.println("====++++++++====================--=-=-= yooooooooooooo" );
-
-
-            Task<Uri> str = st.child(RegisterActivity.getMyId() + "/Profile_pic/profilepic.png").getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
-                @Override
-                public void onSuccess(Uri uri) {
-
-                    Picasso.get().load(uri).into(profilePic);
-
-                    Toast.makeText(ProfileActivity.this, "Yay worked", Toast.LENGTH_SHORT).show();
-                }
-            }).addOnFailureListener(new OnFailureListener() {
-                @Override
-                public void onFailure(@NonNull Exception e) {
-                    Toast.makeText(ProfileActivity.this, "Couldn't get file from Cloud", Toast.LENGTH_SHORT).show();
-
-                }
-            });
-
     }
 
     //this function gets the info from database and store it here
@@ -141,9 +113,13 @@ public class ProfileActivity extends AppCompatActivity {
                    new DownloadImageTask(profilePic).execute(dataModel.getImageUrl());
 
                 }
+
                 else{
-                   dataModel = dataSnapshot.child(RegisterActivity.getMyId()).getValue(DataModel.class);
+
+                   dataModel = dataSnapshot.child(firebaseAuth.getUid()).getValue(DataModel.class);
+                   System.out.println("The firebase url:" + dataModel.getImageUrl());
                    name.setText(dataModel.getFirstName() + " " + dataModel.getLastName());
+                   Picasso.get().load(dataModel.getImageUrl()).into(profilePic);
                }
 
                 username.setText(dataModel.getUsername());

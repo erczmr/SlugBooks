@@ -48,6 +48,7 @@ import java.util.List;
 
 public class RegisterActivity extends AppCompatActivity {
 
+    private static String img;
     private EditText emailEditText;
     private EditText passwordEditText;
     private EditText repeatPasswordEditText;
@@ -70,12 +71,12 @@ public class RegisterActivity extends AppCompatActivity {
 
     private FirebaseAuth mAuth;
     private FirebaseDatabase firebaseDatabase;
-    private DatabaseReference databaseReference;
+    public static DatabaseReference databaseReference;
     private FirebaseStorage firebaseStorage;
     private StorageReference storageReference;
     private ProgressBar progressBar;
 
-
+    DataModel dataModel;
     private Uri selectedImage;
     ImageView bookImage;
     TextView uploadPicTextView;
@@ -149,7 +150,8 @@ public class RegisterActivity extends AppCompatActivity {
 
 
 
-    private void registerUser(final String emailString, String passwordString, String repeatPasswordString, final String usernameString, final String fNameString, final String lNameString, final String imageString) {
+    private void registerUser(final String emailString, String passwordString, String repeatPasswordString,
+                              final String usernameString, final String fNameString, final String lNameString, final String imageString) {
 
         if (TextUtils.isEmpty(fNameString)){Toast.makeText(this, "Please enter First Name", Toast.LENGTH_SHORT).show();}
         else if (TextUtils.isEmpty(lNameString)){Toast.makeText(this, "Please enter Last Name", Toast.LENGTH_SHORT).show();}
@@ -182,10 +184,7 @@ public class RegisterActivity extends AppCompatActivity {
                                 Toast.makeText(RegisterActivity.this, "Registered Successfully", Toast.LENGTH_SHORT).show();
 
                                 List<String> imageList = new ArrayList<String>();
-                                BookObject bookObject = new BookObject("","","","","","",0,imageList);
-
-                                DataModel dataModel = new DataModel(mAuth.getUid().toString(), usernameString,emailString,fNameString,lNameString,imageString,bookObject);
-                                writeNewUser(dataModel);
+                                List<BookObject> bookObject = new ArrayList<BookObject>();
 
                                 setMyId(mAuth.getUid());
                                 System.out.println("register page id: " + getMyId());
@@ -194,6 +193,14 @@ public class RegisterActivity extends AppCompatActivity {
                                 startActivity(new Intent(RegisterActivity.this, HomeActivity.class));
 
                                 pushToCloud(selectedImage);
+
+                                System.out.println("get url : " + getTheImagestr());
+
+                                dataModel = new DataModel(mAuth.getUid(), usernameString,emailString,
+                                        fNameString,lNameString,getTheImagestr(),bookObject);
+
+                                writeNewUser(dataModel);
+
 
                             } else {
                                 Toast.makeText(RegisterActivity.this, "Could not Register...  Please try again", Toast.LENGTH_SHORT).show();
@@ -284,6 +291,15 @@ public class RegisterActivity extends AppCompatActivity {
             Toast.makeText(this, "The Passwords Were Not A Mach! Try Again!", Toast.LENGTH_SHORT).show();
         }}
 
+    public static String getTheImagestr() {
+
+        return img;
+    }
+
+    public void setImageURLstr(String images){
+        img = images;
+    }
+
     //get the image from gllery
     private void openGallery()
     {
@@ -308,11 +324,12 @@ public class RegisterActivity extends AppCompatActivity {
 
             System.out.println("URL is : " + imageURLstr);
 
+
             // bookImage.setImageURI(selectedImage);
         }
     }
 
-    private void writeNewUser(DataModel dataM) {
+    public static void writeNewUser(DataModel dataM) {
         databaseReference.child("users").child(dataM.getUserID()).setValue(dataM);
     }
 
@@ -337,7 +354,8 @@ public class RegisterActivity extends AppCompatActivity {
     private void pushToCloud(Uri img) {
         if(img != null)
         {
-            final StorageReference fileRef = storageReference.child( "profilepic." + getFileExtension(selectedImage));
+            //+ getFileExtension(selectedImage)
+            final StorageReference fileRef = storageReference.child( "profilepic.png" );
 
             fileRef.putFile(img).continueWithTask(new Continuation<UploadTask.TaskSnapshot, Task<Uri>>() {
                 @Override
@@ -347,6 +365,14 @@ public class RegisterActivity extends AppCompatActivity {
                     }
 
                     return fileRef.getDownloadUrl();
+                }
+            }).addOnSuccessListener(new OnSuccessListener<Uri>() {
+                @Override
+                public void onSuccess(Uri uri) {
+
+                    System.out.println("the downloaded uri is: " + uri.toString());
+                    setImageURLstr(uri.toString());
+
                 }
             }).addOnCompleteListener(new OnCompleteListener<Uri>() {
                 @Override

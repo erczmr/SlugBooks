@@ -1,9 +1,14 @@
 package com.example.slugbooks.slugbooks;
 
+import android.content.ContentResolver;
 import android.content.Intent;
+import android.net.Uri;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
+import android.webkit.MimeTypeMap;
 import android.widget.Button;
 import android.widget.SearchView;
 import android.widget.TextView;
@@ -11,8 +16,19 @@ import android.widget.Toast;
 
 import com.facebook.AccessToken;
 import com.facebook.login.LoginManager;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.ChildEventListener;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.squareup.picasso.Picasso;
 
 
 public class HomeActivity extends AppCompatActivity {
@@ -24,10 +40,14 @@ public class HomeActivity extends AppCompatActivity {
     Button MESSAGE;
     Button profile;
     Button Home;
+    public static String imgurl;
 
     private Button logoutButton;
     private FirebaseAuth firebaseAuth;
-
+    private FirebaseDatabase firebaseDatabase;
+    private DatabaseReference databaseReference;
+    private FirebaseStorage firebaseStorage;
+    private StorageReference storageReference;
     private FirebaseUser firebaseUser;
     public static String getHomeId() {
         return homeId;
@@ -56,17 +76,97 @@ public class HomeActivity extends AppCompatActivity {
 
         firebaseAuth = FirebaseAuth.getInstance();
 
-
-
+        databaseReference = FirebaseDatabase.getInstance().getReference();
+        firebaseStorage = FirebaseStorage.getInstance();
         logoutButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 logoutUser();
             }
         });
+        storageReference = FirebaseStorage.getInstance().getReference();
 
+
+
+        addImgUrlToDB(databaseReference, storageReference);
     }
 
+    private void addImgUrlToDB(final DatabaseReference ref, final StorageReference stor) {
+        final String imgUrl = RegisterActivity.getTheImagestr();
+
+
+        getImageDisplay(stor);
+
+
+
+            ref.addChildEventListener(new ChildEventListener() {
+                @Override
+                public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+                    System.out.println("The imgURL is : " + imgUrl + "\nand the userid is: " + firebaseAuth.getUid() + "\nThe Home Database ref is: " +
+                            ref + "\nThe img url is: " + imgurl);
+
+                    if (!isLoggedIn()) {
+
+                        DataModel dataModel = dataSnapshot.child(firebaseAuth.getUid()).getValue(DataModel.class);
+
+                        System.out.println("the image url before change: " + dataModel.getImageUrl() + "\nthe id for data model is: "
+                                + dataModel.getUserID());
+
+                        dataModel.setImageUrl(imgurl);
+
+                        System.out.println("the image url after change: " + dataModel.getImageUrl());
+                        ref.child("users").child(dataModel.getUserID()).setValue(dataModel);
+                    }
+                }
+
+                @Override
+                public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+
+                }
+
+                @Override
+                public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {
+
+                }
+
+                @Override
+                public void onChildMoved(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+
+                }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                }
+            });
+
+    }
+    private String getFileExtension(Uri uri){
+        ContentResolver contentResolver = getContentResolver();
+        MimeTypeMap mimeTypeMap = MimeTypeMap.getSingleton();
+        return mimeTypeMap.getExtensionFromMimeType(contentResolver.getType(uri));
+    }
+    private void getImageDisplay(StorageReference st) {
+        System.out.println("====++++++++====================--=-=-= yooooooooooooo : " + firebaseAuth.getUid() );
+
+
+        Task<Uri> str = st.child(firebaseAuth.getUid() + "/Profile_pic/profilepic.png").getDownloadUrl()
+                .addOnSuccessListener(new OnSuccessListener<Uri>() {
+            @Override
+            public void onSuccess(Uri uri) {
+
+                imgurl = uri.toString();
+                System.out.println("got the imgurl from url: " + imgurl);
+
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                System.err.println("Couldn't get file from Cloud");
+
+            }
+        });
+    }
     public void logoutUser(){
 
         //if the user loged in with thier facebook or not

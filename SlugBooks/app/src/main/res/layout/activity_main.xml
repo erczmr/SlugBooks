@@ -68,7 +68,7 @@
         android:layout_marginEnd="8dp"
         android:layout_marginRight="8dp"
         android:layout_marginBottom="12dp"
-        android:text="Register with Facebook"
+        android:text="Login with Facebook"
         android:textAllCaps="false"
         app:layout_constraintBottom_toTopOf="@+id/registerButtonId"
         app:layout_constraintEnd_toEndOf="parent"

@@ -178,9 +178,11 @@ public class MainActivity extends AppCompatActivity {
                 emailstr = emailEditText.getText().toString();
                 passwordstr = passwordEditText.getText().toString();
 
+
                 //make sure they enter a email or password
                 if(!emailEditText.getText().toString().isEmpty() && !passwordEditText.getText().toString().isEmpty()) {
                     //call the function that logs in the user if the email pass is right
+                    System.err.println("email is: " + emailstr + "\n password is: " + passwordstr);
                     userLogin(emailstr, passwordstr);
                 }
                 else{
@@ -202,6 +204,7 @@ public class MainActivity extends AppCompatActivity {
                         if(task.isSuccessful()){
                             startActivity(new Intent(getApplicationContext(), HomeActivity.class));
                             setUID(firebaseAuth.getUid());
+
                         }
                         else{
                             //if login was not a success then give an error msg
@@ -314,9 +317,9 @@ public class MainActivity extends AppCompatActivity {
                              picUrl = "https://graph.facebook.com/me/picture?type=normal&method=GET&access_token="+ token;
 
                              List<String> imageList = new ArrayList<String>();
-                             bookObject = new BookObject("N/A", "N/A", "N/A", "N/A", "N/A", "N/A", 0.0,imageList);
+                             List<BookObject> bookObjects = new ArrayList<BookObject>();
 
-                            dataModel = new DataModel(facebook_id,"@" +userName,email_id,f_name, l_name,picUrl,bookObject);
+                            dataModel = new DataModel(facebook_id,"@" +userName,email_id,f_name, l_name,picUrl,bookObjects);
 
                             saveFacebookCredentialsInFirebase(login_result.getAccessToken(),dataModel);
 

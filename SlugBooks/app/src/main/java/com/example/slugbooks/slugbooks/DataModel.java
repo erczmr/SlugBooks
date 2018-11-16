@@ -3,6 +3,8 @@ package com.example.slugbooks.slugbooks;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
+import java.util.List;
+
 public class DataModel {
 
     public String username;
@@ -11,13 +13,17 @@ public class DataModel {
     public String firstName;
     public String lastName;
     public String imageUrl;
-    public BookObject bookObject;
 
+
+
+
+
+    public List<BookObject> bookObject;
     public DataModel() {
         // Default constructor required for calls to DataSnapshot.getValue(DataModel.class)
     }
 
-    public DataModel(String userID, String username, String email, String firstName, String lastName, String imageUrl , BookObject bookObject) {
+    public DataModel(String userID, String username, String email, String firstName, String lastName, String imageUrl , List<BookObject> bookObject) {
         this.username = username;
         this.email = email;
         this.firstName = firstName;
@@ -52,9 +58,10 @@ public class DataModel {
         return imageUrl;
     }
 
-    public BookObject getBookObject() {
-        return bookObject;
+    public void setBookObject(List<BookObject> bookObject) {
+        this.bookObject = bookObject;
     }
+
 
     //setters
     public void setUsername(String username) {
@@ -86,7 +93,9 @@ public class DataModel {
         System.out.println(firstName + " " + lastName + " " + username + " " + userID + " " + email + " " + imageUrl);
     }
 
-    public void setBookObject(BookObject bookObject) {
-        this.bookObject = bookObject;
+    public List<BookObject> getBookObject() {
+        return bookObject;
     }
+
+
 }
