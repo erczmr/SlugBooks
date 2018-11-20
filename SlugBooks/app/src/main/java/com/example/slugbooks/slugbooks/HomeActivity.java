@@ -87,23 +87,25 @@ public class HomeActivity extends AppCompatActivity {
         storageReference = FirebaseStorage.getInstance().getReference();
 
 
-
-        addImgUrlToDB(databaseReference, storageReference);
+        if(!isLoggedIn())
+        addImgUrlToDB();
     }
 
-    private void addImgUrlToDB(final DatabaseReference ref, final StorageReference stor) {
+    private void addImgUrlToDB() {
         final String imgUrl = RegisterActivity.getTheImagestr();
 
+System.out.println("storrrrraaaaaaaaaagggggggge:   " +  storageReference + "\ndatabase: " + databaseReference + "" +
+        "\nauthoid: " + firebaseAuth.getUid());
 
-        getImageDisplay(stor);
+        getImageDisplay(storageReference, firebaseAuth);
 
 
 
-            ref.addChildEventListener(new ChildEventListener() {
+            databaseReference.addChildEventListener(new ChildEventListener() {
                 @Override
                 public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
                     System.out.println("The imgURL is : " + imgUrl + "\nand the userid is: " + firebaseAuth.getUid() + "\nThe Home Database ref is: " +
-                            ref + "\nThe img url is: " + imgurl);
+                            databaseReference + "\nThe img url is: " + imgurl);
 
                     if (!isLoggedIn()) {
 
@@ -115,7 +117,7 @@ public class HomeActivity extends AppCompatActivity {
                         dataModel.setImageUrl(imgurl);
 
                         System.out.println("the image url after change: " + dataModel.getImageUrl());
-                        ref.child("users").child(dataModel.getUserID()).setValue(dataModel);
+                        databaseReference.child("users").child(dataModel.getUserID()).setValue(dataModel);
                     }
                 }
 
@@ -146,11 +148,11 @@ public class HomeActivity extends AppCompatActivity {
         MimeTypeMap mimeTypeMap = MimeTypeMap.getSingleton();
         return mimeTypeMap.getExtensionFromMimeType(contentResolver.getType(uri));
     }
-    private void getImageDisplay(StorageReference st) {
-        System.out.println("====++++++++====================--=-=-= yooooooooooooo : " + firebaseAuth.getUid() );
+    private void getImageDisplay(StorageReference st, FirebaseAuth fAuth) {
+        System.out.println("====++++++++====================--=-=-= yooooooooooooo : " + fAuth.getUid() );
 
 
-        Task<Uri> str = st.child(firebaseAuth.getUid() + "/Profile_pic/profilepic.png").getDownloadUrl()
+        Task<Uri> str = st.child(fAuth.getUid() + "/Profile_pic/profilepic.png").getDownloadUrl()
                 .addOnSuccessListener(new OnSuccessListener<Uri>() {
             @Override
             public void onSuccess(Uri uri) {
@@ -202,4 +204,8 @@ public class HomeActivity extends AppCompatActivity {
         startActivity(intent);
     }
 
+    public void launchInboxActivity(View view) {
+        Intent intent = new Intent(this, InboxActivity.class);
+        startActivity(intent);
+    }
 }

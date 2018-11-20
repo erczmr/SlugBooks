@@ -1,5 +1,6 @@
 package com.example.slugbooks.slugbooks;
 
+
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -22,21 +23,13 @@ public class AddBookActivity extends AppCompatActivity {
     EditText condition;
     EditText price;
 
-    public static String imageURl;
-    Uri uri;
+
     private static final int CHOOSE_IMAGE = 100;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_book);
 
-        bookName = (EditText) findViewById(R.id.bookNameEditID);
-        author = (EditText) findViewById(R.id.authorEditID);
-        descrip = (EditText) findViewById(R.id.descriptionEditID);
-        classEditText = (EditText) findViewById(R.id.classEditID);
-        edition = (EditText) findViewById(R.id.edititionEditID);
-        condition = (EditText) findViewById(R.id.conditionEditID);
-        price = (EditText) findViewById(R.id.priceEditID);
 
 
     }
@@ -61,17 +54,16 @@ public class AddBookActivity extends AppCompatActivity {
         super.onActivityResult(requestCode, resultCode, data);
         //Detects request codes
         if(resultCode==RESULT_OK && requestCode == CHOOSE_IMAGE) {
+          /*  selectedImage = data.getData();
+            String ali = selectedImage.getPath();
 
-            imageURl = data.getData().toString();
-            uri = data.getData();
+            bookImage.setImageURI(selectedImage);
 
-            ImageView imageView = new ImageView(this);
-            imageView.setImageURI(uri);
-            
+            System.out.println("URL is : " + imageURLstr);
 
+
+            // bookImage.setImageURI(selectedImage);*/
         }
     }
-
-
 }
 
