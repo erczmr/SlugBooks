@@ -76,7 +76,7 @@ public class HomeActivity extends AppCompatActivity {
 
         firebaseAuth = FirebaseAuth.getInstance();
 
-        databaseReference = FirebaseDatabase.getInstance().getReference();
+        databaseReference = FirebaseDatabase.getInstance().getReference().child("user");
         firebaseStorage = FirebaseStorage.getInstance();
         logoutButton.setOnClickListener(new View.OnClickListener() {
             @Override

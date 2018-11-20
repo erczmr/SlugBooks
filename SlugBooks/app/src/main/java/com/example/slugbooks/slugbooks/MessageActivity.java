@@ -54,7 +54,7 @@ public class MessageActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_message);
 
-       /* ActionBar actionBar = getSupportActionBar();
+      /* ActionBar actionBar = getSupportActionBar();
 
         actionBar.setDisplayHomeAsUpEnabled(true);
         actionBar.setDisplayShowCustomEnabled(true);
@@ -62,7 +62,7 @@ public class MessageActivity extends AppCompatActivity {
         LayoutInflater inflater = (LayoutInflater) this.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         View action_bar_view = inflater.inflate(R.layout.chat_custom_bar, null);
         actionBar.setCustomView(action_bar_view);
-
+*/
 
         recyclerView = findViewById(R.id.recycler_view);
         recyclerView.setHasFixedSize(true);
@@ -114,7 +114,7 @@ public class MessageActivity extends AppCompatActivity {
 
             }
         });
-  */
+
     }
     private void sendMessage(String sender, String receiver, String message){
         DatabaseReference reference = FirebaseDatabase.getInstance().getReference();
