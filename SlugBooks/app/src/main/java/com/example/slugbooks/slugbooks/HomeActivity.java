@@ -202,4 +202,8 @@ public class HomeActivity extends AppCompatActivity {
         startActivity(intent);
     }
 
+    public void launchInboxActivity(View view) {
+        Intent intent = new Intent(this, InboxActivity.class);
+        startActivity(intent);
+    }
 }
