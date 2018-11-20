@@ -20,6 +20,8 @@ public class InboxActivity extends AppCompatActivity {
         setContentView(R.layout.activity_inbox);
 
         mViewPager = findViewById(R.id.tabPager);
+
+        System.out.println("fragment mangager is: " + getFragmentManager());
         mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
 
         mViewPager.setAdapter(mSectionsPagerAdapter);

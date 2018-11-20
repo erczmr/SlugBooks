@@ -119,6 +119,7 @@ public class ProfileActivity extends AppCompatActivity {
                    dataModel = dataSnapshot.child(firebaseAuth.getUid()).getValue(DataModel.class);
                    System.out.println("The firebase url:" + dataModel.getImageUrl());
                    name.setText(dataModel.getFirstName() + " " + dataModel.getLastName());
+
                    Picasso.get().load(dataModel.getImageUrl()).into(profilePic);
                }
 

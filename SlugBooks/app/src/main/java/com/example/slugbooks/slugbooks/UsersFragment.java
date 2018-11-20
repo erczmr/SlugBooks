@@ -21,28 +21,29 @@ import com.google.firebase.database.ValueEventListener;
 import java.util.ArrayList;
 import java.util.List;
 
-
-/**
- * A simple {@link Fragment} subclass.
- */
 public class UsersFragment extends Fragment {
 
     private RecyclerView recyclerView;
     private UserAdapter userAdapter;
     private List<DataModel> mUsers;
-
-
+    FirebaseUser firebaseUser;
+    DatabaseReference reference;
+    FirebaseAuth firebaseAuth;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_users, container, false);
+        firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
+        reference = FirebaseDatabase.getInstance().getReference("users");
+        firebaseAuth = FirebaseAuth.getInstance();
 
         recyclerView = view.findViewById(R.id.recycler_view);
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 
         mUsers = new ArrayList<>();
+        System.out.println("the uid issss22222: " + firebaseUser.getUid());
 
         readUsers();
 
@@ -50,8 +51,9 @@ public class UsersFragment extends Fragment {
     }
 
     private void readUsers(){
-        final FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
-        DatabaseReference reference = FirebaseDatabase.getInstance().getReference("users");
+
+        System.out.println("refrece isss: " +reference.toString());
+        System.out.println("the Current User is::: " + firebaseUser);
 
         reference.addValueEventListener(new ValueEventListener() {
             @Override
@@ -63,11 +65,14 @@ public class UsersFragment extends Fragment {
                     assert user != null;
                     assert firebaseUser != null;
 
+                    System.out.println("the uid issss: " + firebaseUser.getUid());
                     if(!user.getUserID().equals(firebaseUser.getUid())){
                         mUsers.add(user);
                     }
+
                 }
 
+                System.out.println("the muser issss: " + mUsers + "\n the context is: " + getContext()) ;
                 userAdapter = new UserAdapter(getContext(), mUsers);
                 recyclerView.setAdapter(userAdapter);
             }

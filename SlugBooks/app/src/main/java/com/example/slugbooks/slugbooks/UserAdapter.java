@@ -21,6 +21,7 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.ViewHolder> {
     private Context mContext;
     private List<DataModel> mUsers;
 
+    public  UserAdapter(){}
 
     public UserAdapter(Context mContext, List<DataModel> mUsers){
         this.mUsers = mUsers;

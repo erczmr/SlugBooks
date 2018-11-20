@@ -319,6 +319,7 @@ public class MainActivity extends AppCompatActivity {
 
                 System.out.println("the firebase auth is: " + FirebaseAuth.getInstance().getUid());
                 System.out.println("the firebase auth is: " + firebaseAuth.getUid());
+                dm.setUserID(firebaseAuth.getUid());
                 databaseReference.child("users").child(FirebaseAuth.getInstance().getUid()).setValue(dm);
 
                     setUID(firebaseAuth.getUid());
