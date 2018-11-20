@@ -25,6 +25,9 @@
             android:parentActivityName=".MainActivity"
             android:screenOrientation="portrait" />
         <activity
+            android:name=".SignInActivity"
+            android:screenOrientation="portrait" />
+        <activity
             android:name=".HomeActivity"
             android:screenOrientation="portrait" />
         <activity
