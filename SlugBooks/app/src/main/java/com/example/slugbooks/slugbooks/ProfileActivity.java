@@ -67,13 +67,11 @@ public class ProfileActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profile);
-
-
-
+        firebaseAuth = FirebaseAuth.getInstance();
         profilePic = findViewById(R.id.profilePicImageViewId);
         firebaseDatabase = FirebaseDatabase.getInstance();
         ref = firebaseDatabase.getReference();
-        firebaseAuth = FirebaseAuth.getInstance();
+
         user = firebaseAuth.getCurrentUser();
         storageReference = FirebaseStorage.getInstance().getReference();
 
@@ -96,9 +94,10 @@ public class ProfileActivity extends AppCompatActivity {
     }
 
     //this function gets the info from database and store it here
-        private void storeDataInObject(DatabaseReference refrence) {
+        private void storeDataInObject(final DatabaseReference refrence) {
 
-            System.out.println("====================== +++++++= " + refrence);
+            System.out.println("====================== +++++++= " +
+                    refrence.child("users").child(firebaseAuth.getUid()));
 
             refrence.addChildEventListener(new ChildEventListener() {
             @Override
@@ -106,27 +105,51 @@ public class ProfileActivity extends AppCompatActivity {
 
 
                if(isLoggedIn()){
-                   System.out.println("I am loggggggggged in: " + firebaseAuth.getUid() );
-                   dataModel = dataSnapshot.child(firebaseAuth.getUid()).getValue(DataModel.class);
-                    //if you are on with the facebook button upload the profile picture here
-                    name.setText(dataModel.getFirstName());
-                   new DownloadImageTask(profilePic).execute(dataModel.getImageUrl());
-
+                   if(dataSnapshot.getKey().equals("users")) {
+                       System.out.println("I am loggggggggged in: " + firebaseAuth.getUid());
+                       dataModel = dataSnapshot.child(firebaseAuth.getUid()).getValue(DataModel.class);
+                       //if you are on with the facebook button upload the profile picture here
+                       name.setText(dataModel.getFirstName());
+                       new DownloadImageTask(profilePic).execute(dataModel.getImageUrl());
+                       username.setText(dataModel.getUsername());
+                   }
                 }
 
                 else{
 
-                   dataModel = dataSnapshot.child(firebaseAuth.getUid()).getValue(DataModel.class);
-                   System.out.println("The firebase url:" + dataModel.getImageUrl());
-                   name.setText(dataModel.getFirstName() + " " + dataModel.getLastName());
 
-                   Picasso.get().load(dataModel.getImageUrl()).into(profilePic);
+                   System.out.println("yoyoyoy ++++++++++++++++++++++++++++++++++++++ other stuff : " + dataSnapshot.getRef() );
+                   System.out.println("yoyoyoy ++++++++++++++++++++++++++++++++++++++ other key : " + dataSnapshot.getKey() );
+                   System.out.println("yoyoyoy ++++++++++++++++++++++++++++++++++++++ other key : " + dataSnapshot.getValue() );
+
+                   //dataSnapshot = dataSnapshot.getChildren().iterator().next();
+                   /*System.out.println("Data Snapshot value is: " + dataSnapshot.getValue() + "\n datasnapshot  user values:  " + dataSnapshot.child("users") +
+                           "\nthe user next child values: " + "\n the value of that: " );
+*/
+                   //dataSnapshot.child("user").getChildren().
+                   //                           iterator().next().getKey() +
+
+                   //+ dataSnapshot.child("users").getChildren().iterator().next()
+                   //                   .getValue());
+                   if(dataSnapshot.getKey().equals("users")) {
+                       System.out.println("yoyoyoy ++++++++++++++++++++++++++++++++++++++ database childre : " + dataSnapshot.getChildren().iterator().next());
+                       dataModel = dataSnapshot.child(firebaseAuth.getUid()).getValue(DataModel.class);
+
+                       System.out.println("The firebase url:" + dataModel.getImageUrl());
+
+                       name.setText(dataModel.getFirstName() + " " + dataModel.getLastName());
+
+                       Picasso.get().load(dataModel.getImageUrl()).into(profilePic);
+                       username.setText(dataModel.getUsername());
+                       System.out.println(" +++++++++++ " + dataModel.getFirstName() + " +++++++++++++ "
+                            + dataModel.getImageUrl());
+                   }
                }
 
-                username.setText(dataModel.getUsername());
+               // username.setText(dataModel.getUsername());
 
-               System.out.println(" +++++++++++ " + dataModel.getFirstName() + " +++++++++++++ "
-                     + dataModel.getImageUrl());
+               //System.out.println(" +++++++++++ " + dataModel.getFirstName() + " +++++++++++++ "
+                //     + dataModel.getImageUrl());
             }
 
             @Override
@@ -147,6 +170,7 @@ public class ProfileActivity extends AppCompatActivity {
         });
 
     }
+
 
     public void launchHomeActivity(View view){
         Intent intent = new Intent (this, HomeActivity.class);

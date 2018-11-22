@@ -48,7 +48,7 @@ import java.util.List;
 
 public class RegisterActivity extends AppCompatActivity {
 
-    private static String img;
+    public static String img = "";
     private EditText emailEditText;
     private EditText passwordEditText;
     private EditText repeatPasswordEditText;
@@ -187,20 +187,20 @@ public class RegisterActivity extends AppCompatActivity {
                                 List<BookObject> bookObject = new ArrayList<BookObject>();
 
                                 setMyId(mAuth.getUid());
-                                System.out.println("register page id: " + getMyId());
-                                storageReference = FirebaseStorage.getInstance().getReference(mAuth.getUid()).child("Profile_pic");
 
-                                startActivity(new Intent(RegisterActivity.this, HomeActivity.class));
+                                storageReference = FirebaseStorage.getInstance().getReference(mAuth.getUid()).child("Profile_pic");
 
                                 pushToCloud(selectedImage);
 
-                                System.out.println("get url : " + getTheImagestr());
+                               // System.out.println("get url : " + getTheImagestr());
 
                                 dataModel = new DataModel(mAuth.getUid(), usernameString,emailString,
-                                        fNameString,lNameString,getTheImagestr(),bookObject);
+                                        fNameString,lNameString,"empty",bookObject);
 
                                 writeNewUser(dataModel);
+                                Intent intent = new Intent(RegisterActivity.this, HomeActivity.class);
 
+                                startActivity(intent);
 
                             } else {
                                 Toast.makeText(RegisterActivity.this, "Could not Register...  Please try again", Toast.LENGTH_SHORT).show();
@@ -291,14 +291,7 @@ public class RegisterActivity extends AppCompatActivity {
             Toast.makeText(this, "The Passwords Were Not A Mach! Try Again!", Toast.LENGTH_SHORT).show();
         }}
 
-    public static String getTheImagestr() {
 
-        return img;
-    }
-
-    public void setImageURLstr(String images){
-        img = images;
-    }
 
     //get the image from gllery
     private void openGallery()
@@ -351,34 +344,46 @@ public class RegisterActivity extends AppCompatActivity {
         return mimeTypeMap.getExtensionFromMimeType(contentResolver.getType(uri));
     }
 
-    private void pushToCloud(Uri img) {
-        if(img != null)
+    private void pushToCloud(Uri igg) {
+        if(igg != null)
         {
             //+ getFileExtension(selectedImage)
             final StorageReference fileRef = storageReference.child( "profilepic.png" );
 
-            fileRef.putFile(img).continueWithTask(new Continuation<UploadTask.TaskSnapshot, Task<Uri>>() {
+            fileRef.putFile(igg).continueWithTask(new Continuation<UploadTask.TaskSnapshot, Task<Uri>>() {
                 @Override
                 public Task<Uri> then(@NonNull Task<UploadTask.TaskSnapshot> task) throws Exception {
                     if (!task.isSuccessful()) {
                         throw task.getException();
                     }
 
+                    System.out.println("the downloaded uri is22222: " + task.getResult().toString());
+                   // setImageURLstr(task.getResult().toString());
                     return fileRef.getDownloadUrl();
                 }
             }).addOnSuccessListener(new OnSuccessListener<Uri>() {
                 @Override
                 public void onSuccess(Uri uri) {
 
-                    System.out.println("the downloaded uri is: " + uri.toString());
-                    setImageURLstr(uri.toString());
+                    img = uri.toString();
+                    System.out.println("the downloaded uri is333: " + uri.toString());
+                  //  setImageURLstr(uri.toString());
 
+                }
+            }).addOnFailureListener(new OnFailureListener() {
+                @Override
+                public void onFailure(@NonNull Exception e) {
+                    System.out.println("dint put it in the storage");
                 }
             }).addOnCompleteListener(new OnCompleteListener<Uri>() {
                 @Override
                 public void onComplete(@NonNull Task<Uri> task) {
                     if (task.isSuccessful()) {
                         Uri downloadUri = task.getResult();
+                        img = downloadUri.toString();
+                        new sendImgUrlToDB().execute(img);
+                        System.out.println("the downloaded uri is: " + downloadUri.toString());
+                        //setImageURLstr(downloadUri.toString());
 
                     } else {
                         Toast.makeText(RegisterActivity.this, "upload failed: " + task.getException().getMessage(), Toast.LENGTH_SHORT).show();

@@ -2,6 +2,7 @@ package com.example.slugbooks.slugbooks;
 
 import android.content.ContentResolver;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -16,11 +17,14 @@ import android.widget.Toast;
 
 import com.facebook.AccessToken;
 import com.facebook.login.LoginManager;
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.auth.FirebaseUserMetadata;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -59,12 +63,16 @@ public class HomeActivity extends AppCompatActivity {
 
     static String homeId;
     private FirebaseUser user;
+
     private static String userIdNum = "";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
+        System.out.println("not working ooooooooooooooooo");
 
+        storageReference = FirebaseStorage.getInstance().getReference();
         logoutButton = (Button) findViewById(R.id.logoutButtonId);
         searchBar = (SearchView) findViewById(R.id.searchBarID);
         //bookName = (TextView) findViewById(R.id.bookNameID);
@@ -76,7 +84,7 @@ public class HomeActivity extends AppCompatActivity {
 
         firebaseAuth = FirebaseAuth.getInstance();
 
-        databaseReference = FirebaseDatabase.getInstance().getReference().child("user");
+        databaseReference = FirebaseDatabase.getInstance().getReference();
         firebaseStorage = FirebaseStorage.getInstance();
         logoutButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -84,43 +92,48 @@ public class HomeActivity extends AppCompatActivity {
                 logoutUser();
             }
         });
-        storageReference = FirebaseStorage.getInstance().getReference();
+/*\
 
+        FirebaseUserMetadata metadata = firebaseAuth.getCurrentUser().getMetadata();
+        if (metadata.getCreationTimestamp() == metadata.getLastSignInTimestamp()) {
+            // The user is new, show them a fancy intro screen!
+            //if(!isLoggedIn())
+               // addImgUrlToDB();
+        } else {
+            // This is an existing user, show them a welcome back screen.
+        }
 
-        if(!isLoggedIn())
-        addImgUrlToDB();
+ */
+
     }
 
-    private void addImgUrlToDB() {
-        final String imgUrl = RegisterActivity.getTheImagestr();
+   /* private void addImgUrlToDB() {
+            System.out.println("storrrrraaaaaaaaaagggggggge:   " +  storageReference + "\ndatabase: " + databaseReference + "\n authid: " + firebaseAuth.getUid());
 
-System.out.println("storrrrraaaaaaaaaagggggggge:   " +  storageReference + "\ndatabase: " + databaseReference + "" +
-        "\nauthoid: " + firebaseAuth.getUid());
-
-        getImageDisplay(storageReference, firebaseAuth);
-
-
-
+       // getImageDisplay(storageReference, firebaseAuth);
             databaseReference.addChildEventListener(new ChildEventListener() {
                 @Override
                 public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-                    System.out.println("The imgURL is : " + imgUrl + "\nand the userid is: " + firebaseAuth.getUid() + "\nThe Home Database ref is: " +
+                    System.out.println("The imgURL is : " + dataSnapshot.getValue() + "\nand the userid is: " + dataSnapshot.getKey()+ "\nThe Home Database ref is: " +
                             databaseReference + "\nThe img url is: " + imgurl);
 
                     if (!isLoggedIn()) {
 
-                        DataModel dataModel = dataSnapshot.child(firebaseAuth.getUid()).getValue(DataModel.class);
+                        if(dataSnapshot.getKey().equals("users")) {
 
-                        System.out.println("the image url before change: " + dataModel.getImageUrl() + "\nthe id for data model is: "
-                                + dataModel.getUserID());
+                            System.out.println("lettssss : " + imgurlStr);
+                            DataModel dataModel = dataSnapshot.child(firebaseAuth.getUid()).getValue(DataModel.class);
 
-                        dataModel.setImageUrl(imgurl);
+                            System.out.println("the image url before change: " + dataModel.getImageUrl() + "\nthe id for data model is: "
+                                    + dataModel.getUserID());
 
-                        System.out.println("the image url after change: " + dataModel.getImageUrl());
-                        databaseReference.child("users").child(dataModel.getUserID()).setValue(dataModel);
+                            dataModel.setImageUrl(imgurlStr);
+
+                            System.out.println("the image url after change: " + dataModel.getImageUrl());
+                            databaseReference.child("users").child(dataModel.getUserID()).setValue(dataModel);
+                        }
                     }
                 }
-
                 @Override
                 public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
 
@@ -148,6 +161,7 @@ System.out.println("storrrrraaaaaaaaaagggggggge:   " +  storageReference + "\nda
         MimeTypeMap mimeTypeMap = MimeTypeMap.getSingleton();
         return mimeTypeMap.getExtensionFromMimeType(contentResolver.getType(uri));
     }
+
     private void getImageDisplay(StorageReference st, FirebaseAuth fAuth) {
         System.out.println("====++++++++====================--=-=-= yooooooooooooo : " + fAuth.getUid() );
 
@@ -156,8 +170,6 @@ System.out.println("storrrrraaaaaaaaaagggggggge:   " +  storageReference + "\nda
                 .addOnSuccessListener(new OnSuccessListener<Uri>() {
             @Override
             public void onSuccess(Uri uri) {
-
-                imgurl = uri.toString();
                 System.out.println("got the imgurl from url: " + imgurl);
 
             }
@@ -169,6 +181,7 @@ System.out.println("storrrrraaaaaaaaaagggggggge:   " +  storageReference + "\nda
             }
         });
     }
+*/
     public void logoutUser(){
 
         //if the user loged in with thier facebook or not
@@ -207,5 +220,5 @@ System.out.println("storrrrraaaaaaaaaagggggggge:   " +  storageReference + "\nda
     public void launchInboxActivity(View view) {
         Intent intent = new Intent(this, InboxActivity.class);
         startActivity(intent);
-    }
+   }
 }
