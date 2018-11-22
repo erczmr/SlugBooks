@@ -21,7 +21,7 @@ public class sendImgUrlToDB extends AsyncTask<String,Void,Void> {
         firebaseAuth = FirebaseAuth.getInstance();
         databaseReference = FirebaseDatabase.getInstance().getReference();
 
-        databaseReference.child("users").child(firebaseAuth.getUid()).child("imageUrl").setValue(strings[0]);
+        databaseReference.child("users").child(firebaseAuth.getUid()).child("bookObject").setValue(strings[0]);
 
         return null;
     }

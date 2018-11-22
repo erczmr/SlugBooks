@@ -9,8 +9,8 @@
 
     <EditText
         android:id="@+id/bookNameEditID"
-        android:layout_width="370dp"
-        android:layout_height="42dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
         android:layout_marginLeft="8dp"
         android:layout_marginEnd="8dp"
@@ -26,8 +26,8 @@
 
     <EditText
         android:id="@+id/authorEditID"
-        android:layout_width="370dp"
-        android:layout_height="44dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
         android:layout_marginLeft="8dp"
         android:layout_marginEnd="8dp"
@@ -43,8 +43,8 @@
 
     <EditText
         android:id="@+id/descriptionEditID"
-        android:layout_width="370dp"
-        android:layout_height="42dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
         android:layout_marginLeft="8dp"
         android:layout_marginEnd="8dp"
@@ -59,8 +59,8 @@
 
     <EditText
         android:id="@+id/classEditID"
-        android:layout_width="370dp"
-        android:layout_height="42dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
         android:layout_marginLeft="8dp"
         android:layout_marginEnd="8dp"
@@ -75,8 +75,8 @@
 
     <EditText
         android:id="@+id/edititionEditID"
-        android:layout_width="370dp"
-        android:layout_height="42dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
         android:layout_marginLeft="8dp"
         android:layout_marginEnd="8dp"
@@ -91,8 +91,8 @@
 
     <EditText
         android:id="@+id/conditionEditID"
-        android:layout_width="370dp"
-        android:layout_height="42dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
         android:layout_marginLeft="8dp"
         android:layout_marginEnd="8dp"
@@ -107,8 +107,8 @@
 
     <EditText
         android:id="@+id/priceEditID"
-        android:layout_width="370dp"
-        android:layout_height="42dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
         android:layout_marginLeft="8dp"
         android:layout_marginEnd="8dp"
