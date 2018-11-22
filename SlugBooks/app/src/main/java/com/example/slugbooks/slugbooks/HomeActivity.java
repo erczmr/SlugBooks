@@ -75,16 +75,14 @@ public class HomeActivity extends AppCompatActivity {
         setContentView(R.layout.activity_home);
         System.out.println("not working ooooooooooooooooo");
 
-<<<<<<< HEAD
         BottomNavigationView bottomNavigationView = (BottomNavigationView) findViewById(R.id.bottom_navigation);
         BottomNavigationViewHelper.removeShiftMode(bottomNavigationView);
         Menu menu = bottomNavigationView.getMenu();
         MenuItem menuItem = menu.getItem(0);
         menuItem.setChecked(true);
 
-=======
         storageReference = FirebaseStorage.getInstance().getReference();
->>>>>>> 4ae9322f785db10e624007ef475f06129fb9eef0
+
         logoutButton = (Button) findViewById(R.id.logoutButtonId);
         searchBar = (SearchView) findViewById(R.id.searchBarID);
         //bookName = (TextView) findViewById(R.id.bookNameID);
@@ -248,17 +246,4 @@ public class HomeActivity extends AppCompatActivity {
             super.onBackPressed();
         }
     }
-<<<<<<< HEAD
-=======
-
-    public void launchProfileActivity(View view){
-        Intent intent = new Intent (this, ProfileActivity.class);
-        startActivity(intent);
-    }
-
-    public void launchInboxActivity(View view) {
-        Intent intent = new Intent(this, InboxActivity.class);
-        startActivity(intent);
-   }
->>>>>>> 4ae9322f785db10e624007ef475f06129fb9eef0
 }
