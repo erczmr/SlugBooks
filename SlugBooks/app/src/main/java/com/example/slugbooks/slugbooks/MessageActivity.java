@@ -103,7 +103,7 @@ public class MessageActivity extends AppCompatActivity {
                 if(user.getImageUrl().equals("default")){
                     profile_image.setImageResource(R.mipmap.ic_launcher);
                 }else{
-                    Glide.with(MessageActivity.this).load(user.getImageUrl());
+                    Glide.with(getApplicationContext()).load(user.getImageUrl());
                 }
 
                 readMessage(fuser.getUid(), userid, user.getImageUrl());
