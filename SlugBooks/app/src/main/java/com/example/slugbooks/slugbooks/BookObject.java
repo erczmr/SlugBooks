@@ -10,7 +10,7 @@ public class BookObject {
     String classStr;
     String edition;
     String condition;
-    double price;
+    String price;
 
     List<String> imges ;
 
@@ -18,7 +18,7 @@ public class BookObject {
 
     }
 
-    public BookObject(String bookname, String author, String descriptionStr, String classStr, String edition, String condition, double price, List<String> imges ) {
+    public BookObject(String bookname, String author, String descriptionStr, String classStr, String edition, String condition, String price, List<String> imges ) {
         this.bookname = bookname;
         this.author = author;
         this.descriptionStr = descriptionStr;
@@ -77,11 +77,11 @@ public class BookObject {
         this.condition = condition;
     }
 
-    public double getPrice() {
+    public String getPrice() {
         return price;
     }
 
-    public void setPrice(double price) {
+    public void setPrice(String price) {
         this.price = price;
     }
 
