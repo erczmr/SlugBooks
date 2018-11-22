@@ -14,6 +14,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -42,6 +43,7 @@ import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.List;
 
 import static java.security.AccessController.getContext;
 
@@ -59,7 +61,9 @@ public class ProfileActivity extends AppCompatActivity {
     Button profile2;
     Button Home2;
     ImageView profilePic;
-
+    private LinearLayout lv;
+    private LinearLayout.LayoutParams textPrams;
+    private LinearLayout.LayoutParams layoutParams;
 
     String userIDnum;
     File localFile;
@@ -83,8 +87,14 @@ public class ProfileActivity extends AppCompatActivity {
 
         System.out.println("id:issssssssssssssssssssssssss:   " + firebaseAuth.getUid() + " +============ "  + MainActivity.getUID());
 
+        lv = (LinearLayout) findViewById(R.id.profilePageLinearlayout);
+
         //System.out.println("hommmeeeeeeeeeeeeeee: " + HomeActivity.getHomeId());
         storeDataInObject(ref);
+        layoutParams = new LinearLayout.LayoutParams(400, 400);
+        textPrams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+        layoutParams.setMargins(40, 0, 0, 0);
+        textPrams.setMargins(40, 100, 0, 0);
 
     }
     // check to see if user is logged in with facebook
@@ -103,7 +113,6 @@ public class ProfileActivity extends AppCompatActivity {
             @Override
             public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
 
-
                if(isLoggedIn()){
                    if(dataSnapshot.getKey().equals("users")) {
                        System.out.println("I am loggggggggged in: " + firebaseAuth.getUid());
@@ -112,25 +121,24 @@ public class ProfileActivity extends AppCompatActivity {
                        name.setText(dataModel.getFirstName());
                        new DownloadImageTask(profilePic).execute(dataModel.getImageUrl());
                        username.setText(dataModel.getUsername());
+
+                       if(dataModel.getBookObject() != null)
+                       {
+                           List<BookObject> bo = dataModel.getBookObject();
+                           for(int i = 0; i < bo.size(); i++)
+                           {
+                               BookObject bookObject = bo.get(i);
+
+
+                           }
+
+
+                       }
                    }
                 }
 
                 else{
 
-
-                   System.out.println("yoyoyoy ++++++++++++++++++++++++++++++++++++++ other stuff : " + dataSnapshot.getRef() );
-                   System.out.println("yoyoyoy ++++++++++++++++++++++++++++++++++++++ other key : " + dataSnapshot.getKey() );
-                   System.out.println("yoyoyoy ++++++++++++++++++++++++++++++++++++++ other key : " + dataSnapshot.getValue() );
-
-                   //dataSnapshot = dataSnapshot.getChildren().iterator().next();
-                   /*System.out.println("Data Snapshot value is: " + dataSnapshot.getValue() + "\n datasnapshot  user values:  " + dataSnapshot.child("users") +
-                           "\nthe user next child values: " + "\n the value of that: " );
-*/
-                   //dataSnapshot.child("user").getChildren().
-                   //                           iterator().next().getKey() +
-
-                   //+ dataSnapshot.child("users").getChildren().iterator().next()
-                   //                   .getValue());
                    if(dataSnapshot.getKey().equals("users")) {
                        System.out.println("yoyoyoy ++++++++++++++++++++++++++++++++++++++ database childre : " + dataSnapshot.getChildren().iterator().next());
                        dataModel = dataSnapshot.child(firebaseAuth.getUid()).getValue(DataModel.class);
@@ -143,13 +151,16 @@ public class ProfileActivity extends AppCompatActivity {
                        username.setText(dataModel.getUsername());
                        System.out.println(" +++++++++++ " + dataModel.getFirstName() + " +++++++++++++ "
                             + dataModel.getImageUrl());
+
+                        //get the image info and pics
+                       if(dataModel.getBookObject() != null)
+                       {
+
+                       }
                    }
                }
 
-               // username.setText(dataModel.getUsername());
 
-               //System.out.println(" +++++++++++ " + dataModel.getFirstName() + " +++++++++++++ "
-                //     + dataModel.getImageUrl());
             }
 
             @Override
@@ -180,5 +191,9 @@ public class ProfileActivity extends AppCompatActivity {
 
     public void addBook(View view) {
         startActivity(new Intent(this, AddBookActivity.class));
+    }
+
+    public void messageBut(View view) {
+        startActivity(new Intent(this, InboxActivity.class));
     }
 }
