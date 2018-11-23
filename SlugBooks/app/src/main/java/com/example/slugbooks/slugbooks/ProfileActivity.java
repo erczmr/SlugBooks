@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
+import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
@@ -43,6 +44,7 @@ import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import static java.security.AccessController.getContext;
@@ -91,7 +93,7 @@ public class ProfileActivity extends AppCompatActivity {
 
         //System.out.println("hommmeeeeeeeeeeeeeee: " + HomeActivity.getHomeId());
         storeDataInObject(ref);
-        layoutParams = new LinearLayout.LayoutParams(400, 400);
+        layoutParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
         textPrams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
         layoutParams.setMargins(40, 0, 0, 0);
         textPrams.setMargins(40, 100, 0, 0);
@@ -127,12 +129,45 @@ public class ProfileActivity extends AppCompatActivity {
                            List<BookObject> bo = dataModel.getBookObject();
                            for(int i = 0; i < bo.size(); i++)
                            {
+
                                BookObject bookObject = bo.get(i);
 
+                               if(bookObject.getAuthor()== null) bookObject.setAuthor("N/A");
+                               if(bookObject.getBookname()== null) bookObject.setAuthor("N/A");
+                               if(bookObject.getClassStr()== null) bookObject.setAuthor("N/A");
+
+                               TextView tx = new TextView(ProfileActivity.this);
+                               tx.setText("Book Title: " + bookObject.getBookname() + "\nAuthor: " + bookObject.getAuthor()
+                               + "\nClass: " + bookObject.getClassStr());
+
+                               System.out.println("noooooooooo: " + "Book Title: " + bookObject.getBookname() + "\n\nAuthor: " + bookObject.getAuthor()
+                                       + "\n\nClass: " + bookObject.getClassStr());
+                               tx.setTextSize(12);
+                               tx.setLayoutParams(textPrams);
+
+                               //System.out.println("the bitmap in view function is: " + bt.toString());
+                               LinearLayout lh = new LinearLayout(ProfileActivity.this);
+                               lh.setOrientation(LinearLayout.HORIZONTAL);
+                               ImageView img = new ImageView(ProfileActivity.this);
+
+                               if(bookObject.getImges()!= null) {
+
+                                   List<String> imgStrings = bookObject.getImges();
+                                   Uri myUri = Uri.parse(imgStrings.get(0));
+
+                                   System.out.println("theeeeee img url iss: " + imgStrings.get(0));
+                                   System.out.println("theeeeee img url iss: " + myUri.toString());
+                                   Picasso.get().load(imgStrings.get(0)).into(img);
+                                   img.setImageURI(myUri);
+                                   //new DownloadImageTask(img).execute(urlsr);
+                                   img.setLayoutParams(layoutParams);
+
+                               }
+                               lh.addView(img);
+                               lh.addView(tx);
+                               lv.addView(lh);
 
                            }
-
-
                        }
                    }
                 }
@@ -155,7 +190,49 @@ public class ProfileActivity extends AppCompatActivity {
                         //get the image info and pics
                        if(dataModel.getBookObject() != null)
                        {
+                           List<BookObject> bo = dataModel.getBookObject();
+                           for(int i = 0; i < bo.size(); i++)
+                           {
 
+                               BookObject bookObject = bo.get(i);
+
+                               if(bookObject.getAuthor()== null) bookObject.setAuthor("N/A");
+                               if(bookObject.getBookname()== null) bookObject.setAuthor("N/A");
+                               if(bookObject.getClassStr()== null) bookObject.setAuthor("N/A");
+
+                               TextView tx = new TextView(ProfileActivity.this);
+                               tx.setText("Book Title: " + bookObject.getBookname() + "\nAuthor: " + bookObject.getAuthor()
+                                       + "\nClass: " + bookObject.getClassStr());
+
+                               System.out.println("noooooooooo: " + "Book Title: " + bookObject.getBookname() + "\n\nAuthor: " + bookObject.getAuthor()
+                                       + "\n\nClass: " + bookObject.getClassStr());
+                               tx.setTextSize(12);
+                               tx.setLayoutParams(textPrams);
+
+                               //System.out.println("the bitmap in view function is: " + bt.toString());
+                               LinearLayout lh = new LinearLayout(ProfileActivity.this);
+                               lh.setOrientation(LinearLayout.HORIZONTAL);
+                               ImageView img = new ImageView(ProfileActivity.this);
+                              // img
+                              // img.setImageDrawable(getResources().getDrawable(findViewById(R.drawable.com_facebook_button_icon_white)));
+                               if(bookObject.getImges()!= null) {
+
+                                   List<String> imgStrings = bookObject.getImges();
+                                   Uri myUri = Uri.parse(imgStrings.get(0));
+
+                                   System.out.println("theeeeee img url iss: " + imgStrings.get(0));
+                                   System.out.println("theeeeee img url iss: " + myUri.toString());
+                                   Picasso.get().load(imgStrings.get(0)).into(img);
+                                   img.setImageURI(myUri);
+                                   //new DownloadImageTask(img).execute(urlsr);
+                                   img.setLayoutParams(layoutParams);
+
+                               }
+                               lh.addView(img);
+                               lh.addView(tx);
+                               lv.addView(lh);
+
+                           }
                        }
                    }
                }

@@ -131,7 +131,6 @@ public class AddBookActivity extends AppCompatActivity {
 
     public void post(View view) {
 
-
         //get the current Datamodel
 
         databaseReference.addChildEventListener(new ChildEventListener() {
@@ -235,7 +234,8 @@ public class AddBookActivity extends AppCompatActivity {
                             //setImageURLstr(downloadUri.toString());
 
                         } else {
-                            Toast.makeText(AddBookActivity.this, "upload failed: " + task.getException().getMessage(), Toast.LENGTH_SHORT).show();
+                            Toast.makeText(AddBookActivity.this, "upload failed: "
+                                    + task.getException().getMessage(), Toast.LENGTH_SHORT).show();
                         }
                     }
                 });
