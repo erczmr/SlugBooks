@@ -1,40 +1,26 @@
 package com.example.slugbooks.slugbooks;
 
 import android.content.Intent;
+import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
-
-import com.facebook.GraphRequest;
-import com.facebook.GraphResponse;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.android.gms.tasks.Task;
-import com.google.firebase.auth.AuthResult;
-import com.google.firebase.auth.FirebaseAuth;
-
-import com.facebook.FacebookSdk;
-import com.facebook.appevents.AppEventsLogger;
 
 import com.facebook.AccessToken;
 import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
 import com.facebook.FacebookException;
-import com.facebook.FacebookSdk;
-import com.facebook.appevents.AppEventsLogger;
-
+import com.facebook.GraphRequest;
+import com.facebook.GraphResponse;
 import com.facebook.login.LoginManager;
 import com.facebook.login.LoginResult;
-import com.facebook.login.widget.LoginButton;
-
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.AuthResult;
@@ -47,18 +33,16 @@ import com.google.firebase.database.FirebaseDatabase;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.ArrayList;
 
-public class MainActivity extends AppCompatActivity {
+public class SignInActivity extends AppCompatActivity {
 
 
     private EditText emailEditText;
     private EditText passwordEditText;
     private Button loginButton;
-    private Button registerButton;
-    private Button signInButton;
     private TextView forgotPassTextView;
 
 
@@ -92,10 +76,12 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_sign_in);
 
-        registerButton = (Button) findViewById(R.id.registerButtonId);
-        signInButton = (Button) findViewById(R.id.landingPageSignIn_ID);
+        emailEditText = (EditText) findViewById(R.id.emailEditTextId);
+        passwordEditText = (EditText) findViewById(R.id.passwordEditTextId);
+        loginButton = (Button)findViewById(R.id.loginButtonId);
+        forgotPassTextView = (TextView) findViewById(R.id.forgotpasswordTextViewId);
         callbackManager = CallbackManager.Factory.create();
         //all about facebook button
         facebookConnectButton = (Button) findViewById(R.id.facebookConnectButtonId);
@@ -112,56 +98,69 @@ public class MainActivity extends AppCompatActivity {
 
         databaseReference = FirebaseDatabase.getInstance().getReference();
         facebookConnectButton.setOnClickListener(new View.OnClickListener() {
-        @Override
-        public void onClick(View v) {
-            //firebaseAuth = FirebaseAuth.getInstance();
-            LoginManager.getInstance().logInWithReadPermissions(MainActivity.this, Arrays.asList(EMAIL, "public_profile"));
-            LoginManager.getInstance().registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
-                @Override
-                public void onSuccess(LoginResult loginResult) {
-                    startActivity(new Intent(MainActivity.this, HomeActivity.class));
-                    finish();
-                    // App code
-                    handleFacebookAccessToken(loginResult.getAccessToken());
-                    getUserInfo(loginResult);
-                }
+            @Override
+            public void onClick(View v) {
+                //firebaseAuth = FirebaseAuth.getInstance();
+                LoginManager.getInstance().logInWithReadPermissions(SignInActivity.this, Arrays.asList(EMAIL, "public_profile"));
+                LoginManager.getInstance().registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
+                    @Override
+                    public void onSuccess(LoginResult loginResult) {
+                        startActivity(new Intent(SignInActivity.this, HomeActivity.class));
+                        finish();
+                        // App code
+                        handleFacebookAccessToken(loginResult.getAccessToken());
+                        getUserInfo(loginResult);
+                    }
 
-                @Override
-                public void onCancel() {
-                    // App code
-                }
+                    @Override
+                    public void onCancel() {
+                        // App code
+                    }
 
-                @Override
-                public void onError(FacebookException exception) {
-                    // App code
-                }
-            });
-        }
-    });
+                    @Override
+                    public void onError(FacebookException exception) {
+                        // App code
+                    }
+                });
+            }
+        });
 
 
         //check to see if the user is already loged in then go stright to the homepage
         firebaseAuth = FirebaseAuth.getInstance();
         if(firebaseAuth.getCurrentUser() != null) {
-            startActivity(new Intent(MainActivity.this, HomeActivity.class));
-            setUID(firebaseAuth.getUid());
+            startActivity(new Intent(SignInActivity.this, HomeActivity.class));
         }
 
-        //after clicking on register button, go to register page
-        registerButton.setOnClickListener(new View.OnClickListener() {
+
+        //if the forgot password text view was clicked, go to forgot password page
+        forgotPassTextView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(MainActivity.this , RegisterActivity.class);
-                startActivity(intent);
+                startActivity(new Intent(SignInActivity.this, ForgotPasswordActivity.class));
             }
         });
 
-        //after clicking on sign in button, go to sign in page
-        signInButton.setOnClickListener(new View.OnClickListener() {
+
+        //after clicking the login button, it will check to see if email password is write, then goes in if true else it wont
+        //and will give an error toast
+
+        loginButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(MainActivity.this , SignInActivity.class);
-                startActivity(intent);
+
+                //store the email edit text and the password edit texts in strings
+                emailstr = emailEditText.getText().toString();
+                passwordstr = passwordEditText.getText().toString();
+
+                //make sure they enter a email or password
+                if(!emailEditText.getText().toString().isEmpty() && !passwordEditText.getText().toString().isEmpty()) {
+                    //call the function that logs in the user if the email pass is right
+                    userLogin(emailstr, passwordstr);
+                }
+                else{
+                    Toast.makeText(SignInActivity.this,"Enter Email or Password", Toast.LENGTH_SHORT).show();
+                }
             }
         });
 
@@ -177,30 +176,18 @@ public class MainActivity extends AppCompatActivity {
                         //if login was a success then go to home page
                         if(task.isSuccessful()){
                             startActivity(new Intent(getApplicationContext(), HomeActivity.class));
-                            setUID(firebaseAuth.getUid());
-
                         }
                         else{
                             //if login was not a success then give an error msg
                             if (!task.isSuccessful()){
 
-                                Toast.makeText(MainActivity.this, "Username Or password was wrong!", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(SignInActivity.this, "Username Or password was wrong!", Toast.LENGTH_SHORT).show();
 
                             }
                         }
                     }
                 });
 
-    }
-
-    //disable back button
-    @Override
-    public void onBackPressed() {
-        if (true) {
-            //do nothing
-        } else {
-            super.onBackPressed();
-        }
     }
 
     @Override
@@ -235,7 +222,7 @@ public class MainActivity extends AppCompatActivity {
                         } else {
                             // If sign in fails, display a message to the user.
                             System.err.println("signInWithCredential:failed");
-                            Toast.makeText(MainActivity.this, "Authentication failed.",
+                            Toast.makeText(SignInActivity.this, "Authentication failed.",
                                     Toast.LENGTH_SHORT).show();
 
                         }
@@ -270,28 +257,28 @@ public class MainActivity extends AppCompatActivity {
                             {
                                 f_name = object.getString("first_name");
                             }
-                             else{
+                            else{
                                 f_name = object.getString("name");
                             }
 
                             if(object.has("last_name"))
-                             l_name = object.getString("last_name");
+                                l_name = object.getString("last_name");
 
                             if(object.has("name"))
-                             userName = object.getString("name");
+                                userName = object.getString("name");
 
                             if(object.has("email"))
-                             email_id = object.getString("email");
+                                email_id = object.getString("email");
                             //String username = object.getString("username");
 
                             String token = login_result.getAccessToken().getToken();
 
                             System.out.println("+++_=_+_=_+_=_=_+ " + token );
 
-                             picUrl = "https://graph.facebook.com/me/picture?type=normal&method=GET&access_token="+ token;
+                            picUrl = "https://graph.facebook.com/me/picture?type=normal&method=GET&access_token="+ token;
 
-                             List<String> imageList = new ArrayList<String>();
-                             List<BookObject> bookObjects = new ArrayList<BookObject>();
+                            List<String> imageList = new ArrayList<String>();
+                            List<BookObject> bookObjects = new ArrayList<BookObject>();
 
                             dataModel = new DataModel(facebook_id,"@" +userName,email_id,f_name, l_name,picUrl,bookObjects);
 
@@ -299,7 +286,7 @@ public class MainActivity extends AppCompatActivity {
 
                         } catch (JSONException e) {
                             // TODO Auto-generated catch block
-                            Toast.makeText(MainActivity.this,e.getMessage(),Toast.LENGTH_SHORT).show();
+                            Toast.makeText(SignInActivity.this,e.getMessage(),Toast.LENGTH_SHORT).show();
                         }
                     }
                 });
@@ -319,19 +306,18 @@ public class MainActivity extends AppCompatActivity {
 
                 System.out.println("the firebase auth is: " + FirebaseAuth.getInstance().getUid());
                 System.out.println("the firebase auth is: " + firebaseAuth.getUid());
-                dm.setUserID(firebaseAuth.getUid());
                 databaseReference.child("users").child(FirebaseAuth.getInstance().getUid()).setValue(dm);
 
-                    setUID(firebaseAuth.getUid());
+                setUID(firebaseAuth.getUid());
 
 
-                //Toast.makeText(MainActivity.this,FirebaseAuth.getInstance().getUid(), Toast.LENGTH_SHORT).show();
+                //Toast.makeText(SignInActivity.this,FirebaseAuth.getInstance().getUid(), Toast.LENGTH_SHORT).show();
             }
 
         }).addOnFailureListener(new OnFailureListener() {
             @Override
             public void onFailure(@NonNull Exception e) {
-                Toast.makeText(MainActivity.this,"Facebook Data Didnt save", Toast.LENGTH_SHORT).show();
+                Toast.makeText(SignInActivity.this,"Facebook Data Didnt save", Toast.LENGTH_SHORT).show();
             }
         }).addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
             @Override

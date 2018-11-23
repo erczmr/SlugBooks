@@ -7,10 +7,13 @@ import android.net.Uri;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.design.widget.BottomNavigationView;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -59,9 +62,6 @@ public class ProfileActivity extends AppCompatActivity {
 
     TextView name;
     TextView username;
-    Button MESSAGE2;
-    Button profile2;
-    Button Home2;
     ImageView profilePic;
     private LinearLayout lv;
     private LinearLayout.LayoutParams textPrams;
@@ -82,9 +82,6 @@ public class ProfileActivity extends AppCompatActivity {
         storageReference = FirebaseStorage.getInstance().getReference();
 
         name = (TextView) findViewById(R.id.nameID);
-        MESSAGE2 = (Button) findViewById(R.id.messageButton2ID);
-        profile2 = (Button) findViewById(R.id.profileButton2ID);
-        Home2 = (Button) findViewById(R.id.homeButton2ID);
         username = (TextView) findViewById(R.id.usernameID);
 
         System.out.println("id:issssssssssssssssssssssssss:   " + firebaseAuth.getUid() + " +============ "  + MainActivity.getUID());
@@ -97,6 +94,40 @@ public class ProfileActivity extends AppCompatActivity {
         textPrams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
         layoutParams.setMargins(40, 0, 0, 0);
         textPrams.setMargins(40, 100, 0, 0);
+
+        BottomNavigationView bottomNavigationView = (BottomNavigationView) findViewById(R.id.bottom_navigation);
+        BottomNavigationViewHelper.removeShiftMode(bottomNavigationView);
+        Menu menu = bottomNavigationView.getMenu();
+        MenuItem menuItem = menu.getItem(3);
+        menuItem.setChecked(true);
+
+        bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
+            @Override
+            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+                switch (item.getItemId()){
+                    case R.id.action_home:
+                        Intent intent1 = new Intent(ProfileActivity.this, HomeActivity.class);
+                        startActivity(intent1);
+                        break;
+
+                    case R.id.action_sell:
+                        Intent intent2 = new Intent(ProfileActivity.this, AddBookActivity.class);
+                        startActivity(intent2);
+                        break;
+
+                    case R.id.action_messages:
+                        Intent intent3 = new Intent(ProfileActivity.this, InboxActivity.class);
+                        startActivity(intent3);
+                        break;
+
+                    case R.id.action_profile:
+                        break;
+                }
+
+
+                return false;
+            }
+        });
 
     }
     // check to see if user is logged in with facebook

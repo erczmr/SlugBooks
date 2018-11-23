@@ -36,6 +36,7 @@ public class MessageActivity extends AppCompatActivity {
     CircleImageView profile_image;
     TextView username;
     ImageButton btn_send;
+    ImageButton btn_back;
     EditText text_send;
 
     Intent intent;
@@ -74,11 +75,14 @@ public class MessageActivity extends AppCompatActivity {
         username = findViewById(R.id.custom_bar_title);
         btn_send = findViewById(R.id.btn_send);
         text_send = findViewById(R.id.text_send);
-
+        btn_back = findViewById(R.id.custom_bar_back);
         intent = getIntent();
 
         final String userid = intent.getStringExtra("userID");
+        final String userName = intent.getStringExtra("username");
+        System.out.println(userName);
         fuser = FirebaseAuth.getInstance().getCurrentUser();
+        username.setText(userName);
         btn_send.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -91,6 +95,13 @@ public class MessageActivity extends AppCompatActivity {
                 text_send.setText("");
             }
         });
+        btn_back.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(MessageActivity.this,InboxActivity.class);
+                startActivity(intent);
+            }
+        });
 
 
         reference = FirebaseDatabase.getInstance().getReference("users").child(userid);
@@ -99,11 +110,12 @@ public class MessageActivity extends AppCompatActivity {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 DataModel user = dataSnapshot.getValue(DataModel.class);
-                username.setText(user.getUsername());
+                assert user != null;
+                //username.setText(user.getUsername());
                 if(user.getImageUrl().equals("default")){
                     profile_image.setImageResource(R.mipmap.ic_launcher);
                 }else{
-                    Glide.with(MessageActivity.this).load(user.getImageUrl());
+                    Glide.with(getApplicationContext()).load(user.getImageUrl()).into(profile_image);
                 }
 
                 readMessage(fuser.getUid(), userid, user.getImageUrl());

@@ -6,8 +6,11 @@ import android.content.SharedPreferences;
 import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.design.widget.BottomNavigationView;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.webkit.MimeTypeMap;
 import android.widget.Button;
@@ -72,15 +75,47 @@ public class HomeActivity extends AppCompatActivity {
         setContentView(R.layout.activity_home);
         System.out.println("not working ooooooooooooooooo");
 
+        BottomNavigationView bottomNavigationView = (BottomNavigationView) findViewById(R.id.bottom_navigation);
+        BottomNavigationViewHelper.removeShiftMode(bottomNavigationView);
+        Menu menu = bottomNavigationView.getMenu();
+        MenuItem menuItem = menu.getItem(0);
+        menuItem.setChecked(true);
+
         storageReference = FirebaseStorage.getInstance().getReference();
+
         logoutButton = (Button) findViewById(R.id.logoutButtonId);
         searchBar = (SearchView) findViewById(R.id.searchBarID);
         //bookName = (TextView) findViewById(R.id.bookNameID);
         //author = (TextView) findViewById(R.id.bookName2ID);
         //className = (TextView) findViewById(R.id.classID);
-        MESSAGE = (Button) findViewById(R.id.messageButtonID);
-        profile = (Button) findViewById(R.id.profileButtonID);
-        Home = (Button) findViewById(R.id.homeButtonID);
+        bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
+            @Override
+            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+                switch (item.getItemId()){
+                    case R.id.action_home:
+
+                        break;
+
+                    case R.id.action_sell:
+                        Intent intent2 = new Intent(HomeActivity.this, AddBookActivity.class);
+                        startActivity(intent2);
+                        break;
+
+                    case R.id.action_messages:
+                        Intent intent3 = new Intent(HomeActivity.this, InboxActivity.class);
+                        startActivity(intent3);
+                        break;
+
+                    case R.id.action_profile:
+                        Intent intent4 = new Intent(HomeActivity.this, ProfileActivity.class);
+                        startActivity(intent4);
+                        break;
+                }
+
+
+                return false;
+            }
+        });
 
         firebaseAuth = FirebaseAuth.getInstance();
 
@@ -211,14 +246,4 @@ public class HomeActivity extends AppCompatActivity {
             super.onBackPressed();
         }
     }
-
-    public void launchProfileActivity(View view){
-        Intent intent = new Intent (this, ProfileActivity.class);
-        startActivity(intent);
-    }
-
-    public void launchInboxActivity(View view) {
-        Intent intent = new Intent(this, InboxActivity.class);
-        startActivity(intent);
-   }
 }

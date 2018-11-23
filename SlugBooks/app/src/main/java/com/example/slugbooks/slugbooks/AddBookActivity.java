@@ -7,7 +7,10 @@ import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.design.widget.BottomNavigationView;
 import android.support.v7.app.AppCompatActivity;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -93,6 +96,40 @@ public class AddBookActivity extends AppCompatActivity {
         imgUris = new ArrayList<Uri>();
         System.out.println("the refrence at first in addBookpage is: " + storageReference.toString());
         System.out.println("the refrence at first in addBookpage is222: " + storageReference.getPath());
+
+        BottomNavigationView bottomNavigationView = (BottomNavigationView) findViewById(R.id.bottom_navigation);
+        BottomNavigationViewHelper.removeShiftMode(bottomNavigationView);
+        Menu menu = bottomNavigationView.getMenu();
+        MenuItem menuItem = menu.getItem(1);
+        menuItem.setChecked(true);
+
+        bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
+            @Override
+            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+                switch (item.getItemId()){
+                    case R.id.action_home:
+                        Intent intent1 = new Intent(AddBookActivity.this, HomeActivity.class);
+                        startActivity(intent1);
+                        break;
+
+                    case R.id.action_sell:
+                        break;
+
+                    case R.id.action_messages:
+                        Intent intent3 = new Intent(AddBookActivity.this, InboxActivity.class);
+                        startActivity(intent3);
+                        break;
+
+                    case R.id.action_profile:
+                        Intent intent4 = new Intent(AddBookActivity.this, ProfileActivity.class);
+                        startActivity(intent4);
+                        break;
+                }
+
+
+                return false;
+            }
+        });
     }
 
     //get the image from gllery
