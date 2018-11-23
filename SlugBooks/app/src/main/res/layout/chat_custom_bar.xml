@@ -20,7 +20,7 @@
 
     <TextView
         android:id="@+id/custom_bar_title"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignBottom="@+id/custom_bar_image"
         android:layout_alignParentStart="true"
@@ -33,7 +33,7 @@
         android:layout_toStartOf="@+id/custom_bar_image"
         android:layout_toLeftOf="@+id/custom_bar_image"
         android:text="Display Nameeee"
-        android:textColor="@android:color/black"
+        android:textColor="@color/gray"
         android:textSize="18sp"
         android:textStyle="bold" />
 
