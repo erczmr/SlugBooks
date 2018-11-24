@@ -202,11 +202,7 @@ public class AddBookActivity extends AppCompatActivity {
                         bo.add(bookObject);
                         dataModel.setBookObject(bo);
                         databaseReference.child("users").child(firebaseAuth.getUid()).setValue(dataModel);
-
-
                         String getIndex = String.valueOf(bo.size()-1);
-
-
                         pushToCloud(imgUris,imgStrings,getIndex);
                     }
 

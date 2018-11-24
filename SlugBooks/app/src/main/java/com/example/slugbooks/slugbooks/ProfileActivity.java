@@ -89,7 +89,7 @@ public class ProfileActivity extends AppCompatActivity {
         lv = (LinearLayout) findViewById(R.id.profilePageLinearlayout);
 
         //System.out.println("hommmeeeeeeeeeeeeeee: " + HomeActivity.getHomeId());
-        storeDataInObject(ref);
+        storeDataInObject(ref,firebaseAuth);
         layoutParams = new LinearLayout.LayoutParams(250, 250);
         textPrams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
         layoutParams.setMargins(40, 50, 0, 50);
@@ -137,19 +137,16 @@ public class ProfileActivity extends AppCompatActivity {
     }
 
     //this function gets the info from database and store it here
-        private void storeDataInObject(final DatabaseReference refrence) {
+        private void storeDataInObject(final DatabaseReference refrence,final FirebaseAuth mAuth) {
 
-            System.out.println("====================== +++++++= " +
-                    refrence.child("users").child(MainActivity.getUID()));
+            System.out.println("========mAuthhhhh============== +++++++= " + mAuth.getUid());
 
             refrence.addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-
-
                    if(dataSnapshot.getKey().equals("users")) {
                        System.out.println("yoyoyoy ++++++++++++++++++++++++++++++++++++++ database childre : " + dataSnapshot.getChildren().iterator().next());
-                       dataModel = dataSnapshot.child(MainActivity.getUID()).getValue(DataModel.class);
+                       dataModel = dataSnapshot.child(mAuth.getUid()).getValue(DataModel.class);
 
                        System.out.println("The firebase url:" + dataModel.getImageUrl());
 
@@ -203,8 +200,8 @@ public class ProfileActivity extends AppCompatActivity {
 
                                    System.out.println("theeeeee img url iss: " + imgStrings.get(0));
 
-                                   //Picasso.get().load(imgStrings.get(0)).into(img);
-                                   new DownloadImageTask(img).execute(imgStrings.get(0));
+                                   Picasso.get().load(imgStrings.get(0)).into(img);
+                                   //new DownloadImageTask(img).execute(imgStrings.get(0));
                                    //new DownloadImageTask(img).execute(urlsr);
                                    img.setLayoutParams(layoutParams);
                                    lh.addView(img);
