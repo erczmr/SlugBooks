@@ -304,9 +304,16 @@ public class SignInActivity extends AppCompatActivity {
             @Override
             public void onSuccess(AuthResult authResult) {
 
+                boolean isnew = authResult.getAdditionalUserInfo().isNewUser();
+
                 System.out.println("the firebase auth is: " + FirebaseAuth.getInstance().getUid());
                 System.out.println("the firebase auth is: " + firebaseAuth.getUid());
-                databaseReference.child("users").child(FirebaseAuth.getInstance().getUid()).setValue(dm);
+                if(isnew)
+                {
+                    System.out.println("new userssssssssssssssss");
+                    dm.setUserID(firebaseAuth.getUid());
+                    databaseReference.child("users").child(FirebaseAuth.getInstance().getUid()).setValue(dm);
+                }
 
                 setUID(firebaseAuth.getUid());
 

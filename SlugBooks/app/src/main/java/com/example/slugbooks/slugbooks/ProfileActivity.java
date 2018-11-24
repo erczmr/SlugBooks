@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
+import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.BottomNavigationView;
@@ -46,6 +47,7 @@ import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import static java.security.AccessController.getContext;
@@ -87,11 +89,11 @@ public class ProfileActivity extends AppCompatActivity {
         lv = (LinearLayout) findViewById(R.id.profilePageLinearlayout);
 
         //System.out.println("hommmeeeeeeeeeeeeeee: " + HomeActivity.getHomeId());
-        storeDataInObject(ref);
-        layoutParams = new LinearLayout.LayoutParams(400, 400);
+        storeDataInObject(ref,firebaseAuth);
+        layoutParams = new LinearLayout.LayoutParams(250, 250);
         textPrams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
-        layoutParams.setMargins(40, 0, 0, 0);
-        textPrams.setMargins(40, 100, 0, 0);
+        layoutParams.setMargins(40, 50, 0, 50);
+        textPrams.setMargins(40, 50, 0, 50);
 
         BottomNavigationView bottomNavigationView = (BottomNavigationView) findViewById(R.id.bottom_navigation);
         BottomNavigationViewHelper.removeShiftMode(bottomNavigationView);
@@ -135,24 +137,37 @@ public class ProfileActivity extends AppCompatActivity {
     }
 
     //this function gets the info from database and store it here
-        private void storeDataInObject(final DatabaseReference refrence) {
+        private void storeDataInObject(final DatabaseReference refrence,final FirebaseAuth mAuth) {
 
-            System.out.println("====================== +++++++= " +
-                    refrence.child("users").child(firebaseAuth.getUid()));
+            System.out.println("========mAuthhhhh============== +++++++= " + mAuth.getUid());
 
             refrence.addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-
-               if(isLoggedIn()){
                    if(dataSnapshot.getKey().equals("users")) {
-                       System.out.println("I am loggggggggged in: " + firebaseAuth.getUid());
-                       dataModel = dataSnapshot.child(firebaseAuth.getUid()).getValue(DataModel.class);
-                       //if you are on with the facebook button upload the profile picture here
-                       name.setText(dataModel.getFirstName());
+                       System.out.println("yoyoyoy ++++++++++++++++++++++++++++++++++++++ database childre : " + dataSnapshot.getChildren().iterator().next());
+                       dataModel = dataSnapshot.child(mAuth.getUid()).getValue(DataModel.class);
+
+                       System.out.println("The firebase url:" + dataModel.getImageUrl());
+
+                       if(isLoggedIn()){
+                           //if you are on with the facebook button upload the profile picture here
+                           name.setText(dataModel.getFirstName());
+                           new DownloadImageTask(profilePic).execute(dataModel.getImageUrl());
+                           //Picasso.get().load(dataModel.getImageUrl()).into(profilePic);
+                           username.setText(dataModel.getUsername());}
+                           else{
+                       name.setText(dataModel.getFirstName() + " " + dataModel.getLastName());
+
+                       //Picasso.get().load(dataModel.getImageUrl()).into(profilePic);
                        new DownloadImageTask(profilePic).execute(dataModel.getImageUrl());
                        username.setText(dataModel.getUsername());
+                       }
 
+                       System.out.println(" +++++++++++ " + dataModel.getFirstName() + " +++++++++++++ "
+                            + dataModel.getImageUrl());
+
+                        //get the image info and pics
                        if(dataModel.getBookObject() != null)
                        {
                            List<BookObject> bo = dataModel.getBookObject();
@@ -160,32 +175,41 @@ public class ProfileActivity extends AppCompatActivity {
                            {
                                BookObject bookObject = bo.get(i);
 
+                               if(bookObject.getAuthor()== null) bookObject.setAuthor("N/A");
+                               if(bookObject.getBookname()== null) bookObject.setAuthor("N/A");
+                               if(bookObject.getClassStr()== null) bookObject.setAuthor("N/A");
 
-                           }
+                               TextView tx = new TextView(ProfileActivity.this);
+                               tx.setText("Book Title: " + bookObject.getBookname() + "\nAuthor: " + bookObject.getAuthor()
+                                       + "\nClass: " + bookObject.getClassStr());
 
+                               System.out.println("noooooooooo: " + "Book Title: " + bookObject.getBookname() + "\n\nAuthor: " + bookObject.getAuthor()
+                                       + "\n\nClass: " + bookObject.getClassStr());
+                               tx.setTextSize(15);
+                               tx.setLayoutParams(textPrams);
 
-                       }
-                   }
-                }
+                               //System.out.println("the bitmap in view function is: " + bt.toString());
+                               LinearLayout lh = new LinearLayout(ProfileActivity.this);
+                               lh.setOrientation(LinearLayout.HORIZONTAL);
 
-                else{
+                              // img
+                              // img.setImageDrawable(getResources().getDrawable(findViewById(R.drawable.com_facebook_button_icon_white)));
+                               if(bookObject.getImges()!= null) {
+                                   ImageView img = new ImageView(ProfileActivity.this);
+                                   List<String> imgStrings = bookObject.getImges();
 
-                   if(dataSnapshot.getKey().equals("users")) {
-                       System.out.println("yoyoyoy ++++++++++++++++++++++++++++++++++++++ database childre : " + dataSnapshot.getChildren().iterator().next());
-                       dataModel = dataSnapshot.child(firebaseAuth.getUid()).getValue(DataModel.class);
+                                   System.out.println("theeeeee img url iss: " + imgStrings.get(0));
 
-                       System.out.println("The firebase url:" + dataModel.getImageUrl());
+                                   Picasso.get().load(imgStrings.get(0)).into(img);
+                                   //new DownloadImageTask(img).execute(imgStrings.get(0));
+                                   //new DownloadImageTask(img).execute(urlsr);
+                                   img.setLayoutParams(layoutParams);
+                                   lh.addView(img);
+                               }
 
-                       name.setText(dataModel.getFirstName() + " " + dataModel.getLastName());
+                               lh.addView(tx);
+                               lv.addView(lh);
 
-                       Picasso.get().load(dataModel.getImageUrl()).into(profilePic);
-                       username.setText(dataModel.getUsername());
-                       System.out.println(" +++++++++++ " + dataModel.getFirstName() + " +++++++++++++ "
-                            + dataModel.getImageUrl());
-
-                        //get the image info and pics
-                       if(dataModel.getBookObject() != null)
-                       {
 
                        }
                    }

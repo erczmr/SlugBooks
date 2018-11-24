@@ -168,7 +168,6 @@ public class AddBookActivity extends AppCompatActivity {
 
     public void post(View view) {
 
-
         //get the current Datamodel
 
         databaseReference.addChildEventListener(new ChildEventListener() {
@@ -203,11 +202,7 @@ public class AddBookActivity extends AppCompatActivity {
                         bo.add(bookObject);
                         dataModel.setBookObject(bo);
                         databaseReference.child("users").child(firebaseAuth.getUid()).setValue(dataModel);
-
-
                         String getIndex = String.valueOf(bo.size()-1);
-
-
                         pushToCloud(imgUris,imgStrings,getIndex);
                     }
 
@@ -230,7 +225,7 @@ public class AddBookActivity extends AppCompatActivity {
             }
         });
 
-       startActivity(new Intent(AddBookActivity.this,ProfileActivity.class));
+       startActivity(new Intent(AddBookActivity.this,HomeActivity.class));
 
     }
 
@@ -272,7 +267,8 @@ public class AddBookActivity extends AppCompatActivity {
                             //setImageURLstr(downloadUri.toString());
 
                         } else {
-                            Toast.makeText(AddBookActivity.this, "upload failed: " + task.getException().getMessage(), Toast.LENGTH_SHORT).show();
+                            Toast.makeText(AddBookActivity.this, "upload failed: "
+                                    + task.getException().getMessage(), Toast.LENGTH_SHORT).show();
                         }
                     }
                 });
