@@ -3,6 +3,7 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:background="@drawable/white_grey_border_bottom"
     android:padding="10dp">
 
     <de.hdodenhof.circleimageview.CircleImageView
@@ -22,7 +23,7 @@
         android:textSize="18dp"
         android:text="username"
         android:textStyle="bold"
-        android:textColor="@android:color/black"
+        android:textColor="@color/colorAccent"
         />
 
     <TextView
@@ -36,7 +37,7 @@
         android:maxLines="2"
         android:paddingTop="5dp"
         android:text="testing"
-        android:textColor="@android:color/darker_gray" />
+        android:textColor="@color/gray" />
 
 
 </RelativeLayout>

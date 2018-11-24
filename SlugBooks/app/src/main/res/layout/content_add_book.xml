@@ -119,13 +119,13 @@
             android:layout_marginLeft="8dp"
             android:layout_marginEnd="8dp"
             android:layout_marginRight="8dp"
-            android:layout_marginBottom="32dp"
+            android:layout_marginBottom="12dp"
             android:ems="10"
             android:hint="price"
             android:inputType="textPersonName"
             app:layout_constraintBottom_toTopOf="@+id/postButtonID"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintHorizontal_bias="1.0"
             app:layout_constraintStart_toStartOf="parent" />
 
         <Button
@@ -139,8 +139,12 @@
             android:layout_marginBottom="8dp"
             android:layout_weight="1"
             android:onClick="openP"
-            android:text="Add Picture"
+            android:text="A d d  P i c t u r e"
             android:textAllCaps="false"
+            android:background="@drawable/roundedbutton_yellow"
+            android:textColor="@color/white"
+            android:textSize="14dp"
+            app:fontFamily="@font/bebasneue"
             app:layout_constraintBottom_toTopOf="@+id/bookNameEditID"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent" />
@@ -177,12 +181,17 @@
             android:id="@+id/postButtonID"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="16dp"
+            android:layout_marginBottom="68dp"
             android:onClick="post"
-            android:text="Post"
+            android:text="P o s t"
             android:textAllCaps="false"
+            android:background="@drawable/roundedbutton_yellow"
+            android:textColor="@color/white"
+            android:textSize="14dp"
+            app:fontFamily="@font/bebasneue"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.486"
             app:layout_constraintStart_toStartOf="parent" />
 
     </android.support.constraint.ConstraintLayout>

@@ -213,13 +213,6 @@ public class ProfileActivity extends AppCompatActivity {
 
     }
 
-
-    public void launchHomeActivity(View view){
-        Intent intent = new Intent (this, HomeActivity.class);
-        startActivity(intent);
-
-    }
-
     public void addBook(View view) {
         startActivity(new Intent(this, AddBookActivity.class));
     }
