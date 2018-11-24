@@ -229,7 +229,7 @@ public class AddBookActivity extends AppCompatActivity {
             }
         });
 
-       startActivity(new Intent(AddBookActivity.this,ProfileActivity.class));
+       startActivity(new Intent(AddBookActivity.this,HomeActivity.class));
 
     }
 

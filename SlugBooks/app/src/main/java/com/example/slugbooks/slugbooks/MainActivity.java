@@ -2,6 +2,7 @@ package com.example.slugbooks.slugbooks;
 
 import android.content.Intent;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -41,6 +42,9 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FacebookAuthProvider;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.ChildEventListener;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
@@ -119,11 +123,14 @@ public class MainActivity extends AppCompatActivity {
             LoginManager.getInstance().registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
                 @Override
                 public void onSuccess(LoginResult loginResult) {
+
+                    getUserInfo(loginResult);
+
                     startActivity(new Intent(MainActivity.this, HomeActivity.class));
                     finish();
                     // App code
-                    handleFacebookAccessToken(loginResult.getAccessToken());
-                    getUserInfo(loginResult);
+
+
                 }
 
                 @Override
@@ -216,35 +223,6 @@ public class MainActivity extends AppCompatActivity {
         FirebaseUser currentUser = firebaseAuth.getCurrentUser();
     }
 
-
-    private void handleFacebookAccessToken(AccessToken token) {
-        System.err.println("handleFacebookAccessToken");
-
-        AuthCredential credential = FacebookAuthProvider.getCredential(token.getToken());
-        firebaseAuth.signInWithCredential(credential)
-                .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
-                    @Override
-                    public void onComplete(@NonNull Task<AuthResult> task) {
-                        if (task.isSuccessful()) {
-                            // Sign in success, update UI with the signed-in user's information
-                            System.err.println("signInWithCredential:success");
-
-                            setUID(firebaseAuth.getUid());
-                            FirebaseUser user = firebaseAuth.getCurrentUser();
-
-                        } else {
-                            // If sign in fails, display a message to the user.
-                            System.err.println("signInWithCredential:failed");
-                            Toast.makeText(MainActivity.this, "Authentication failed.",
-                                    Toast.LENGTH_SHORT).show();
-
-                        }
-
-                        // ...
-                    }
-                });
-    }
-
     protected void getUserInfo(final LoginResult login_result){
 
         GraphRequest data_request = GraphRequest.newMeRequest(
@@ -284,6 +262,7 @@ public class MainActivity extends AppCompatActivity {
                              email_id = object.getString("email");
                             //String username = object.getString("username");
 
+
                             String token = login_result.getAccessToken().getToken();
 
                             System.out.println("+++_=_+_=_+_=_=_+ " + token );
@@ -316,14 +295,18 @@ public class MainActivity extends AppCompatActivity {
         firebaseAuth.signInWithCredential(credential).addOnSuccessListener(new OnSuccessListener<AuthResult>() {
             @Override
             public void onSuccess(AuthResult authResult) {
+            boolean isnew = authResult.getAdditionalUserInfo().isNewUser();
 
                 System.out.println("the firebase auth is: " + FirebaseAuth.getInstance().getUid());
                 System.out.println("the firebase auth is: " + firebaseAuth.getUid());
-                dm.setUserID(firebaseAuth.getUid());
-                databaseReference.child("users").child(FirebaseAuth.getInstance().getUid()).setValue(dm);
+                if(isnew)
+                {
+                    System.out.println("new userssssssssssssssss");
+                    dm.setUserID(firebaseAuth.getUid());
+                    databaseReference.child("users").child(FirebaseAuth.getInstance().getUid()).setValue(dm);
+                }
 
                     setUID(firebaseAuth.getUid());
-
 
                 //Toast.makeText(MainActivity.this,FirebaseAuth.getInstance().getUid(), Toast.LENGTH_SHORT).show();
             }
@@ -337,6 +320,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onComplete(@NonNull Task<AuthResult> task) {
                 if(!task.isSuccessful()){
+
                     Toast.makeText(getApplicationContext(),"Error logging in", Toast.LENGTH_LONG).show();
                 }else{
                     Toast.makeText(getApplicationContext(),"Login in Successful", Toast.LENGTH_LONG).show();

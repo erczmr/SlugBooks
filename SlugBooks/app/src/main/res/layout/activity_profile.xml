@@ -10,15 +10,17 @@
     <android.support.constraint.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
-    <ImageView
-        android:id="@+id/profilePicImageViewId"
-        android:layout_width="114dp"
-        android:layout_height="99dp"
-        app:layout_constraintBottom_toTopOf="@+id/addBookButtonId"
-        app:layout_constraintEnd_toStartOf="@+id/nameID"
-        app:layout_constraintHorizontal_bias="0.285"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+
+        <ImageView
+            android:id="@+id/profilePicImageViewId"
+            android:layout_width="114dp"
+            android:layout_height="99dp"
+
+            app:layout_constraintBottom_toTopOf="@+id/addBookButtonId"
+            app:layout_constraintEnd_toStartOf="@+id/nameID"
+            app:layout_constraintHorizontal_bias="0.285"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
         android:id="@+id/nameID"
@@ -45,34 +47,33 @@
         app:layout_constraintStart_toEndOf="@id/profilePicImageViewId"
         app:layout_constraintTop_toBottomOf="@+id/nameID" />
 
-    <Button
-        android:id="@+id/addBookButtonId"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="15dp"
-        android:onClick="addBook"
-        android:text="Add Books"
-        app:layout_constraintBottom_toTopOf="@+id/scrolId"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/profilePicImageViewId" />
+        <Button
+            android:id="@+id/addBookButtonId"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
 
-    <ScrollView
-        android:id="@+id/scrolId"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:paddingBottom="100dp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/addBookButtonId"
-        >
+            android:onClick="addBook"
+            android:text="Add Books"
+            app:layout_constraintBottom_toTopOf="@+id/scrolId"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.049"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/profilePicImageViewId" />
 
-        <LinearLayout
-            android:id="@+id/profilePageLinearlayout"
+        <ScrollView
+            android:id="@+id/scrolId"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical"></LinearLayout>
-    </ScrollView>
+            android:paddingBottom="200dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/addBookButtonId">
+
+            <LinearLayout
+                android:id="@+id/profilePageLinearlayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"></LinearLayout>
+        </ScrollView>
 
     </android.support.constraint.ConstraintLayout>
 
