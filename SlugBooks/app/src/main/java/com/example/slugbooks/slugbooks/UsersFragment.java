@@ -46,10 +46,8 @@ public class UsersFragment extends Fragment {
         System.out.println("the uid issss22222: " + firebaseUser.getUid());
 
         readUsers();
-
         return view;
     }
-
     private void readUsers(){
 
         System.out.println("refrece isss: " +reference.toString());
@@ -69,7 +67,6 @@ public class UsersFragment extends Fragment {
                     if(!user.getUserID().equals(firebaseUser.getUid())){
                         mUsers.add(user);
                     }
-
                 }
 
                 System.out.println("the muser issss: " + mUsers + "\n the context is: " + getContext()) ;
@@ -83,5 +80,4 @@ public class UsersFragment extends Fragment {
             }
         });
     }
-
 }
