@@ -12,12 +12,11 @@
         android:layout_height="match_parent"
         android:layout_alignParentStart="true"
         android:layout_alignParentTop="true">
-        android:layout_height="match_parent">
 
-        <ImageView
+        <de.hdodenhof.circleimageview.CircleImageView
             android:id="@+id/profilePicImageViewId"
-            android:layout_width="114dp"
-            android:layout_height="99dp"
+            android:layout_width="115dp"
+            android:layout_height="115dp"
             app:layout_constraintBottom_toTopOf="@+id/addBookButtonId"
             app:layout_constraintEnd_toStartOf="@+id/nameID"
             app:layout_constraintHorizontal_bias="0.285"
