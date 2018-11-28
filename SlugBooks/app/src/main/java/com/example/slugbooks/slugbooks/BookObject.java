@@ -1,8 +1,9 @@
 package com.example.slugbooks.slugbooks;
 
+import java.io.Serializable;
 import java.util.List;
 
-public class BookObject {
+public class BookObject implements Serializable {
 
     String bookname;
     String author;

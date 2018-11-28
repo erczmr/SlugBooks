@@ -68,7 +68,6 @@ public class UsersFragment extends Fragment {
                         mUsers.add(user);
                     }
                 }
-
                 System.out.println("the muser issss: " + mUsers + "\n the context is: " + getContext()) ;
                 userAdapter = new UserAdapter(getContext(), mUsers);
                 recyclerView.setAdapter(userAdapter);
