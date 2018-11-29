@@ -157,8 +157,8 @@ public class ProfileActivity extends AppCompatActivity  {
                        if(isLoggedIn()){
                            //if you are on with the facebook button upload the profile picture here
                            name.setText(dataModel.getFirstName());
-                           new DownloadImageTask(profilePic).execute(dataModel.getImageUrl());
-                           //Picasso.get().load(dataModel.getImageUrl()).into(profilePic);
+                          // new DownloadImageTask(profilePic).execute(dataModel.getImageUrl());
+                           Picasso.get().load(dataModel.getImageUrl()).into(profilePic);
                            username.setText(dataModel.getUsername());}
                            else{
                        name.setText(dataModel.getFirstName() + " " + dataModel.getLastName());
