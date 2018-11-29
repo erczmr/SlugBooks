@@ -437,6 +437,7 @@ public class ImageEditActivity extends AppCompatActivity {
                             System.out.println("the id1 is: " + id1 + "\nthe index is: " + index );
                             System.out.println("the downloaded uri is: " + downloadUri.toString());
                             //setImageURLstr(downloadUri.toString());
+                            lastIndex = (bj.getImges().size()-1)+1;
 
                         } else {
                             Toast.makeText(ImageEditActivity.this, "upload failed: "
