@@ -218,7 +218,8 @@ public class HomeActivity extends AppCompatActivity {
                                             intent.putExtra("book", (Serializable) bookObject);
                                             System.out.println("final i is: " + finalI);
                                             intent.putExtra("index", finalI);
-                                            intent.putExtra("userId",user.getUserID());
+                                            intent.putExtra("userID", user.getUserID());
+                                            intent.putExtra("username", user.getUsername());
                                             startActivity(intent);
 
                                         }

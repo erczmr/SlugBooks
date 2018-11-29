@@ -97,8 +97,10 @@ public class ProfileActivity extends AppCompatActivity  {
         textPrams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
         layoutParams.setMargins(40, 50, 0, 50);
         textPrams.setMargins(40, 50, 0, 50);
+
         buttonPram = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT,LinearLayout.LayoutParams.WRAP_CONTENT);
         buttonPram.setMargins(40,50,0,50);
+
         BottomNavigationView bottomNavigationView = (BottomNavigationView) findViewById(R.id.bottom_navigation);
         BottomNavigationViewHelper.removeShiftMode(bottomNavigationView);
         Menu menu = bottomNavigationView.getMenu();
@@ -219,7 +221,9 @@ public class ProfileActivity extends AppCompatActivity  {
                                    }
 
                                    lh.addView(tx);
+
                                    lh.addView(bt);
+
                                    lv.addView(lh);
 
                                    final int finalI = i;
