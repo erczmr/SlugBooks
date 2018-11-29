@@ -26,4 +26,6 @@ public class PutBookPicInDB extends AsyncTask<String,Void,Void> {
                 .child("bookObject").child(strings[0]).child("imges").child(strings[1]).setValue(strings[2]);
         return null;
     }
+
+
 }

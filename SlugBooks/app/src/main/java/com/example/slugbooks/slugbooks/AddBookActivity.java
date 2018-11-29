@@ -153,7 +153,7 @@ public class AddBookActivity extends AppCompatActivity {
         if(resultCode==RESULT_OK && requestCode == CHOOSE_IMAGE) {
             selectedImage = data.getData();
 
-             ali = selectedImage.toString();
+            ali = selectedImage.toString();
             ImageView newBookImg = new ImageView(this);
 
             newBookImg.setImageURI(selectedImage);
@@ -162,7 +162,7 @@ public class AddBookActivity extends AppCompatActivity {
             linearLayout.addView(newBookImg);
             imgStrings.add(ali);
             imgUris.add(selectedImage);
-           //pushToCloud(selectedImage,ali);
+            //pushToCloud(selectedImage,ali);
         }
     }
 

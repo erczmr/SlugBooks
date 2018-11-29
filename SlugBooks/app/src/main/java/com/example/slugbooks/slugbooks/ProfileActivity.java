@@ -218,7 +218,6 @@ public class ProfileActivity extends AppCompatActivity  {
                                        lh.addView(img);
                                    }
 
-
                                    lh.addView(tx);
                                    lh.addView(bt);
                                    lv.addView(lh);

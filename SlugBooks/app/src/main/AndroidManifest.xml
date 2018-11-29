@@ -68,7 +68,8 @@
         <activity android:name=".ChatsFragment" />
         <activity android:name=".UsersFragment" />
         <activity android:name=".MessageActivity" />
-        <activity android:name=".editBookActivity"></activity>
+        <activity android:name=".editBookActivity" />
+        <activity android:name=".ImageEditActivity"></activity>
     </application>
 
 </manifest>
