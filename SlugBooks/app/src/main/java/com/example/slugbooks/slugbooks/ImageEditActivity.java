@@ -302,25 +302,28 @@ public class ImageEditActivity extends AppCompatActivity {
 
             @Override
             public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-
+                Toast.makeText(ImageEditActivity.this, "Image got chaged2", Toast.LENGTH_SHORT).show();
+                System.out.println("child got changed" );
             }
 
             @Override
             public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {
 
-                Toast.makeText(ImageEditActivity.this, "Image got removed", Toast.LENGTH_SHORT).show();
+                Toast.makeText(ImageEditActivity.this, "Image got removed2", Toast.LENGTH_SHORT).show();
                 System.out.println("child got removied" );
 
             }
 
             @Override
             public void onChildMoved(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-
+                Toast.makeText(ImageEditActivity.this, "Image got movied2", Toast.LENGTH_SHORT).show();
+                System.out.println("child got removied" );
             }
 
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
-
+                Toast.makeText(ImageEditActivity.this, "Image got cancelled2", Toast.LENGTH_SHORT).show();
+                System.out.println("child got removied" );
             }
         });
 
@@ -376,7 +379,7 @@ public class ImageEditActivity extends AppCompatActivity {
                     public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {
 
                         Toast.makeText(ImageEditActivity.this, "Image got removed", Toast.LENGTH_SHORT).show();
-                        System.out.println("child got removied" );
+                        System.out.println("child got removied1" );
 
                     }
 

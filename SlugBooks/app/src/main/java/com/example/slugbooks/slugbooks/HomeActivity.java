@@ -41,6 +41,7 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.squareup.picasso.Picasso;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -143,6 +144,7 @@ public class HomeActivity extends AppCompatActivity {
             }
         });
         mUsers = new ArrayList<>();
+
         postBooks();
     }
 
@@ -151,7 +153,7 @@ public class HomeActivity extends AppCompatActivity {
             @Override
             public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
                 for(DataSnapshot snapshot : dataSnapshot.getChildren()){
-                    DataModel user = snapshot.getValue(DataModel.class);
+                    final DataModel user = snapshot.getValue(DataModel.class);
 
                     assert user != null;
 
@@ -168,7 +170,7 @@ public class HomeActivity extends AppCompatActivity {
                             for(int i = 0; i < bo.size(); i++)
                             {
                                 if(bo.get(i)!=null) {
-                                    BookObject bookObject = bo.get(i);
+                                    final BookObject bookObject = bo.get(i);
 
                                     if (bookObject.getAuthor() == null) bookObject.setAuthor("N/A");
                                     if (bookObject.getBookname() == null)
@@ -204,7 +206,23 @@ public class HomeActivity extends AppCompatActivity {
                                         lh.addView(img);
                                     }
 
+
                                     lh.addView(tx);
+                                    final int finalI = i;
+                                    lh.setOnClickListener(new View.OnClickListener() {
+                                        @Override
+                                        public void onClick(View v) {
+
+                                            Intent intent = new Intent(HomeActivity.this, ShowBookInfoActivity.class);
+                                            //intent.putExtra("book", (Parcelable) bookObject);
+                                            intent.putExtra("book", (Serializable) bookObject);
+                                            System.out.println("final i is: " + finalI);
+                                            intent.putExtra("index", finalI);
+                                            intent.putExtra("userId",user.getUserID());
+                                            startActivity(intent);
+
+                                        }
+                                    });
                                     linearLayout.addView(lh);
 
                                 }

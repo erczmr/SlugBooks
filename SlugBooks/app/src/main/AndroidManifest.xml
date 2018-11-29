@@ -69,7 +69,8 @@
         <activity android:name=".UsersFragment" />
         <activity android:name=".MessageActivity" />
         <activity android:name=".editBookActivity" />
-        <activity android:name=".ImageEditActivity"></activity>
+        <activity android:name=".ImageEditActivity" />
+        <activity android:name=".ShowBookInfoActivity"></activity>
     </application>
 
 </manifest>
