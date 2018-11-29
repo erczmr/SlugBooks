@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
+import android.os.Parcelable;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -44,6 +45,7 @@ import com.squareup.picasso.Picasso;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.Serializable;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
@@ -52,7 +54,7 @@ import java.util.List;
 
 import static java.security.AccessController.getContext;
 
-public class ProfileActivity extends AppCompatActivity {
+public class ProfileActivity extends AppCompatActivity  {
     FirebaseDatabase firebaseDatabase;
     DatabaseReference ref;
     DataModel dataModel;
@@ -66,6 +68,7 @@ public class ProfileActivity extends AppCompatActivity {
     private LinearLayout lv;
     private LinearLayout.LayoutParams textPrams;
     private LinearLayout.LayoutParams layoutParams;
+    private LinearLayout.LayoutParams buttonPram;
 
     String userIDnum;
     File localFile;
@@ -94,7 +97,8 @@ public class ProfileActivity extends AppCompatActivity {
         textPrams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
         layoutParams.setMargins(40, 50, 0, 50);
         textPrams.setMargins(40, 50, 0, 50);
-
+        buttonPram = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT,LinearLayout.LayoutParams.WRAP_CONTENT);
+        buttonPram.setMargins(40,50,0,50);
         BottomNavigationView bottomNavigationView = (BottomNavigationView) findViewById(R.id.bottom_navigation);
         BottomNavigationViewHelper.removeShiftMode(bottomNavigationView);
         Menu menu = bottomNavigationView.getMenu();
@@ -173,43 +177,65 @@ public class ProfileActivity extends AppCompatActivity {
                            List<BookObject> bo = dataModel.getBookObject();
                            for(int i = 0; i < bo.size(); i++)
                            {
-                               BookObject bookObject = bo.get(i);
+                               if(bo.get(i)!=null) {
+                                   final BookObject bookObject = bo.get(i);
 
-                               if(bookObject.getAuthor()== null) bookObject.setAuthor("N/A");
-                               if(bookObject.getBookname()== null) bookObject.setAuthor("N/A");
-                               if(bookObject.getClassStr()== null) bookObject.setAuthor("N/A");
+                                   if (bookObject.getAuthor() == null) bookObject.setAuthor("N/A");
+                                   if (bookObject.getBookname() == null)
+                                       bookObject.setAuthor("N/A");
+                                   if (bookObject.getClassStr() == null)
+                                       bookObject.setAuthor("N/A");
 
-                               TextView tx = new TextView(ProfileActivity.this);
-                               tx.setText("Book Title: " + bookObject.getBookname() + "\nAuthor: " + bookObject.getAuthor()
-                                       + "\nClass: " + bookObject.getClassStr());
 
-                               System.out.println("noooooooooo: " + "Book Title: " + bookObject.getBookname() + "\n\nAuthor: " + bookObject.getAuthor()
-                                       + "\n\nClass: " + bookObject.getClassStr());
-                               tx.setTextSize(15);
-                               tx.setLayoutParams(textPrams);
+                                   TextView tx = new TextView(ProfileActivity.this);
+                                   tx.setText("Book Title: " + bookObject.getBookname() + "\nAuthor: " + bookObject.getAuthor()
+                                           + "\nClass: " + bookObject.getClassStr());
 
-                               //System.out.println("the bitmap in view function is: " + bt.toString());
-                               LinearLayout lh = new LinearLayout(ProfileActivity.this);
-                               lh.setOrientation(LinearLayout.HORIZONTAL);
+                                   System.out.println("noooooooooo: " + "Book Title: " + bookObject.getBookname() + "\n\nAuthor: " + bookObject.getAuthor()
+                                           + "\n\nClass: " + bookObject.getClassStr());
+                                   tx.setTextSize(15);
+                                   tx.setLayoutParams(textPrams);
 
-                              // img
-                              // img.setImageDrawable(getResources().getDrawable(findViewById(R.drawable.com_facebook_button_icon_white)));
-                               if(bookObject.getImges()!= null) {
-                                   ImageView img = new ImageView(ProfileActivity.this);
-                                   List<String> imgStrings = bookObject.getImges();
+                                   Button bt = new Button(ProfileActivity.this);
+                                   bt.setLayoutParams(buttonPram);
+                                   bt.setText("edit");
 
-                                   System.out.println("theeeeee img url iss: " + imgStrings.get(0));
+                                   //System.out.println("the bitmap in view function is: " + bt.toString());
+                                   LinearLayout lh = new LinearLayout(ProfileActivity.this);
+                                   lh.setOrientation(LinearLayout.HORIZONTAL);
 
-                                   Picasso.get().load(imgStrings.get(0)).into(img);
-                                   //new DownloadImageTask(img).execute(imgStrings.get(0));
-                                   //new DownloadImageTask(img).execute(urlsr);
-                                   img.setLayoutParams(layoutParams);
-                                   lh.addView(img);
+                                   // img.setImageDrawable(getResources().getDrawable(findViewById(R.drawable.com_facebook_button_icon_white)));
+                                   if (bookObject.getImges() != null) {
+                                       ImageView img = new ImageView(ProfileActivity.this);
+                                       List<String> imgStrings = bookObject.getImges();
+
+                                       System.out.println("theeeeee img url iss: " + imgStrings.get(0));
+
+                                       Picasso.get().load(imgStrings.get(0)).into(img);
+                                       //new DownloadImageTask(img).execute(imgStrings.get(0));
+                                       //new DownloadImageTask(img).execute(urlsr);
+                                       img.setLayoutParams(layoutParams);
+                                       lh.addView(img);
+                                   }
+
+                                   lh.addView(tx);
+                                   lh.addView(bt);
+                                   lv.addView(lh);
+
+                                   final int finalI = i;
+                                   bt.setOnClickListener(new View.OnClickListener() {
+                                       @Override
+                                       public void onClick(View v) {
+
+                                           Intent intent = new Intent(ProfileActivity.this, editBookActivity.class);
+                                           //intent.putExtra("book", (Parcelable) bookObject);
+                                           intent.putExtra("book", (Serializable) bookObject);
+                                           System.out.println("final i is: " + finalI);
+                                           intent.putExtra("index", finalI);
+                                           startActivity(intent);
+                                       }
+                                   });
                                }
-
-                               lh.addView(tx);
-                               lv.addView(lh);
-
 
                        }
                    }

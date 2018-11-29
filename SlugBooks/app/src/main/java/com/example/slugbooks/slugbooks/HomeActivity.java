@@ -157,21 +157,24 @@ public class HomeActivity extends AppCompatActivity {
 
                     if(user.getUserID()!= null && !user.getUserID().equals( firebaseAuth.getUid())){
                         System.out.println("the ++++ uiddd Issss: " + user.getUserID());
+                        mUsers.add(user);
+                        System.out.println(" +++++++++++ user first name: " + user.getFirstName() + " +++++++++++++ user img url "
+                                + user.getImageUrl());
 
-                            System.out.println(" +++++++++++ user first name: " + user.getFirstName() + " +++++++++++++ user img url "
-                                    + user.getImageUrl());
-
-                            //get the image info and pics
-                            if(user.getBookObject() != null)
+                        //get the image info and pics
+                        if(user.getBookObject() != null)
+                        {
+                            List<BookObject> bo = user.getBookObject();
+                            for(int i = 0; i < bo.size(); i++)
                             {
-                                List<BookObject> bo = user.getBookObject();
-                                for(int i = 0; i < bo.size(); i++)
-                                {
+                                if(bo.get(i)!=null) {
                                     BookObject bookObject = bo.get(i);
 
-                                    if(bookObject.getAuthor()== null) bookObject.setAuthor("N/A");
-                                    if(bookObject.getBookname()== null) bookObject.setAuthor("N/A");
-                                    if(bookObject.getClassStr()== null) bookObject.setAuthor("N/A");
+                                    if (bookObject.getAuthor() == null) bookObject.setAuthor("N/A");
+                                    if (bookObject.getBookname() == null)
+                                        bookObject.setAuthor("N/A");
+                                    if (bookObject.getClassStr() == null)
+                                        bookObject.setAuthor("N/A");
 
                                     TextView tx = new TextView(HomeActivity.this);
                                     tx.setText("Book Title: " + bookObject.getBookname() + "\nAuthor: " + bookObject.getAuthor()
@@ -188,7 +191,7 @@ public class HomeActivity extends AppCompatActivity {
 
                                     // img
                                     // img.setImageDrawable(getResources().getDrawable(findViewById(R.drawable.com_facebook_button_icon_white)));
-                                    if(bookObject.getImges()!= null) {
+                                    if (bookObject.getImges() != null) {
                                         ImageView img = new ImageView(HomeActivity.this);
                                         List<String> imgStrings = bookObject.getImges();
 
@@ -204,9 +207,9 @@ public class HomeActivity extends AppCompatActivity {
                                     lh.addView(tx);
                                     linearLayout.addView(lh);
 
-
                                 }
                             }
+                        }
 
 
 
@@ -218,6 +221,13 @@ public class HomeActivity extends AppCompatActivity {
             @Override
             public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
 
+                DataModel user = dataSnapshot.getValue(DataModel.class);
+                if(user.getUserID() != null)
+                {
+                    System.out.println("********************&&&^^%% it worked: " + user.getUserID());
+
+                }
+                System.out.println("its null");
             }
 
             @Override
