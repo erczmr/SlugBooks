@@ -112,7 +112,7 @@ public class editBookActivity extends AppCompatActivity  {
                          dataModel.setBookObject(bookObjects);
                          databaseReference.child("users").child(firebaseAuth.getUid()).setValue(dataModel);
 
-                            startActivity(new Intent(editBookActivity.this,HomeActivity.class));
+                            startActivity(new Intent(editBookActivity.this,ProfileActivity.class));
 
                     }
                     else{
@@ -123,6 +123,7 @@ public class editBookActivity extends AppCompatActivity  {
 
             @Override
             public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+
 
             }
 
@@ -166,7 +167,7 @@ public class editBookActivity extends AppCompatActivity  {
         databaseReference.child("users").child(firebaseAuth.getUid()).child("bookObject").
                 child(String.valueOf(index)).setValue(bj2);
         System.out.println("the new book name isss: " + bookNameEditText.getText().toString());
-        startActivity(new Intent(editBookActivity.this,HomeActivity.class));
+        startActivity(new Intent(editBookActivity.this,ProfileActivity.class));
     }
 
     public void editPics(View view) {

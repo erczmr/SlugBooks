@@ -151,7 +151,6 @@ public class ProfileActivity extends AppCompatActivity  {
             @Override
             public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
                    if(dataSnapshot.getKey().equals("users")) {
-                       System.out.println("yoyoyoy ++++++++++++++++++++++++++++++++++++++ database childre : " + dataSnapshot.getChildren().iterator().next());
                        dataModel = dataSnapshot.child(mAuth.getUid()).getValue(DataModel.class);
 
                        System.out.println("The firebase url:" + dataModel.getImageUrl());
@@ -159,8 +158,8 @@ public class ProfileActivity extends AppCompatActivity  {
                        if(isLoggedIn()){
                            //if you are on with the facebook button upload the profile picture here
                            name.setText(dataModel.getFirstName());
-                          // new DownloadImageTask(profilePic).execute(dataModel.getImageUrl());
-                           Picasso.get().load(dataModel.getImageUrl()).into(profilePic);
+                           new DownloadImageTask(profilePic).execute(dataModel.getImageUrl());
+                          // Picasso.get().load(dataModel.getImageUrl()).into(profilePic);
                            username.setText(dataModel.getUsername());}
                            else{
                        name.setText(dataModel.getFirstName() + " " + dataModel.getLastName());
@@ -211,9 +210,15 @@ public class ProfileActivity extends AppCompatActivity  {
                                        ImageView img = new ImageView(ProfileActivity.this);
                                        List<String> imgStrings = bookObject.getImges();
 
-                                       System.out.println("theeeeee img url iss: " + imgStrings.get(0));
+                                     int index = 0;
 
-                                       Picasso.get().load(imgStrings.get(0)).into(img);
+
+                                               while(imgStrings.get(index) == null )
+                                               {
+                                                   index++;
+
+                                               }
+                                       Picasso.get().load(imgStrings.get(index)).into(img);
                                        //new DownloadImageTask(img).execute(imgStrings.get(0));
                                        //new DownloadImageTask(img).execute(urlsr);
                                        img.setLayoutParams(layoutParams);
@@ -250,6 +255,9 @@ public class ProfileActivity extends AppCompatActivity  {
 
             @Override
             public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+                lv.removeAllViews();
+
+                onChildAdded(dataSnapshot,s);
             }
 
             @Override

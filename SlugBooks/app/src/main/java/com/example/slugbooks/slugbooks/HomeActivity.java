@@ -199,6 +199,12 @@ public class HomeActivity extends AppCompatActivity {
 
                                         System.out.println("theeeeee img url iss: " + imgStrings.get(0));
 
+                                        int index = 0;
+                                        while(imgStrings.get(index) == null )
+                                        {
+                                            index++;
+
+                                        }
                                         Picasso.get().load(imgStrings.get(0)).into(img);
                                         //new DownloadImageTask(img).execute(imgStrings.get(0));
                                         //new DownloadImageTask(img).execute(urlsr);
@@ -240,13 +246,8 @@ public class HomeActivity extends AppCompatActivity {
             @Override
             public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
 
-                DataModel user = dataSnapshot.getValue(DataModel.class);
-                if(user.getUserID() != null)
-                {
-                    System.out.println("********************&&&^^%% it worked: " + user.getUserID());
-
-                }
-                System.out.println("its null");
+                linearLayout.removeAllViews();
+                onChildAdded(dataSnapshot,s);
             }
 
             @Override

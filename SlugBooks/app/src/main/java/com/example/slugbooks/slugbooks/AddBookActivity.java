@@ -174,11 +174,6 @@ public class AddBookActivity extends AppCompatActivity {
             @Override
             public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
 
-
-                    System.out.println("yoyoyoy ++++++++++++++++++++++++++++++++++++++ other stuff : " + dataSnapshot.getRef() );
-                    System.out.println("yoyoyoy ++++++++++++++++++++++++++++++++++++++ other key : " + dataSnapshot.getKey() );
-                    System.out.println("yoyoyoy ++++++++++++++++++++++++++++++++++++++ other key : " + dataSnapshot.getValue() );
-
                     if(dataSnapshot.getKey().equals("users")) {
                         List<String> imgUrls = new ArrayList<String>();
                         bookObject = new BookObject(bookNameEditText.getText().toString(),authorEditText.getText().toString(),
@@ -225,7 +220,7 @@ public class AddBookActivity extends AppCompatActivity {
             }
         });
 
-       startActivity(new Intent(AddBookActivity.this,HomeActivity.class));
+       startActivity(new Intent(AddBookActivity.this,ProfileActivity.class));
 
     }
 

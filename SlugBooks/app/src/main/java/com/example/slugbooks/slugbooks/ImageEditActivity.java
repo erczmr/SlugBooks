@@ -34,7 +34,7 @@ import java.util.List;
 
 public class ImageEditActivity extends AppCompatActivity {
 
-    private BookObject bj;
+    private BookObject jj;
     private List<String> images;
     private static int index;
 
@@ -89,120 +89,118 @@ public class ImageEditActivity extends AppCompatActivity {
         buttonPram.setMargins(40, 50, 0, 50);
 
         Bundle bundle = getIntent().getExtras();
-        bj = (BookObject) bundle.getSerializable("book");
-        System.out.println("author name is: " + bj.getAuthor());
-        lastIndex = bj.getImges().size()-1;
-        index = bundle.getInt("index");
+        jj = (BookObject) bundle.getSerializable("book");
+        System.out.println("author name is: " + jj.getAuthor());
 
+        index = bundle.getInt("index");
+        System.out.println("the index is: " + index);
          displayImages();
     }
 
     private void displayImages() {
 
-        Bundle bundle = getIntent().getExtras();
-        bj = (BookObject) bundle.getSerializable("book");
-        System.out.println("author name is: " + bj.getAuthor());
-        lastIndex = bj.getImges().size()-1;
-        index = bundle.getInt("index");
-        if (bj.getImges() != null) {
-            List<String> img = bj.getImges();
-            for (int i = 0; i < img.size(); i++) {
-                if (img.get(i) != null) {
-                    final String bookImg = img.get(i);
+        databaseReference.addChildEventListener(new ChildEventListener() {
+            @Override
+            public void onChildAdded(@NonNull final DataSnapshot dataSnapshot, @Nullable String s) {
+                if(dataSnapshot.getKey().equals("users")) {
+                    System.out.println("the frikin id is: " + firebaseAuth.getUid());
+                    dataModel = dataSnapshot.child(firebaseAuth.getUid()).getValue(DataModel.class);
+                    for (int j = 0; j < dataModel.bookObject.size(); j++) {
+                        if (j == index) {
+                            BookObject bj = dataModel.bookObject.get(index);
+                            if (bj.getImges() != null) {
+                                List<String> img = bj.getImges();
+                                for (int i = 0; i < img.size(); i++) {
+                                    if (img.get(i) != null) {
+                                        final String bookImg = img.get(i);
 
-                    Button bt = new Button(ImageEditActivity.this);
-                    bt.setLayoutParams(buttonPram);
-                    bt.setText("Delete");
+                                        Button bt = new Button(ImageEditActivity.this);
+                                        bt.setLayoutParams(buttonPram);
+                                        bt.setText("Delete");
 
-                    //System.out.println("the bitmap in view function is: " + bt.toString());
-                    LinearLayout lh = new LinearLayout(ImageEditActivity.this);
-                    lh.setOrientation(LinearLayout.HORIZONTAL);
+                                        //System.out.println("the bitmap in view function is: " + bt.toString());
+                                        final LinearLayout lh = new LinearLayout(ImageEditActivity.this);
+                                        lh.setOrientation(LinearLayout.HORIZONTAL);
 
-                    // img.setImageDrawable(getResources().getDrawable(findViewById(R.drawable.com_facebook_button_icon_white)));
+                                        // img.setImageDrawable(getResources().getDrawable(findViewById(R.drawable.com_facebook_button_icon_white)));
 
-                    ImageView image = new ImageView(ImageEditActivity.this);
+                                        ImageView image = new ImageView(ImageEditActivity.this);
 
-                    Picasso.get().load(img.get(i)).into(image);
-                    //new DownloadImageTask(img).execute(imgStrings.get(0));
-                    //new DownloadImageTask(img).execute(urlsr);
-                    image.setLayoutParams(layoutParams);
-                    lh.addView(image);
+                                        Picasso.get().load(img.get(i)).into(image);
+                                        //new DownloadImageTask(img).execute(imgStrings.get(0));
+                                        //new DownloadImageTask(img).execute(urlsr);
+                                        image.setLayoutParams(layoutParams);
+                                        lh.addView(image);
 
 
-                    lh.addView(bt);
-                    lv.addView(lh);
+                                        lh.addView(bt);
+                                        lv.addView(lh);
 
-                    final int finalI = i;
-                   bt.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
+                                        lastIndex = bj.getImges().size() - 1;
+                                        final int finalI = i;
+                                        bt.setOnClickListener(new View.OnClickListener() {
+                                            @Override
+                                            public void onClick(View v) {
+                                                if (firebaseAuth.getUid() != null) {
 
-                            databaseReference.addChildEventListener(new ChildEventListener() {
-                                @Override
-                                public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+                                                    dataModel = dataSnapshot.child(firebaseAuth.getUid()).getValue(DataModel.class);
 
-                                    if(dataSnapshot.getKey().equals("users"))
-                                    {
+                                                    if (dataModel.getBookObject() != null) {
+                                                        bookObjects = dataModel.getBookObject();
 
-                                        if(firebaseAuth.getUid() != null) {
+                                                        if (bookObjects.get(index).getImges() != null) {
+                                                            bookImgStr = bookObjects.get(index).getImges();
+                                                            bookImgStr.set(finalI, null);
+                                                            lv.removeView(lh);
 
-                                            dataModel = dataSnapshot.child(firebaseAuth.getUid()).getValue(DataModel.class);
+                                                            bookObjects.get(index).setImges(bookImgStr);
 
-                                            if(dataModel.getBookObject()!=null) {
-                                                bookObjects = dataModel.getBookObject();
+                                                            dataModel.setBookObject(bookObjects);
 
-                                                if(bookObjects.get(index).getImges()!= null)
-                                                {
-                                                    bookImgStr =   bookObjects.get(index).getImges();
-                                                    bookImgStr.set(finalI,null);
+                                                            databaseReference.child("users").child(firebaseAuth.getUid()).setValue(dataModel);
+                                                        }
 
-                                                    bookObjects.get(index).setImges(bookImgStr);
+                                                        dataModel.setBookObject(bookObjects);
 
-                                                    dataModel.setBookObject(bookObjects);
-
-                                                    databaseReference.child("users").child(firebaseAuth.getUid()).setValue(dataModel);
+                                                    }
+                                                } else {
+                                                    System.out.println("firebase auth is null : " + firebaseAuth.getUid());
                                                 }
 
-                                                dataModel.setBookObject(bookObjects);
-
                                             }
-                                        }
-                                        else{
-                                            System.out.println("firebase auth is null : " + firebaseAuth.getUid());
-                                        }
+                                        });
+
                                     }
                                 }
 
-                                @Override
-                                public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-
-                                }
-
-                                @Override
-                                public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {
-
-                                    Toast.makeText(ImageEditActivity.this, "Image got removed", Toast.LENGTH_SHORT).show();
-                                    System.out.println("child got removied" );
-
-                                }
-
-                                @Override
-                                public void onChildMoved(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-
-                                }
-
-                                @Override
-                                public void onCancelled(@NonNull DatabaseError databaseError) {
-
-                                }
-                            });
-
+                            }
                         }
-                    });
+                    }
                 }
+            }
+
+            @Override
+            public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+                lv.removeAllViews();
+            onChildAdded(dataSnapshot,s);
+            }
+
+            @Override
+            public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {
 
             }
-        }
+
+            @Override
+            public void onChildMoved(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+
 
 
     }
@@ -302,28 +300,24 @@ public class ImageEditActivity extends AppCompatActivity {
 
             @Override
             public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-                Toast.makeText(ImageEditActivity.this, "Image got chaged2", Toast.LENGTH_SHORT).show();
-                System.out.println("child got changed" );
+
             }
 
             @Override
             public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {
 
-                Toast.makeText(ImageEditActivity.this, "Image got removed2", Toast.LENGTH_SHORT).show();
-                System.out.println("child got removied" );
+
 
             }
 
             @Override
             public void onChildMoved(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-                Toast.makeText(ImageEditActivity.this, "Image got movied2", Toast.LENGTH_SHORT).show();
-                System.out.println("child got removied" );
+
             }
 
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
-                Toast.makeText(ImageEditActivity.this, "Image got cancelled2", Toast.LENGTH_SHORT).show();
-                System.out.println("child got removied" );
+
             }
         });
 
@@ -350,7 +344,8 @@ public class ImageEditActivity extends AppCompatActivity {
 
                                         System.out.println("the index isss: " + index);
                                         bookImgStr = bookObjects.get(index).getImges();
-                                        bookImgStr.set(bookImgStr.size()-1,null);
+
+                                        bookImgStr.set(bookImgStr.size(),null);
 
                                         bookObjects.get(index).setImges(bookImgStr);
 
@@ -378,8 +373,7 @@ public class ImageEditActivity extends AppCompatActivity {
                     @Override
                     public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {
 
-                        Toast.makeText(ImageEditActivity.this, "Image got removed", Toast.LENGTH_SHORT).show();
-                        System.out.println("child got removied1" );
+
 
                     }
 
@@ -440,7 +434,6 @@ public class ImageEditActivity extends AppCompatActivity {
                             System.out.println("the id1 is: " + id1 + "\nthe index is: " + index );
                             System.out.println("the downloaded uri is: " + downloadUri.toString());
                             //setImageURLstr(downloadUri.toString());
-                            lastIndex = (bj.getImges().size()-1)+1;
 
                         } else {
                             Toast.makeText(ImageEditActivity.this, "upload failed: "
