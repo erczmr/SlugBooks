@@ -101,7 +101,6 @@ public class HomeActivity extends AppCompatActivity {
         layoutParams.setMargins(40, 50, 0, 50);
         textPrams.setMargins(40, 50, 0, 50);
 
-        logoutButton = (Button) findViewById(R.id.logoutButtonId);
         searchBar = (SearchView) findViewById(R.id.searchBarID);
         //bookName = (TextView) findViewById(R.id.bookNameID);
         //author = (TextView) findViewById(R.id.bookName2ID);
@@ -137,12 +136,6 @@ public class HomeActivity extends AppCompatActivity {
 
         databaseReference = FirebaseDatabase.getInstance().getReference();
         firebaseStorage = FirebaseStorage.getInstance();
-        logoutButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                logoutUser();
-            }
-        });
         mUsers = new ArrayList<>();
 
         postBooks();
@@ -267,19 +260,6 @@ public class HomeActivity extends AppCompatActivity {
 
     }
 
-    public void logoutUser(){
-        //if the user loged in with thier facebook or not
-        if(isLoggedIn())
-        {
-            //logout from the facebook
-            LoginManager.getInstance().logOut();
-        }
-        //logout from the firebase
-        firebaseAuth.signOut();
-        if(firebaseAuth.getCurrentUser() == null);
-        startActivity(new Intent(HomeActivity.this, MainActivity.class));
-        finish();
-    }
     // check to see if user is logged in with facebook
     public boolean isLoggedIn() {
         AccessToken accessToken = AccessToken.getCurrentAccessToken();

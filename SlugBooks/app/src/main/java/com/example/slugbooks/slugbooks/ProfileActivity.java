@@ -24,6 +24,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.facebook.AccessToken;
+import com.facebook.login.LoginManager;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
@@ -64,6 +65,7 @@ public class ProfileActivity extends AppCompatActivity  {
 
     TextView name;
     TextView username;
+    TextView logout;
     ImageView profilePic;
     private LinearLayout lv;
     private LinearLayout.LayoutParams textPrams;
@@ -78,6 +80,7 @@ public class ProfileActivity extends AppCompatActivity  {
         setContentView(R.layout.activity_profile);
         firebaseAuth = FirebaseAuth.getInstance();
         profilePic = findViewById(R.id.profilePicImageViewId);
+        logout = findViewById(R.id.logOutTextview);
         firebaseDatabase = FirebaseDatabase.getInstance();
         ref = firebaseDatabase.getReference();
 
@@ -132,6 +135,13 @@ public class ProfileActivity extends AppCompatActivity  {
 
 
                 return false;
+            }
+        });
+
+        logout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                logoutUser();
             }
         });
 
@@ -190,7 +200,7 @@ public class ProfileActivity extends AppCompatActivity  {
 
 
                                    TextView tx = new TextView(ProfileActivity.this);
-                                   tx.setText("Book Title: " + bookObject.getBookname() + "\nAuthor: " + bookObject.getAuthor()
+                                   tx.setText("Title: " + bookObject.getBookname() + "\nAuthor: " + bookObject.getAuthor()
                                            + "\nClass: " + bookObject.getClassStr());
 
                                    System.out.println("noooooooooo: " + "Book Title: " + bookObject.getBookname() + "\n\nAuthor: " + bookObject.getAuthor()
@@ -265,6 +275,20 @@ public class ProfileActivity extends AppCompatActivity  {
             }
         });
 
+    }
+
+    public void logoutUser(){
+        //if the user loged in with thier facebook or not
+        if(isLoggedIn())
+        {
+            //logout from the facebook
+            LoginManager.getInstance().logOut();
+        }
+        //logout from the firebase
+        firebaseAuth.signOut();
+        if(firebaseAuth.getCurrentUser() == null);
+        startActivity(new Intent(ProfileActivity.this, MainActivity.class));
+        finish();
     }
 
     public void addBook(View view) {
