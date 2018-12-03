@@ -55,7 +55,7 @@ public class ProfileActivity extends AppCompatActivity  {
     TextView username;
     TextView logout;
     ImageView profilePic;
-    private RelativeLayout rl;
+
     private LinearLayout lv;
     private LinearLayout.LayoutParams textPrams;
     private LinearLayout.LayoutParams layoutParams;
@@ -83,19 +83,13 @@ public class ProfileActivity extends AppCompatActivity  {
 
         lv = (LinearLayout) findViewById(R.id.profilePageLinearlayout);
 
-
-        RelativeLayout.LayoutParams lp = new RelativeLayout.LayoutParams
-                (RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
-        lp.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
-
-
        // lv.setGravity(Gravity.CENTER);
 
         //System.out.println("hommmeeeeeeeeeeeeeee: " + HomeActivity.getHomeId());
         storeDataInObject(ref,firebaseAuth);
         layoutParams = new LinearLayout.LayoutParams(250, 250);
         textPrams = new LinearLayout.LayoutParams(950, 250);
-        buttonPram = new LinearLayout.LayoutParams(100, 100);
+        buttonPram = new LinearLayout.LayoutParams(150, 150);
 
         layoutParams.setMargins(20, 50, 0, 50);
         textPrams.setMargins(20, 30, 0, 50);
@@ -159,7 +153,6 @@ public class ProfileActivity extends AppCompatActivity  {
             @Override
             public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
                    if(dataSnapshot.getKey().equals("users")) {
-                       System.out.println("yoyoyoy ++++++++++++++++++++++++++++++++++++++ database childre : " + dataSnapshot.getChildren().iterator().next());
                        dataModel = dataSnapshot.child(mAuth.getUid()).getValue(DataModel.class);
 
                        System.out.println("The firebase url:" + dataModel.getImageUrl());
@@ -167,8 +160,8 @@ public class ProfileActivity extends AppCompatActivity  {
                        if(isLoggedIn()){
                            //if you are on with the facebook button upload the profile picture here
                            name.setText(dataModel.getFirstName());
-                          // new DownloadImageTask(profilePic).execute(dataModel.getImageUrl());
-                           Picasso.get().load(dataModel.getImageUrl()).into(profilePic);
+                           new DownloadImageTask(profilePic).execute(dataModel.getImageUrl());
+                          // Picasso.get().load(dataModel.getImageUrl()).into(profilePic);
                            username.setText(dataModel.getUsername());}
                            else{
                        name.setText(dataModel.getFirstName() + " " + dataModel.getLastName());
@@ -197,35 +190,39 @@ public class ProfileActivity extends AppCompatActivity  {
                                        bookObject.setAuthor("N/A");
 
                                    Button bt = new Button(ProfileActivity.this);
-                                   bt.setBackgroundResource(R.drawable.ic_message_yellow_24dp);
+                                   bt.setBackgroundResource(R.drawable.ic_edit_yellow_24dp);
                                    bt.setLayoutParams(buttonPram);
 
 
                                    TextView tx = new TextView(ProfileActivity.this);
-                                   Typeface bebas = ResourcesCompat.getFont(ProfileActivity.this, R.font.romand);
+                                   Typeface romand = ResourcesCompat.getFont(ProfileActivity.this, R.font.romand);
+                                   Typeface cour = ResourcesCompat.getFont(ProfileActivity.this, R.font.cour);
+
                                    String beg = "";
                                    String title = bookObject.getBookname();
                                    String author = "\nBy " + bookObject.getAuthor()
                                            + "\n";
                                    String for1 = "For ";
                                    String forclass = bookObject.getClassStr();
+
                                    tx.setText(beg + title + author + for1 + forclass, TextView.BufferType.SPANNABLE);
-                                   Spannable sp = (Spannable)tx.getText();
+
                                    int start = beg.length();
                                    int end = start + title.length();
                                    int start1 = end + author.length() + for1.length();
                                    int end1 = start1 + forclass.length();
+
+                                   Spannable sp = (Spannable)tx.getText();
                                    sp.setSpan(new ForegroundColorSpan(getResources().getColor(R.color.colorPrimaryDark)), start, end, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-                                   sp.setSpan(new CustomTypefaceSpan("", bebas), start, end, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                                   sp.setSpan(new CustomTypefaceSpan("", romand), start, end, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
                                    sp.setSpan(new RelativeSizeSpan(.95f), start, end, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
                                    sp.setSpan(new android.text.style.StyleSpan(android.graphics.Typeface.BOLD), start, end1, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-
                                    sp.setSpan(new ForegroundColorSpan(getResources().getColor(R.color.colorAccent)), start1, end1, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
 
                                    System.out.println("noooooooooo: " + "Book Title: " + bookObject.getBookname() + "\n\nAuthor: " + bookObject.getAuthor()
                                            + "\n\nClass: " + bookObject.getClassStr());
+
                                    tx.setTextSize(15);
-                                   Typeface cour = ResourcesCompat.getFont(ProfileActivity.this, R.font.cour);
                                    tx.setTypeface(cour);
                                    tx.setAllCaps(true);
                                    tx.setLayoutParams(textPrams);
@@ -241,9 +238,15 @@ public class ProfileActivity extends AppCompatActivity  {
                                        ImageView img = new ImageView(ProfileActivity.this);
                                        List<String> imgStrings = bookObject.getImges();
 
-                                       System.out.println("theeeeee img url iss: " + imgStrings.get(0));
+                                     int index = 0;
 
-                                       Picasso.get().load(imgStrings.get(0)).into(img);
+
+                                               while(imgStrings.get(index) == null )
+                                               {
+                                                   index++;
+
+                                               }
+                                       Picasso.get().load(imgStrings.get(index)).into(img);
                                        //new DownloadImageTask(img).execute(imgStrings.get(0));
                                        //new DownloadImageTask(img).execute(urlsr);
                                        img.setLayoutParams(layoutParams);
@@ -280,6 +283,9 @@ public class ProfileActivity extends AppCompatActivity  {
 
             @Override
             public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+                lv.removeAllViews();
+
+                onChildAdded(dataSnapshot,s);
             }
 
             @Override
