@@ -1,33 +1,31 @@
 package com.example.slugbooks.slugbooks;
 
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.net.Uri;
-import android.os.Parcelable;
-import android.provider.MediaStore;
+import android.graphics.Typeface;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.BottomNavigationView;
+import android.support.v4.content.res.ResourcesCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.text.TextUtils;
-import android.util.Log;
+import android.text.Html;
+import android.text.Spannable;
+import android.text.SpannableStringBuilder;
+import android.text.style.ForegroundColorSpan;
+import android.text.style.RelativeSizeSpan;
+import android.text.style.TypefaceSpan;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.facebook.AccessToken;
+import com.facebook.Profile;
 import com.facebook.login.LoginManager;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.ChildEventListener;
@@ -35,25 +33,15 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
 
 
-import com.example.slugbooks.slugbooks.HomeActivity;
-import com.google.firebase.storage.FileDownloadTask;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.squareup.picasso.Picasso;
 
 import java.io.File;
-import java.io.IOException;
 import java.io.Serializable;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
-
-import static java.security.AccessController.getContext;
 
 public class ProfileActivity extends AppCompatActivity  {
     FirebaseDatabase firebaseDatabase;
@@ -67,6 +55,7 @@ public class ProfileActivity extends AppCompatActivity  {
     TextView username;
     TextView logout;
     ImageView profilePic;
+    private RelativeLayout rl;
     private LinearLayout lv;
     private LinearLayout.LayoutParams textPrams;
     private LinearLayout.LayoutParams layoutParams;
@@ -94,15 +83,24 @@ public class ProfileActivity extends AppCompatActivity  {
 
         lv = (LinearLayout) findViewById(R.id.profilePageLinearlayout);
 
+
+        RelativeLayout.LayoutParams lp = new RelativeLayout.LayoutParams
+                (RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
+        lp.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
+
+
+       // lv.setGravity(Gravity.CENTER);
+
         //System.out.println("hommmeeeeeeeeeeeeeee: " + HomeActivity.getHomeId());
         storeDataInObject(ref,firebaseAuth);
         layoutParams = new LinearLayout.LayoutParams(250, 250);
-        textPrams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
-        layoutParams.setMargins(40, 50, 0, 50);
-        textPrams.setMargins(40, 50, 0, 50);
+        textPrams = new LinearLayout.LayoutParams(950, 250);
+        buttonPram = new LinearLayout.LayoutParams(100, 100);
 
-        buttonPram = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT,LinearLayout.LayoutParams.WRAP_CONTENT);
-        buttonPram.setMargins(40,50,0,50);
+        layoutParams.setMargins(20, 50, 0, 50);
+        textPrams.setMargins(20, 30, 0, 50);
+        buttonPram.setMargins(20,100,40,0);
+
 
         BottomNavigationView bottomNavigationView = (BottomNavigationView) findViewById(R.id.bottom_navigation);
         BottomNavigationViewHelper.removeShiftMode(bottomNavigationView);
@@ -198,19 +196,41 @@ public class ProfileActivity extends AppCompatActivity  {
                                    if (bookObject.getClassStr() == null)
                                        bookObject.setAuthor("N/A");
 
+                                   Button bt = new Button(ProfileActivity.this);
+                                   bt.setBackgroundResource(R.drawable.ic_message_yellow_24dp);
+                                   bt.setLayoutParams(buttonPram);
+
 
                                    TextView tx = new TextView(ProfileActivity.this);
-                                   tx.setText("Title: " + bookObject.getBookname() + "\nAuthor: " + bookObject.getAuthor()
-                                           + "\nClass: " + bookObject.getClassStr());
+                                   Typeface bebas = ResourcesCompat.getFont(ProfileActivity.this, R.font.romand);
+                                   String beg = "";
+                                   String title = bookObject.getBookname();
+                                   String author = "\nBy " + bookObject.getAuthor()
+                                           + "\n";
+                                   String for1 = "For ";
+                                   String forclass = bookObject.getClassStr();
+                                   tx.setText(beg + title + author + for1 + forclass, TextView.BufferType.SPANNABLE);
+                                   Spannable sp = (Spannable)tx.getText();
+                                   int start = beg.length();
+                                   int end = start + title.length();
+                                   int start1 = end + author.length() + for1.length();
+                                   int end1 = start1 + forclass.length();
+                                   sp.setSpan(new ForegroundColorSpan(getResources().getColor(R.color.colorPrimaryDark)), start, end, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                                   sp.setSpan(new CustomTypefaceSpan("", bebas), start, end, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                                   sp.setSpan(new RelativeSizeSpan(.95f), start, end, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                                   sp.setSpan(new android.text.style.StyleSpan(android.graphics.Typeface.BOLD), start, end1, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+
+                                   sp.setSpan(new ForegroundColorSpan(getResources().getColor(R.color.colorAccent)), start1, end1, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
 
                                    System.out.println("noooooooooo: " + "Book Title: " + bookObject.getBookname() + "\n\nAuthor: " + bookObject.getAuthor()
                                            + "\n\nClass: " + bookObject.getClassStr());
                                    tx.setTextSize(15);
+                                   Typeface cour = ResourcesCompat.getFont(ProfileActivity.this, R.font.cour);
+                                   tx.setTypeface(cour);
+                                   tx.setAllCaps(true);
                                    tx.setLayoutParams(textPrams);
 
-                                   Button bt = new Button(ProfileActivity.this);
-                                   bt.setLayoutParams(buttonPram);
-                                   bt.setText("edit");
+
 
                                    //System.out.println("the bitmap in view function is: " + bt.toString());
                                    LinearLayout lh = new LinearLayout(ProfileActivity.this);
@@ -231,10 +251,10 @@ public class ProfileActivity extends AppCompatActivity  {
                                    }
 
                                    lh.addView(tx);
-
                                    lh.addView(bt);
-
                                    lv.addView(lh);
+
+
 
                                    final int finalI = i;
                                    bt.setOnClickListener(new View.OnClickListener() {

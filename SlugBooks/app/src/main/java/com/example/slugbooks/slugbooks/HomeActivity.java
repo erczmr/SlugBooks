@@ -49,15 +49,8 @@ import java.util.List;
 public class HomeActivity extends AppCompatActivity {
 
     SearchView searchBar;
-    //TextView bookName;
-    //TextView author;
-    //TextView className;
-    Button MESSAGE;
-    Button profile;
-    Button Home;
     public static String imgurl;
 
-    private Button logoutButton;
     private FirebaseAuth firebaseAuth;
     private FirebaseDatabase firebaseDatabase;
     private DatabaseReference databaseReference;

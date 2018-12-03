@@ -21,11 +21,9 @@
             android:id="@+id/profilePicImageViewId"
             android:layout_width="115dp"
             android:layout_height="115dp"
-            android:layout_marginLeft="25dp"
-            android:layout_marginTop="50dp"
-            app:layout_constraintEnd_toStartOf="@+id/nameID"
-            app:layout_constraintHorizontal_bias="0.285"
-            app:layout_constraintHorizontal_chainStyle="packed"
+            android:layout_marginTop="36dp"
+            android:paddingLeft="15dp"
+            android:paddingTop="10dp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
@@ -33,17 +31,16 @@
             android:id="@+id/nameID"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="20dp"
-            android:layout_marginLeft="20dp"
-            android:layout_marginTop="50dp"
+            android:layout_marginStart="40dp"
+            android:layout_marginLeft="40dp"
+            android:layout_marginTop="48dp"
+            android:paddingTop="20dp"
             android:text="Name"
             android:textColor="@color/colorPrimaryDark"
             android:textSize="35dp"
             app:fontFamily="@font/bebasneue"
-            app:layout_constraintBottom_toTopOf="@+id/usernameID"
             app:layout_constraintStart_toEndOf="@id/profilePicImageViewId"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.0" />
+            app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
             android:id="@+id/usernameID"
@@ -52,82 +49,81 @@
             android:text="username"
             android:textColor="@color/gray"
             android:textSize="20dp"
-            android:paddingLeft="5dp"
             app:fontFamily="@font/bebasneue"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.097"
+            app:layout_constraintHorizontal_bias="0.251"
             app:layout_constraintStart_toEndOf="@id/profilePicImageViewId"
             app:layout_constraintTop_toBottomOf="@+id/nameID" />
 
         <Button
             android:id="@+id/addBookButtonId"
-            android:layout_width="match_parent"
+            android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:layout_marginBottom="16dp"
+            android:layout_marginTop="24dp"
             android:background="@color/colorAccent"
             android:onClick="addBook"
             android:text="A d d  B o o k s"
             android:textColor="@color/white"
-            android:textSize="20dp"
+            android:textSize="16dp"
             app:fontFamily="@font/bebasneue"
-            app:layout_constraintBottom_toTopOf="@+id/scrolId"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.083"
+            app:layout_constraintHorizontal_bias="0.053"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/profilePicImageViewId"
-            app:layout_constraintVertical_bias="1.0" />
+            app:layout_constraintTop_toBottomOf="@+id/profilePicImageViewId" />
 
         <ScrollView
             android:id="@+id/scrolId"
             android:layout_width="match_parent"
-            android:layout_height="349dp"
+            android:layout_height="330dp"
+            android:layout_marginTop="8dp"
             android:layout_marginBottom="8dp"
             android:paddingBottom="0dp"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintBottom_toTopOf="@id/bottom_navigation"
-            app:layout_constraintStart_toStartOf="parent">
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/addBookButtonId"
+            app:layout_constraintVertical_bias="0.158">
 
             <LinearLayout
                 android:id="@+id/profilePageLinearlayout"
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"></LinearLayout>
+
         </ScrollView>
 
         <TextView
             android:id="@+id/logOutTextview"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="20dp"
             android:layout_marginStart="8dp"
             android:layout_marginLeft="8dp"
             android:layout_marginTop="8dp"
-            android:layout_marginEnd="8dp"
-            android:layout_marginRight="8dp"
+            android:layout_marginEnd="15dp"
+            android:layout_marginRight="15dp"
             android:layout_marginBottom="8dp"
             android:text="L O G  O U T"
             android:textColor="@color/colorAccent"
-            android:textSize="16dp"
+            android:textSize="19dp"
             app:fontFamily="@font/bebasneue"
             app:layout_constraintBottom_toTopOf="@+id/scrolId"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.916"
+            app:layout_constraintHorizontal_bias="0.844"
             app:layout_constraintStart_toEndOf="@+id/nameID"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.0" />
+            app:layout_constraintVertical_bias="0.024" />
 
         <android.support.design.widget.BottomNavigationView
             android:id="@+id/bottom_navigation"
             android:layout_width="match_parent"
             android:layout_height="50dp"
             android:background="@drawable/white_grey_border_top"
-            app:menu="@menu/bottom_navigation_main"
             app:itemIconTint="@drawable/selector"
             app:itemTextColor="@drawable/selector"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toRightOf="parent" />
+            app:layout_constraintRight_toRightOf="parent"
+            app:menu="@menu/bottom_navigation_main" />
 
     </android.support.constraint.ConstraintLayout>
 
