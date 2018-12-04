@@ -8,6 +8,8 @@ import android.support.design.widget.BottomNavigationView;
 import android.support.v4.content.res.ResourcesCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.text.Html;
 import android.text.Spannable;
 import android.text.SpannableStringBuilder;
@@ -41,6 +43,7 @@ import com.squareup.picasso.Picasso;
 
 import java.io.File;
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 
 public class ProfileActivity extends AppCompatActivity  {
@@ -56,13 +59,10 @@ public class ProfileActivity extends AppCompatActivity  {
     TextView logout;
     ImageView profilePic;
 
-    private LinearLayout lv;
-    private LinearLayout.LayoutParams textPrams;
-    private LinearLayout.LayoutParams layoutParams;
-    private LinearLayout.LayoutParams buttonPram;
+    private ProfileAdapter adapter;
+    private List<BookObject> dataModelArrayList;
 
-    String userIDnum;
-    File localFile;
+    private int ind;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -72,7 +72,7 @@ public class ProfileActivity extends AppCompatActivity  {
         logout = findViewById(R.id.logOutTextview);
         firebaseDatabase = FirebaseDatabase.getInstance();
         ref = firebaseDatabase.getReference();
-
+        dataModelArrayList = new ArrayList<BookObject>();
         user = firebaseAuth.getCurrentUser();
         storageReference = FirebaseStorage.getInstance().getReference();
 
@@ -81,19 +81,10 @@ public class ProfileActivity extends AppCompatActivity  {
 
         System.out.println("id:issssssssssssssssssssssssss:   " + firebaseAuth.getUid() + " +============ "  + MainActivity.getUID());
 
-        lv = (LinearLayout) findViewById(R.id.profilePageLinearlayout);
-
        // lv.setGravity(Gravity.CENTER);
 
         //System.out.println("hommmeeeeeeeeeeeeeee: " + HomeActivity.getHomeId());
         storeDataInObject(ref,firebaseAuth);
-        layoutParams = new LinearLayout.LayoutParams(250, 250);
-        textPrams = new LinearLayout.LayoutParams(950, 250);
-        buttonPram = new LinearLayout.LayoutParams(150, 150);
-
-        layoutParams.setMargins(20, 50, 0, 50);
-        textPrams.setMargins(20, 30, 0, 50);
-        buttonPram.setMargins(20,100,40,0);
 
 
         BottomNavigationView bottomNavigationView = (BottomNavigationView) findViewById(R.id.bottom_navigation);
@@ -138,6 +129,16 @@ public class ProfileActivity extends AppCompatActivity  {
         });
 
     }
+
+    private void setUpRecyclerView() {
+        RecyclerView recyclerView = findViewById(R.id.recycler_view);
+        recyclerView.setHasFixedSize(true);
+        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this);
+        adapter = new ProfileAdapter(ProfileActivity.this,dataModelArrayList,ind);
+        recyclerView.setLayoutManager(layoutManager);
+        recyclerView.setAdapter(adapter);
+    }
+
     // check to see if user is logged in with facebook
     public boolean isLoggedIn() {
         AccessToken accessToken = AccessToken.getCurrentAccessToken();
@@ -152,6 +153,101 @@ public class ProfileActivity extends AppCompatActivity  {
             refrence.addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+                    if(dataSnapshot.getKey().equals("users")) {
+                        dataModel = dataSnapshot.child(mAuth.getUid()).getValue(DataModel.class);
+
+                        System.out.println("The firebase url:" + dataModel.getImageUrl());
+
+                        if(isLoggedIn()){
+                            //if you are on with the facebook button upload the profile picture here
+                            name.setText(dataModel.getFirstName());
+                            new DownloadImageTask(profilePic).execute(dataModel.getImageUrl());
+                            // Picasso.get().load(dataModel.getImageUrl()).into(profilePic);
+                            username.setText(dataModel.getUsername());}
+                        else{
+                            name.setText(dataModel.getFirstName() + " " + dataModel.getLastName());
+
+                            //Picasso.get().load(dataModel.getImageUrl()).into(profilePic);
+                            new DownloadImageTask(profilePic).execute(dataModel.getImageUrl());
+                            username.setText(dataModel.getUsername());
+                        }
+
+                        //get the image info and pics
+                        if(dataModel.getBookObject() != null)
+                        {
+                            List<BookObject> bo = dataModel.getBookObject();
+                            for(int i = 0; i < bo.size(); i++)
+                            {
+                                if(bo.get(i)!=null) {
+                                    final BookObject bookObject = bo.get(i);
+
+                                    if (bookObject.getAuthor() == null) bookObject.setAuthor("N/A");
+                                    if (bookObject.getBookname() == null)
+                                        bookObject.setAuthor("N/A");
+                                    if (bookObject.getClassStr() == null)
+                                        bookObject.setAuthor("N/A");
+
+                                    dataModelArrayList.add(bookObject);
+                                    ind = i;
+                                }
+                            }
+                        }
+                    }
+                System.out.println("object issssssssss: it works" );
+                if (!dataModelArrayList.isEmpty()){
+                    for (int j = 0; j < dataModelArrayList.size(); j++) {
+                        System.out.println("object " + j + " issss: " + dataModelArrayList.get(j).getBookname());
+                    }
+                }else
+                    System.out.println("noooo objects");
+                    setUpRecyclerView();
+                }
+
+            @Override
+            public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+                onChildAdded(dataSnapshot,s);
+            }
+
+            @Override
+            public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {
+            }
+
+            @Override
+            public void onChildMoved(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+            }
+        });
+
+    }
+
+    public void logoutUser(){
+        //if the user loged in with thier facebook or not
+        if(isLoggedIn())
+        {
+            //logout from the facebook
+            LoginManager.getInstance().logOut();
+        }
+        //logout from the firebase
+        firebaseAuth.signOut();
+        if(firebaseAuth.getCurrentUser() == null);
+        startActivity(new Intent(ProfileActivity.this, MainActivity.class));
+        finish();
+    }
+
+    public void addBook(View view) {
+        startActivity(new Intent(this, AddBookActivity.class));
+    }
+
+    public void messageBut(View view) {
+        startActivity(new Intent(this, InboxActivity.class));
+    }
+
+    /*
+
+     public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
                    if(dataSnapshot.getKey().equals("users")) {
                        dataModel = dataSnapshot.child(mAuth.getUid()).getValue(DataModel.class);
 
@@ -188,6 +284,8 @@ public class ProfileActivity extends AppCompatActivity  {
                                        bookObject.setAuthor("N/A");
                                    if (bookObject.getClassStr() == null)
                                        bookObject.setAuthor("N/A");
+
+                                   dataModelArrayList.add(bookObject);
 
                                    Button bt = new Button(ProfileActivity.this);
                                    bt.setBackgroundResource(R.drawable.ic_edit_yellow_24dp);
@@ -278,50 +376,7 @@ public class ProfileActivity extends AppCompatActivity  {
                    }
                }
 
-
+                setUpRecyclerView();
             }
-
-            @Override
-            public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-                lv.removeAllViews();
-
-                onChildAdded(dataSnapshot,s);
-            }
-
-            @Override
-            public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {
-            }
-
-            @Override
-            public void onChildMoved(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-            }
-        });
-
-    }
-
-    public void logoutUser(){
-        //if the user loged in with thier facebook or not
-        if(isLoggedIn())
-        {
-            //logout from the facebook
-            LoginManager.getInstance().logOut();
-        }
-        //logout from the firebase
-        firebaseAuth.signOut();
-        if(firebaseAuth.getCurrentUser() == null);
-        startActivity(new Intent(ProfileActivity.this, MainActivity.class));
-        finish();
-    }
-
-    public void addBook(View view) {
-        startActivity(new Intent(this, AddBookActivity.class));
-    }
-
-    public void messageBut(View view) {
-        startActivity(new Intent(this, InboxActivity.class));
-    }
+     */
 }

@@ -71,7 +71,8 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/profilePicImageViewId" />
 
-        <ScrollView
+
+        <!--<ScrollView
             android:id="@+id/scrolId"
             android:layout_width="match_parent"
             android:layout_height="330dp"
@@ -81,7 +82,7 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/addBookButtonId"
-            app:layout_constraintVertical_bias="0.158">
+            app:layout_constraintVertical_bias="0.0">
 
             <LinearLayout
                 android:id="@+id/profilePageLinearlayout"
@@ -90,7 +91,7 @@
                 android:orientation="vertical"></LinearLayout>
 
         </ScrollView>
-
+-->
         <TextView
             android:id="@+id/logOutTextview"
             android:layout_width="wrap_content"
@@ -105,13 +106,26 @@
             android:textColor="@color/colorAccent"
             android:textSize="19dp"
             app:fontFamily="@font/bebasneue"
-            app:layout_constraintBottom_toTopOf="@+id/scrolId"
+
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.844"
             app:layout_constraintStart_toEndOf="@+id/nameID"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintVertical_bias="0.024" />
 
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/recycler_view"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+
+            android:layout_below="@+id/searchBarID"
+
+            android:padding="4dp"
+            android:scrollbars="vertical"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/addBookButtonId" />
         <android.support.design.widget.BottomNavigationView
             android:id="@+id/bottom_navigation"
             android:layout_width="match_parent"
