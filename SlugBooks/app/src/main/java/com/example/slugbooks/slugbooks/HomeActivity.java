@@ -103,9 +103,9 @@ public class HomeActivity extends AppCompatActivity {
 
         logoutButton = (Button) findViewById(R.id.logoutButtonId);
         searchBar = (SearchView) findViewById(R.id.searchBarID);
-        //bookName = (TextView) findViewById(R.id.bookNameID);
-        //author = (TextView) findViewById(R.id.bookName2ID);
-        //className = (TextView) findViewById(R.id.classID);
+
+
+        
         bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
