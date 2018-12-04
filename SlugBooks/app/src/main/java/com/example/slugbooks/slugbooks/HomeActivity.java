@@ -11,6 +11,8 @@ import android.support.design.widget.BottomNavigationView;
 import android.support.v4.content.res.ResourcesCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.text.Spannable;
 import android.text.style.ForegroundColorSpan;
 import android.text.style.RelativeSizeSpan;
@@ -79,6 +81,10 @@ public class HomeActivity extends AppCompatActivity {
     static String homeId;
     private FirebaseUser user;
 
+    private ExampleAdapter adapter;
+
+    private List<BookObject> dataModelArrayList;
+
     private static String userIdNum = "";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -92,7 +98,7 @@ public class HomeActivity extends AppCompatActivity {
         MenuItem menuItem = menu.getItem(0);
         menuItem.setChecked(true);
 
-        linearLayout = (LinearLayout) findViewById(R.id.homepageLinearLayoutId);
+        //linearLayout = (LinearLayout) findViewById(R.id.homepageLinearLayoutId);
         storageReference = FirebaseStorage.getInstance().getReference();
 
         layoutParams = new LinearLayout.LayoutParams(250, 250);
@@ -105,6 +111,7 @@ public class HomeActivity extends AppCompatActivity {
 
         searchBar = (SearchView) findViewById(R.id.searchBarID);
 
+        dataModelArrayList = new ArrayList<BookObject>();
         bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
@@ -138,31 +145,46 @@ public class HomeActivity extends AppCompatActivity {
         firebaseStorage = FirebaseStorage.getInstance();
         mUsers = new ArrayList<>();
 
-        postBooks();
+        //postBooks();
+       getStoreInfo();
+
+        //the new layout with the search
+        searchBar.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+               // System.out.println("the filter issss: " + adapter.getFilter());
+                adapter.getFilter().filter(newText);
+                return false;
+            }
+        });
+
+
     }
 
-    private void postBooks() {
+    private void getStoreInfo() {
+
         databaseReference.addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-                for(DataSnapshot snapshot : dataSnapshot.getChildren()){
+                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                     final DataModel user = snapshot.getValue(DataModel.class);
 
                     assert user != null;
 
-                    if(user.getUserID()!= null && !user.getUserID().equals( firebaseAuth.getUid())){
-                        System.out.println("the ++++ uiddd Issss: " + user.getUserID());
+                    if (user.getUserID() != null && !user.getUserID().equals(firebaseAuth.getUid())) {
                         mUsers.add(user);
-                        System.out.println(" +++++++++++ user first name: " + user.getFirstName() + " +++++++++++++ user img url "
-                                + user.getImageUrl());
 
                         //get the image info and pics
-                        if(user.getBookObject() != null)
-                        {
+                        if (user.getBookObject() != null) {
                             List<BookObject> bo = user.getBookObject();
-                            for(int i = 0; i < bo.size(); i++)
-                            {
-                                if(bo.get(i)!=null) {
+
+                            for (int i = 0; i < bo.size(); i++) {
+                                if (bo.get(i) != null) {
                                     final BookObject bookObject = bo.get(i);
 
                                     if (bookObject.getAuthor() == null) bookObject.setAuthor("N/A");
@@ -170,7 +192,97 @@ public class HomeActivity extends AppCompatActivity {
                                         bookObject.setAuthor("N/A");
                                     if (bookObject.getClassStr() == null)
                                         bookObject.setAuthor("N/A");
+                                    dataModelArrayList.add(bookObject);
 
+                                }
+
+                            }
+                        }
+                    }
+                }
+                System.out.println("object issssssssss: it works" );
+                if (!dataModelArrayList.isEmpty()){
+                    for (int j = 0; j < dataModelArrayList.size(); j++) {
+                        System.out.println("object " + j + " issss: " + dataModelArrayList.get(j).getBookname());
+                    }
+                }else
+                    System.out.println("noooo objects");
+
+                setUpRecyclerView();
+            }
+
+            @Override
+            public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+
+
+            }
+
+            @Override
+            public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {
+
+            }
+
+            @Override
+            public void onChildMoved(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+
+
+    }
+
+
+
+
+
+
+
+
+
+
+    private void setUpRecyclerView() {
+        RecyclerView recyclerView = findViewById(R.id.recycler_view);
+        recyclerView.setHasFixedSize(true);
+        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this);
+        adapter = new ExampleAdapter(dataModelArrayList);
+        recyclerView.setLayoutManager(layoutManager);
+        recyclerView.setAdapter(adapter);
+    }
+
+    private void postBooks() {
+        databaseReference.addChildEventListener(new ChildEventListener() {
+            @Override
+            public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                    final DataModel user = snapshot.getValue(DataModel.class);
+
+                    assert user != null;
+
+                    if (user.getUserID() != null && !user.getUserID().equals(firebaseAuth.getUid())) {
+                        System.out.println("the ++++ uiddd Issss: " + user.getUserID());
+                        mUsers.add(user);
+                        System.out.println(" +++++++++++ user first name: " + user.getFirstName() + " +++++++++++++ user img url "
+                                + user.getImageUrl());
+
+                        //get the image info and pics
+                        if (user.getBookObject() != null) {
+                            List<BookObject> bo = user.getBookObject();
+
+                            for (int i = 0; i < bo.size(); i++) {
+                                if (bo.get(i) != null) {
+                                    final BookObject bookObject = bo.get(i);
+
+                                    if (bookObject.getAuthor() == null) bookObject.setAuthor("N/A");
+                                    if (bookObject.getBookname() == null)
+                                        bookObject.setAuthor("N/A");
+                                    if (bookObject.getClassStr() == null)
+                                        bookObject.setAuthor("N/A");
+                                    dataModelArrayList.add(bookObject);
                                     Button bt = new Button(HomeActivity.this);
                                     bt.setBackgroundResource(R.drawable.ic_message_yellow_24dp);
                                     bt.setLayoutParams(buttonPram);
@@ -184,7 +296,7 @@ public class HomeActivity extends AppCompatActivity {
                                     String for1 = "For ";
                                     String forclass = bookObject.getClassStr();
                                     tx.setText(beg + title + author + for1 + forclass, TextView.BufferType.SPANNABLE);
-                                    Spannable sp = (Spannable)tx.getText();
+                                    Spannable sp = (Spannable) tx.getText();
                                     int start = beg.length();
                                     int end = start + title.length();
                                     int start1 = end + author.length() + for1.length();
@@ -217,8 +329,7 @@ public class HomeActivity extends AppCompatActivity {
                                         System.out.println("theeeeee img url iss: " + imgStrings.get(0));
 
                                         int index = 0;
-                                        while(imgStrings.get(index) == null )
-                                        {
+                                        while (imgStrings.get(index) == null) {
                                             index++;
 
                                         }
@@ -233,6 +344,7 @@ public class HomeActivity extends AppCompatActivity {
                                     lh.addView(tx);
                                     lh.addView(bt);
                                     linearLayout.addView(lh);
+
 
 // -------------------------------- UNCOMMENT WHEN CAN DIRECT TO MESSAGES WITH SPECIFIC USER
  /*                                   final int finalI = i;
@@ -270,18 +382,22 @@ public class HomeActivity extends AppCompatActivity {
                             }
                         }
 
-
-
-
                     }
                 }
+                System.out.println("object issssssssss: it works" );
+                if (!dataModelArrayList.isEmpty()){
+                    for (int j = 0; j < dataModelArrayList.size(); j++) {
+                        System.out.println("object " + j + " issss: " + dataModelArrayList.get(j).getBookname());
+                    }
+                }else
+                System.out.println("noooo objects");
             }
 
             @Override
             public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
 
                 linearLayout.removeAllViews();
-                onChildAdded(dataSnapshot,s);
+                onChildAdded(dataSnapshot, s);
             }
 
             @Override
