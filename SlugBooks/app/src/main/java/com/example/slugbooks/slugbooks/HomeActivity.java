@@ -3,12 +3,17 @@ package com.example.slugbooks.slugbooks;
 import android.content.ContentResolver;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Typeface;
 import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.BottomNavigationView;
+import android.support.v4.content.res.ResourcesCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.text.Spannable;
+import android.text.style.ForegroundColorSpan;
+import android.text.style.RelativeSizeSpan;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -49,15 +54,8 @@ import java.util.List;
 public class HomeActivity extends AppCompatActivity {
 
     SearchView searchBar;
-    //TextView bookName;
-    //TextView author;
-    //TextView className;
-    Button MESSAGE;
-    Button profile;
-    Button Home;
     public static String imgurl;
 
-    private Button logoutButton;
     private FirebaseAuth firebaseAuth;
     private FirebaseDatabase firebaseDatabase;
     private DatabaseReference databaseReference;
@@ -69,9 +67,10 @@ public class HomeActivity extends AppCompatActivity {
         return homeId;
     }
 
+    private LinearLayout linearLayout;
     private LinearLayout.LayoutParams textPrams;
     private LinearLayout.LayoutParams layoutParams;
-    private LinearLayout linearLayout;
+    private LinearLayout.LayoutParams buttonPram;
 
     public static void setHomeId(String homeId) {
         HomeActivity.homeId = homeId;
@@ -97,15 +96,15 @@ public class HomeActivity extends AppCompatActivity {
         storageReference = FirebaseStorage.getInstance().getReference();
 
         layoutParams = new LinearLayout.LayoutParams(250, 250);
-        textPrams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
-        layoutParams.setMargins(40, 50, 0, 50);
-        textPrams.setMargins(40, 50, 0, 50);
+        textPrams = new LinearLayout.LayoutParams(950, 250);
+        buttonPram = new LinearLayout.LayoutParams(150, 150);
 
-        logoutButton = (Button) findViewById(R.id.logoutButtonId);
+        layoutParams.setMargins(20, 50, 0, 50);
+        textPrams.setMargins(20, 30, 0, 50);
+        buttonPram.setMargins(20,100,40,0);
+
         searchBar = (SearchView) findViewById(R.id.searchBarID);
 
-
-        
         bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
@@ -137,12 +136,6 @@ public class HomeActivity extends AppCompatActivity {
 
         databaseReference = FirebaseDatabase.getInstance().getReference();
         firebaseStorage = FirebaseStorage.getInstance();
-        logoutButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                logoutUser();
-            }
-        });
         mUsers = new ArrayList<>();
 
         postBooks();
@@ -178,13 +171,37 @@ public class HomeActivity extends AppCompatActivity {
                                     if (bookObject.getClassStr() == null)
                                         bookObject.setAuthor("N/A");
 
+                                    Button bt = new Button(HomeActivity.this);
+                                    bt.setBackgroundResource(R.drawable.ic_message_yellow_24dp);
+                                    bt.setLayoutParams(buttonPram);
+
                                     TextView tx = new TextView(HomeActivity.this);
-                                    tx.setText("Book Title: " + bookObject.getBookname() + "\nAuthor: " + bookObject.getAuthor()
-                                            + "\nClass: " + bookObject.getClassStr());
+                                    Typeface bebas = ResourcesCompat.getFont(HomeActivity.this, R.font.romand);
+                                    String beg = "";
+                                    String title = bookObject.getBookname();
+                                    String author = "\nBy " + bookObject.getAuthor()
+                                            + "\n";
+                                    String for1 = "For ";
+                                    String forclass = bookObject.getClassStr();
+                                    tx.setText(beg + title + author + for1 + forclass, TextView.BufferType.SPANNABLE);
+                                    Spannable sp = (Spannable)tx.getText();
+                                    int start = beg.length();
+                                    int end = start + title.length();
+                                    int start1 = end + author.length() + for1.length();
+                                    int end1 = start1 + forclass.length();
+                                    sp.setSpan(new ForegroundColorSpan(getResources().getColor(R.color.colorPrimaryDark)), start, end, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                                    sp.setSpan(new CustomTypefaceSpan("", bebas), start, end, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                                    sp.setSpan(new RelativeSizeSpan(.95f), start, end, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                                    sp.setSpan(new android.text.style.StyleSpan(android.graphics.Typeface.BOLD), start, end1, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+
+                                    sp.setSpan(new ForegroundColorSpan(getResources().getColor(R.color.colorAccent)), start1, end1, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
 
                                     System.out.println("noooooooooo: " + "Book Title: " + bookObject.getBookname() + "\n\nAuthor: " + bookObject.getAuthor()
                                             + "\n\nClass: " + bookObject.getClassStr());
                                     tx.setTextSize(15);
+                                    Typeface cour = ResourcesCompat.getFont(HomeActivity.this, R.font.cour);
+                                    tx.setTypeface(cour);
+                                    tx.setAllCaps(true);
                                     tx.setLayoutParams(textPrams);
 
                                     //System.out.println("the bitmap in view function is: " + bt.toString());
@@ -214,6 +231,24 @@ public class HomeActivity extends AppCompatActivity {
 
 
                                     lh.addView(tx);
+                                    lh.addView(bt);
+                                    linearLayout.addView(lh);
+
+// -------------------------------- UNCOMMENT WHEN CAN DIRECT TO MESSAGES WITH SPECIFIC USER
+ /*                                   final int finalI = i;
+                                    bt.setOnClickListener(new View.OnClickListener() {
+                                        @Override
+                                        public void onClick(View v) {
+
+                                            Intent intent = new Intent(ProfileActivity.this, editBookActivity.class);
+                                            //intent.putExtra("book", (Parcelable) bookObject);
+                                            intent.putExtra("book", (Serializable) bookObject);
+                                            System.out.println("final i is: " + finalI);
+                                            intent.putExtra("index", finalI);
+                                            startActivity(intent);
+                                        }
+                                    });
+ */
                                     final int finalI = i;
                                     lh.setOnClickListener(new View.OnClickListener() {
                                         @Override
@@ -230,7 +265,6 @@ public class HomeActivity extends AppCompatActivity {
 
                                         }
                                     });
-                                    linearLayout.addView(lh);
 
                                 }
                             }
@@ -268,19 +302,6 @@ public class HomeActivity extends AppCompatActivity {
 
     }
 
-    public void logoutUser(){
-        //if the user loged in with thier facebook or not
-        if(isLoggedIn())
-        {
-            //logout from the facebook
-            LoginManager.getInstance().logOut();
-        }
-        //logout from the firebase
-        firebaseAuth.signOut();
-        if(firebaseAuth.getCurrentUser() == null);
-        startActivity(new Intent(HomeActivity.this, MainActivity.class));
-        finish();
-    }
     // check to see if user is logged in with facebook
     public boolean isLoggedIn() {
         AccessToken accessToken = AccessToken.getCurrentAccessToken();

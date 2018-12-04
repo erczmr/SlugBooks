@@ -21,7 +21,6 @@ import android.widget.Toast;
 import com.google.android.gms.tasks.Continuation;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.ChildEventListener;
@@ -32,7 +31,6 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
-import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -78,7 +76,7 @@ public class AddBookActivity extends AppCompatActivity {
         authorEditText = (EditText) findViewById(R.id.authorEditID);
         descripEditText = (EditText) findViewById(R.id.descriptionEditID);
         classEditText = (EditText) findViewById(R.id.classEditID);
-        editionEditText = (EditText) findViewById(R.id.edititionEditID);
+        editionEditText = (EditText) findViewById(R.id.editionEditID);
         conditionEditText = (EditText) findViewById(R.id.conditionEditID);
         priceEditText = (EditText) findViewById(R.id.priceEditID);
 

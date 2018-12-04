@@ -1,17 +1,12 @@
 package com.example.slugbooks.slugbooks;
 
 import android.content.Intent;
-import android.media.Image;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.TextView;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.ChildEventListener;
@@ -19,10 +14,8 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.squareup.picasso.Picasso;
 
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.List;
 
 public class editBookActivity extends AppCompatActivity  {
@@ -55,9 +48,10 @@ public class editBookActivity extends AppCompatActivity  {
         authorEditText = (EditText) findViewById(R.id.authorEditID);
         descripEditText = (EditText) findViewById(R.id.descriptionEditID);
         classEditText = (EditText) findViewById(R.id.classEditID);
-        editionEditText = (EditText) findViewById(R.id.edititionEditID);
+        editionEditText = (EditText) findViewById(R.id.editionEditID);
         conditionEditText = (EditText) findViewById(R.id.conditionEditID);
         priceEditText = (EditText) findViewById(R.id.priceEditID);
+
 
         System.out.println("the user id is: " + firebaseAuth.getUid());
         getData();

@@ -10,16 +10,17 @@
 
     <LinearLayout
         android:id="@+id/horizantalId"
-        android:layout_width="326dp"
+        android:layout_width="350dp"
         android:layout_height="wrap_content"
         android:layout_marginLeft="40dp"
-        android:layout_marginRight="45dp"
-        android:layout_marginBottom="16dp"
+        android:layout_marginRight="40dp"
+        android:layout_marginBottom="24dp"
         android:baselineAligned="true"
+        android:gravity="center_horizontal"
         android:orientation="horizontal"
         app:layout_constraintBottom_toTopOf="@+id/userNameEditTextID"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.494"
+        app:layout_constraintHorizontal_bias="0.491"
         app:layout_constraintStart_toStartOf="parent">
 
         <EditText
@@ -27,8 +28,10 @@
             android:layout_width="133dp"
             android:layout_height="wrap_content"
             android:layout_marginRight="20dp"
+            android:fontFamily="@font/cour"
             android:hint="First Name:"
             android:inputType="textPersonName"
+            android:textStyle="bold"
             app:layout_constraintEnd_toStartOf="@+id/lastNameID"
             app:layout_constraintStart_toStartOf="parent"
             tools:layout_editor_absoluteY="173dp" />
@@ -38,8 +41,10 @@
             android:layout_width="135dp"
             android:layout_height="wrap_content"
             android:ems="10"
+            android:fontFamily="@font/cour"
             android:hint="Last Name:"
             android:inputType="textPersonName"
+            android:textStyle="bold"
             app:layout_constraintEnd_toEndOf="parent"
 
             tools:layout_editor_absoluteY="173dp" />
@@ -56,6 +61,8 @@
         android:layout_marginBottom="12dp"
         android:ems="10"
         android:hint="Email:"
+        android:fontFamily="@font/cour"
+        android:textStyle="bold"
         android:inputType="textEmailAddress"
 
         app:layout_constraintBottom_toTopOf="@+id/passwordEditTextID"
@@ -74,6 +81,8 @@
         android:layout_marginStart="8dp"
         android:ems="10"
         android:hint="Password:"
+        android:fontFamily="@font/cour"
+        android:textStyle="bold"
         android:inputType="textPassword"
         app:layout_constraintBottom_toTopOf="@+id/repeatPasswordEditTextId"
         app:layout_constraintEnd_toEndOf="parent"
@@ -91,6 +100,8 @@
         android:layout_marginBottom="12dp"
         android:ems="10"
         android:hint="Repeat Password:"
+        android:fontFamily="@font/cour"
+        android:textStyle="bold"
         android:inputType="textPassword"
         app:layout_constraintBottom_toTopOf="@+id/registerButtonID"
         app:layout_constraintEnd_toEndOf="parent"
@@ -127,6 +138,8 @@
         android:layout_marginRight="8dp"
         android:layout_marginBottom="24dp"
         android:text="Click To Upload Profile Picture"
+        android:fontFamily="@font/cour"
+        android:textStyle="bold"
         app:layout_constraintBottom_toTopOf="@+id/horizantalId"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.497"
@@ -161,6 +174,8 @@
         android:layout_marginBottom="12dp"
         android:ems="10"
         android:hint="User Name:"
+        android:fontFamily="@font/cour"
+        android:textStyle="bold"
         android:inputType="textPersonName"
         app:layout_constraintBottom_toTopOf="@+id/emailEditTextID"
         app:layout_constraintEnd_toEndOf="parent"
