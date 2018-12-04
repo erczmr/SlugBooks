@@ -74,6 +74,9 @@ public class HomeActivity extends AppCompatActivity {
     private LinearLayout.LayoutParams layoutParams;
     private LinearLayout.LayoutParams buttonPram;
 
+    private int ind;
+    private String usern;
+    private String iduser;
     public static void setHomeId(String homeId) {
         HomeActivity.homeId = homeId;
     }
@@ -193,6 +196,10 @@ public class HomeActivity extends AppCompatActivity {
                                     if (bookObject.getClassStr() == null)
                                         bookObject.setAuthor("N/A");
                                     dataModelArrayList.add(bookObject);
+                                    ind = i;
+                                    usern = user.getUsername();
+                                    iduser = user.getUserID();
+
 
                                 }
 
@@ -237,24 +244,16 @@ public class HomeActivity extends AppCompatActivity {
     }
 
 
-
-
-
-
-
-
-
-
     private void setUpRecyclerView() {
         RecyclerView recyclerView = findViewById(R.id.recycler_view);
         recyclerView.setHasFixedSize(true);
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this);
-        adapter = new ExampleAdapter(dataModelArrayList);
+        adapter = new ExampleAdapter(HomeActivity.this,dataModelArrayList,iduser,usern,ind);
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setAdapter(adapter);
     }
 
-    private void postBooks() {
+   /* private void postBooks() {
         databaseReference.addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
@@ -345,7 +344,7 @@ public class HomeActivity extends AppCompatActivity {
                                     lh.addView(bt);
                                     linearLayout.addView(lh);
 
-
+*/
 // -------------------------------- UNCOMMENT WHEN CAN DIRECT TO MESSAGES WITH SPECIFIC USER
  /*                                   final int finalI = i;
                                     bt.setOnClickListener(new View.OnClickListener() {
@@ -361,6 +360,8 @@ public class HomeActivity extends AppCompatActivity {
                                         }
                                     });
  */
+
+ /*
                                     final int finalI = i;
                                     lh.setOnClickListener(new View.OnClickListener() {
                                         @Override
@@ -417,7 +418,7 @@ public class HomeActivity extends AppCompatActivity {
         });
 
     }
-
+*/
     // check to see if user is logged in with facebook
     public boolean isLoggedIn() {
         AccessToken accessToken = AccessToken.getCurrentAccessToken();

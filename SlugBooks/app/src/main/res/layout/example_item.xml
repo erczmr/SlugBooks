@@ -1,26 +1,30 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/relativelayoutId"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="@drawable/white_grey_border_bottom"
-    android:padding="10dp">
+    android:padding="20dp">
 
     <ImageView
+        android:id="@+id/bookPictureId"
         android:layout_width="60dp"
         android:layout_height="60dp"
-        android:id="@+id/bookPictureId"
-        android:src="@mipmap/ic_launcher"/>
+        android:src="@mipmap/ic_launcher" />
 
     <TextView
         android:id="@+id/bookNameId"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="158dp"
+        android:layout_height="30dp"
         android:layout_alignTop="@+id/bookPictureId"
         android:layout_marginStart="10dp"
         android:layout_marginLeft="10dp"
         android:layout_marginTop="-4dp"
+        android:layout_marginEnd="25dp"
+        android:layout_marginRight="25dp"
+        android:layout_toStartOf="@+id/sendMsgButtonId"
+        android:layout_toLeftOf="@+id/sendMsgButtonId"
         android:layout_toEndOf="@+id/bookPictureId"
         android:layout_toRightOf="@+id/bookPictureId"
         android:text="bookName"
@@ -30,11 +34,11 @@
 
     <TextView
         android:id="@+id/bookAuthor"
-        android:layout_width="wrap_content"
+        android:layout_width="154dp"
         android:layout_height="wrap_content"
         android:layout_alignTop="@+id/bookPictureId"
         android:layout_marginLeft="14dp"
-        android:layout_marginTop="17dp"
+        android:layout_marginTop="30dp"
         android:layout_toRightOf="@id/bookPictureId"
         android:maxLines="2"
         android:paddingTop="5dp"
@@ -44,16 +48,27 @@
 
     <TextView
         android:id="@+id/bookClass"
-        android:layout_width="wrap_content"
+        android:layout_width="156dp"
         android:layout_height="wrap_content"
-        android:layout_alignBottom="@+id/bookPictureId"
+
         android:layout_marginLeft="14dp"
-        android:layout_marginTop="17dp"
+        android:layout_marginTop="60dp"
         android:layout_toRightOf="@id/bookPictureId"
         android:maxLines="2"
         android:paddingTop="5dp"
         android:text="Class"
         android:textColor="@color/gray" />
+
+    <Button
+        android:id="@+id/sendMsgButtonId"
+        android:layout_width="68dp"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+        android:layout_centerVertical="true"
+        android:layout_marginEnd="23dp"
+        android:layout_marginRight="23dp"
+        android:background="@drawable/ic_message_yellow_24dp" />
 
 
 </RelativeLayout>

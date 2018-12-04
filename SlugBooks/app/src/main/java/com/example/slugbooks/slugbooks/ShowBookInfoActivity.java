@@ -53,7 +53,6 @@ public class ShowBookInfoActivity extends AppCompatActivity {
 
     public void offerChat(View view) {
 
-
         Bundle bundle = getIntent().getExtras();
 
         bj = (BookObject) bundle.getSerializable("book");
