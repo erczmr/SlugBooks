@@ -101,12 +101,6 @@ public class ImageEditActivity extends AppCompatActivity {
         System.out.println("the index is: " + index);
          displayImages();
 
-        back.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                finish();
-            }
-        });
     }
 
     private void displayImages() {
