@@ -42,7 +42,7 @@ public class ShowBookInfoActivity extends AppCompatActivity {
         lv = (LinearLayout) findViewById(R.id.showLayoutId) ;
         layoutParams = new LinearLayout.LayoutParams(400, 400);
         textPrams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
-        layoutParams.setMargins(100, 100, 40, 50);
+        layoutParams.setMargins(100, 600, 40, 50);
         textPrams.setMargins(40, 0, 0, 0);
 
         linearLayoutHorizanta = (LinearLayout)findViewById(R.id.linearLayoutHID);
