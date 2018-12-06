@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/white"
     android:theme="@android:style/Theme.Holo.Light"
     tools:context=".ProfileActivity">
 
@@ -116,16 +117,19 @@
         <android.support.v7.widget.RecyclerView
             android:id="@+id/recycler_view"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="384dp"
 
             android:layout_below="@+id/searchBarID"
 
+            android:layout_marginBottom="8dp"
             android:padding="4dp"
             android:scrollbars="vertical"
+            app:layout_constraintBottom_toTopOf="@+id/bottom_navigation"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/addBookButtonId" />
+            app:layout_constraintTop_toBottomOf="@+id/addBookButtonId"
+            app:layout_constraintVertical_bias="0.096" />
         <android.support.design.widget.BottomNavigationView
             android:id="@+id/bottom_navigation"
             android:layout_width="match_parent"
