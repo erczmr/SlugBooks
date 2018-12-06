@@ -54,7 +54,9 @@ public class editBookActivity extends AppCompatActivity  {
 
 
         System.out.println("the user id is: " + firebaseAuth.getUid());
+        getIndex();
         getData();
+
     }
 
     private void getData() {
@@ -64,8 +66,7 @@ public class editBookActivity extends AppCompatActivity  {
         bj = (BookObject) bundle.getSerializable("book");
         System.out.println("author name is: " + bj.getAuthor());
 
-        index = bundle.getInt("index");
-        System.out.println("the index isss: " + index);
+
 
         bookNameEditText.setText(bj.getBookname());
         authorEditText.setText(bj.getAuthor());
@@ -77,6 +78,68 @@ public class editBookActivity extends AppCompatActivity  {
 
 
 
+
+    }
+
+    private void getIndex() {
+        Bundle bundle = getIntent().getExtras();
+
+        bj = (BookObject) bundle.getSerializable("book");
+
+        databaseReference.addChildEventListener(new ChildEventListener() {
+            @Override
+            public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+                if(dataSnapshot.getKey().equals("users")) {
+                    dataModel = dataSnapshot.child(firebaseAuth.getUid()).getValue(DataModel.class);
+
+                    index = -1;
+
+                    for(int i = 0; i < dataModel.getBookObject().size(); i++)
+                    {
+                        if(dataModel.getBookObject().get(i)!= null ) {
+                            System.out.println("first object is: " + dataModel.getBookObject().get(i).getBookname()
+                                    + "   second object iss: " + bj.getBookname());
+
+                            if (dataModel.getBookObject().get(i).getBookname().equals( bj.getBookname()) &&
+                                    dataModel.getBookObject().get(i).getAuthor().equals(bj.getAuthor()) &&
+                                    dataModel.getBookObject().get(i).getClassStr().equals( bj.getClassStr()) ) {
+
+                                System.out.println("first object is: " + dataModel.getBookObject().get(i).toString()
+                                        + "   second object iss: " + bj.toString());
+                                index = i;
+                                break;
+                            }
+                        }
+                    }
+
+                    System.out.println("The index isss :" + index);
+
+
+                    //get the image info and pics
+
+                }
+
+            }
+
+            @Override
+            public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+
+            }
+
+            @Override
+            public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {
+            }
+
+            @Override
+            public void onChildMoved(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+            }
+        });
+
+
     }
 
     public void delete(View view) {
@@ -85,9 +148,6 @@ public class editBookActivity extends AppCompatActivity  {
 
         bj = (BookObject) bundle.getSerializable("book");
         System.out.println("author name is: " + bj.getAuthor());
-
-        index = bundle.getInt("index");
-        System.out.println("the index isss: " + index);
 
         databaseReference.addChildEventListener(new ChildEventListener() {
             @Override
@@ -99,6 +159,7 @@ public class editBookActivity extends AppCompatActivity  {
                     if(firebaseAuth.getUid() != null) {
 
                         dataModel = dataSnapshot.child(firebaseAuth.getUid()).getValue(DataModel.class);
+
 
                          bookObjects = dataModel.getBookObject();
 
@@ -148,8 +209,7 @@ public class editBookActivity extends AppCompatActivity  {
         bj = (BookObject) bundle.getSerializable("book");
         System.out.println("author name is: " + bj.getAuthor());
 
-        index = bundle.getInt("index");
-        System.out.println("the index isss: " + index);
+        getIndex();
 
         List<String> imgUrls = bj.getImges();
 
@@ -167,13 +227,15 @@ public class editBookActivity extends AppCompatActivity  {
     public void editPics(View view) {
         Bundle bundle = getIntent().getExtras();
         bj = (BookObject) bundle.getSerializable("book");
-        System.out.println("author name is: " + bj.getAuthor());
-        index = bundle.getInt("index");
+
+        getIndex();
 
         Intent i = new Intent(editBookActivity.this, ImageEditActivity.class);
         //intent.putExtra("book", (Parcelable) bookObject);
         i.putExtra("book", (Serializable) bj);
+
         System.out.println("final i is: " + index);
+
         i.putExtra("index", index);
         startActivity(i);
 

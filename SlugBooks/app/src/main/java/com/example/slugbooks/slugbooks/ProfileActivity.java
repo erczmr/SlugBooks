@@ -62,7 +62,7 @@ public class ProfileActivity extends AppCompatActivity  {
     private ProfileAdapter adapter;
     private List<BookObject> dataModelArrayList;
 
-    private int ind;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -134,9 +134,10 @@ public class ProfileActivity extends AppCompatActivity  {
         RecyclerView recyclerView = findViewById(R.id.recycler_view);
         recyclerView.setHasFixedSize(true);
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this);
-        adapter = new ProfileAdapter(ProfileActivity.this,dataModelArrayList,ind);
+        adapter = new ProfileAdapter(ProfileActivity.this,dataModelArrayList);
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setAdapter(adapter);
+
     }
 
     // check to see if user is logged in with facebook
@@ -188,7 +189,7 @@ public class ProfileActivity extends AppCompatActivity  {
                                         bookObject.setAuthor("N/A");
 
                                     dataModelArrayList.add(bookObject);
-                                    ind = i;
+
                                 }
                             }
                         }
@@ -197,14 +198,18 @@ public class ProfileActivity extends AppCompatActivity  {
                 if (!dataModelArrayList.isEmpty()){
                     for (int j = 0; j < dataModelArrayList.size(); j++) {
                         System.out.println("object " + j + " issss: " + dataModelArrayList.get(j).getBookname());
+                        System.out.println("the Object String issss: " + dataModelArrayList.get(j).toString());
                     }
                 }else
                     System.out.println("noooo objects");
+
+
                     setUpRecyclerView();
                 }
 
             @Override
             public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+                dataModelArrayList.clear();
                 onChildAdded(dataSnapshot,s);
             }
 

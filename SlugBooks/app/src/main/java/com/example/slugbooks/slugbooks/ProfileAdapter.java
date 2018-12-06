@@ -50,11 +50,11 @@ public class ProfileAdapter extends RecyclerView.Adapter<ProfileAdapter.ExampleV
         }
     }
 
-    ProfileAdapter(Context context,List<BookObject> dataModelList,int finalI) {
+    ProfileAdapter(Context context,List<BookObject> dataModelList) {
         this.context =context;
         this.dataModelList = dataModelList;
         dataModelListFull = new ArrayList<>(dataModelList);
-        this.finalI = finalI;
+
     }
 
 
@@ -67,35 +67,38 @@ public class ProfileAdapter extends RecyclerView.Adapter<ProfileAdapter.ExampleV
     }
 
     @Override
-    public void onBindViewHolder(@NonNull ProfileAdapter.ExampleViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull ProfileAdapter.ExampleViewHolder holder, final int position) {
 
         final BookObject currentItem = dataModelList.get(position);
 
+
         //holder.bookImg.setImageResource(currentItem.getImges().get(0));
-        int j = 0;
-        while(currentItem.getImges().get(j) == null)
-        {
-            j++;
-        }
-        Picasso.get().load(currentItem.getImges().get(j)).into(holder.bookImg);
 
-        holder.bookName.setText(currentItem.getBookname());
-        holder.bookAuthor.setText(currentItem.getAuthor());
-        holder.bookClass.setText(currentItem.getClassStr());
-
-
-        holder.contactButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(context, editBookActivity.class);
-                //intent.putExtra("book", (Parcelable) bookObject);
-                intent.putExtra("book", (Serializable) currentItem);
-                System.out.println("final i is: " + finalI);
-                intent.putExtra("index", finalI);
-                context.startActivity(intent);
+        if(currentItem.getImges() != null) {
+            int j = 0;
+            while (currentItem.getImges().get(j) == null) {
+                j++;
             }
-        });
+            Picasso.get().load(currentItem.getImges().get(j)).into(holder.bookImg);
 
+            holder.bookName.setText(currentItem.getBookname());
+            holder.bookAuthor.setText(currentItem.getAuthor());
+            holder.bookClass.setText(currentItem.getClassStr());
+
+            holder.contactButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent = new Intent(context, editBookActivity.class);
+                    //intent.putExtra("book", (Parcelable) bookObject);
+                    intent.putExtra("book", (Serializable) currentItem);
+
+                    System.out.println("theeeeeee objeeecttt isss: " + currentItem);
+
+                    context.startActivity(intent);
+
+                }
+            });
+        }
     }
 
     @Override

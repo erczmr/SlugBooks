@@ -24,8 +24,14 @@ public class ExampleAdapter extends RecyclerView.Adapter<ExampleAdapter.ExampleV
 
     private List<BookObject> dataModelList;
     private List<BookObject> dataModelListFull;
-    String userId;
-    String username;
+
+    private List<String> userIdList;
+    private List<String> userIdListFull;
+
+    private List<String> userNameList;
+    private List<String> userNameListFull;
+    //String userId;
+    //String username;
     int finalI;
     private Context context;
     class ExampleViewHolder extends RecyclerView.ViewHolder{
@@ -51,12 +57,19 @@ public class ExampleAdapter extends RecyclerView.Adapter<ExampleAdapter.ExampleV
         }
     }
 
-    ExampleAdapter(Context context,List<BookObject> dataModelList,String userId,String username,int finalI) {
-        this.context =context;
+    ExampleAdapter(Context context,List<BookObject> dataModelList,List<String> userIdList,List<String> userNameList,int finalI) {
+        this.context = context;
         this.dataModelList = dataModelList;
         dataModelListFull = new ArrayList<>(dataModelList);
-        this.userId = userId;
-        this.username = username;
+
+        this.userIdList = userIdList;
+        userIdListFull = new ArrayList<>(userIdList);
+
+        this.userNameList = userNameList;
+        userNameListFull = new ArrayList<>(userNameList);
+
+        //this.userId = userId;
+       // this.username = username;
         this.finalI = finalI;
     }
 
@@ -74,41 +87,54 @@ public class ExampleAdapter extends RecyclerView.Adapter<ExampleAdapter.ExampleV
 
         final BookObject currentItem = dataModelList.get(position);
 
+        final String currentId = userIdList.get(position);
+
+        final String currentName = userNameList.get(position);
+
         //holder.bookImg.setImageResource(currentItem.getImges().get(0));
-        Picasso.get().load(currentItem.getImges().get(0)).into(holder.bookImg);
-
-        holder.bookName.setText(currentItem.getBookname());
-        holder.bookAuthor.setText(currentItem.getAuthor());
-        holder.bookClass.setText(currentItem.getClassStr());
-
-        holder.relativeLayout.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-                Intent intent;
-                intent = new Intent(context, ShowBookInfoActivity.class);
-                //intent.putExtra("book", (Parcelable) bookObject);
-                intent.putExtra("book", (Serializable) currentItem);
-                //System.out.println("final i is: " + finalI);
-                intent.putExtra("index", finalI);
-                intent.putExtra("userID", userId);
-                intent.putExtra("username", username);
-
-                context.startActivity(intent);
+        if(currentItem.getImges() != null) {
+            int j = 0;
+            while (currentItem.getImges().get(j) == null) {
+                j++;
             }
-        });
 
-        holder.contactButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent it = new Intent(context, MessageActivity.class);
-                it.putExtra("userID", userId);
-                it.putExtra("username", username);
+            Picasso.get().load(currentItem.getImges().get(j)).into(holder.bookImg);
 
-                context.startActivity(it);
-            }
-        });
+            holder.bookName.setText(currentItem.getBookname());
+            holder.bookAuthor.setText(currentItem.getAuthor());
+            holder.bookClass.setText(currentItem.getClassStr());
 
+            holder.relativeLayout.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+
+                    Intent intent;
+                    intent = new Intent(context, ShowBookInfoActivity.class);
+                    //intent.putExtra("book", (Parcelable) bookObject);
+                    intent.putExtra("book", (Serializable) currentItem);
+                    //System.out.println("final i is: " + finalI);
+                    intent.putExtra("index", finalI);
+                    intent.putExtra("userID", currentId);
+                    intent.putExtra("username", currentName);
+
+                    System.out.println("adapter username isss: " + currentName);
+
+                    context.startActivity(intent);
+                }
+            });
+
+            holder.contactButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent it = new Intent(context, MessageActivity.class);
+                    it.putExtra("userID", currentId);
+                    it.putExtra("username", currentName);
+
+                    System.out.println("adapter username isss: " + currentName);
+                    context.startActivity(it);
+                }
+            });
+        }
     }
 
     @Override

@@ -87,6 +87,8 @@ public class HomeActivity extends AppCompatActivity {
     private ExampleAdapter adapter;
 
     private List<BookObject> dataModelArrayList;
+    private List<String> usernameArrayList;
+    private List<String> userIdArrayList;
 
     private static String userIdNum = "";
     @Override
@@ -115,6 +117,8 @@ public class HomeActivity extends AppCompatActivity {
         searchBar = (SearchView) findViewById(R.id.searchBarID);
 
         dataModelArrayList = new ArrayList<BookObject>();
+        userIdArrayList = new ArrayList<String>();
+        usernameArrayList = new ArrayList<String>();
         bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
@@ -186,6 +190,8 @@ public class HomeActivity extends AppCompatActivity {
                         if (user.getBookObject() != null) {
                             List<BookObject> bo = user.getBookObject();
 
+                            System.out.println("the username issss: " + usern);
+                            System.out.println("the user id isss ++++++: " + iduser);
                             for (int i = 0; i < bo.size(); i++) {
                                 if (bo.get(i) != null) {
                                     final BookObject bookObject = bo.get(i);
@@ -197,8 +203,10 @@ public class HomeActivity extends AppCompatActivity {
                                         bookObject.setAuthor("N/A");
                                     dataModelArrayList.add(bookObject);
                                     ind = i;
-                                    usern = user.getUsername();
-                                    iduser = user.getUserID();
+                                    userIdArrayList.add(user.getUserID());
+                                    usernameArrayList.add(user.getUsername());
+                                    //usern = user.getUsername();
+                                    //iduser = user.getUserID();
 
 
                                 }
@@ -220,8 +228,10 @@ public class HomeActivity extends AppCompatActivity {
 
             @Override
             public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-
-
+                dataModelArrayList.clear();
+                usernameArrayList.clear();
+                userIdArrayList.clear();
+                onChildAdded(dataSnapshot,s);
             }
 
             @Override
@@ -248,7 +258,7 @@ public class HomeActivity extends AppCompatActivity {
         RecyclerView recyclerView = findViewById(R.id.recycler_view);
         recyclerView.setHasFixedSize(true);
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this);
-        adapter = new ExampleAdapter(HomeActivity.this,dataModelArrayList,iduser,usern,ind);
+        adapter = new ExampleAdapter(HomeActivity.this,dataModelArrayList,userIdArrayList,usernameArrayList,ind);
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setAdapter(adapter);
     }

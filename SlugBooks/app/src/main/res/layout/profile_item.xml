@@ -15,21 +15,20 @@
 
     <TextView
         android:id="@+id/bookNameId"
-        android:layout_width="158dp"
-        android:layout_height="30dp"
+        android:layout_width="221dp"
+        android:layout_height="wrap_content"
         android:layout_alignTop="@+id/bookPictureId"
-        android:layout_marginStart="10dp"
-        android:layout_marginLeft="10dp"
-        android:layout_marginTop="-4dp"
-        android:layout_marginEnd="25dp"
-        android:layout_marginRight="25dp"
-        android:layout_toStartOf="@+id/sendMsgButtonId"
-        android:layout_toLeftOf="@+id/sendMsgButtonId"
+        android:layout_marginStart="13dp"
+        android:layout_marginLeft="13dp"
+        android:layout_marginTop="-3dp"
         android:layout_toEndOf="@+id/bookPictureId"
         android:layout_toRightOf="@+id/bookPictureId"
-        android:text="bookName"
-        android:textColor="@color/colorAccent"
-        android:textSize="18dp"
+        android:maxLines="2"
+        android:fontFamily="@font/romand"
+        android:text="book Name"
+        android:textAllCaps="true"
+        android:textColor="@color/colorPrimaryDark"
+        android:textSize="16dp"
         android:textStyle="bold" />
 
     <TextView
@@ -40,34 +39,40 @@
         android:layout_marginLeft="14dp"
         android:layout_marginTop="30dp"
         android:layout_toRightOf="@id/bookPictureId"
-        android:maxLines="2"
-        android:paddingTop="5dp"
+        android:maxLines="1"
         android:text="Book Author"
-        android:textColor="@color/gray" />
+        android:fontFamily="@font/cour"
+        android:textAllCaps="true"
+        android:textColor="@color/gray"
+        android:textStyle="bold"/>
 
 
     <TextView
         android:id="@+id/bookClass"
         android:layout_width="156dp"
         android:layout_height="wrap_content"
-
         android:layout_marginLeft="14dp"
-        android:layout_marginTop="60dp"
+        android:layout_marginTop="50dp"
         android:layout_toRightOf="@id/bookPictureId"
-        android:maxLines="2"
-        android:paddingTop="5dp"
+        android:maxLines="1"
         android:text="Class"
-        android:textColor="@color/gray" />
+        android:fontFamily="@font/cour"
+        android:textAllCaps="true"
+        android:textColor="@color/colorAccent"
+        android:textStyle="bold" />
 
     <Button
         android:id="@+id/sendMsgButtonId"
-        android:layout_width="68dp"
+        android:layout_width="36dp"
         android:layout_height="wrap_content"
+        android:layout_alignTop="@+id/bookAuthor"
         android:layout_alignParentEnd="true"
         android:layout_alignParentRight="true"
-        android:layout_centerVertical="true"
-        android:layout_marginEnd="23dp"
-        android:layout_marginRight="23dp"
+        android:layout_marginTop="-20dp"
+        android:layout_marginStart="110dp"
+        android:layout_marginLeft="110dp"
+        android:layout_marginEnd="0dp"
+        android:layout_marginRight="0dp"
         android:background="@drawable/ic_edit_yellow_24dp" />
 
 

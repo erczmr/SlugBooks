@@ -1,9 +1,14 @@
 package com.example.slugbooks.slugbooks;
 
 
+import android.content.Context;
 import android.content.Intent;
+import android.database.Cursor;
+import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
+import android.os.StrictMode;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -16,6 +21,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.Switch;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.Continuation;
@@ -32,8 +38,12 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
+import java.io.ByteArrayOutputStream;
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
+
+import static android.provider.MediaStore.Files.FileColumns.MEDIA_TYPE_IMAGE;
 
 public class AddBookActivity extends AppCompatActivity {
 
@@ -64,7 +74,8 @@ public class AddBookActivity extends AppCompatActivity {
     private String ali;
 
     private int id;
-    private static final int CHOOSE_IMAGE = 100;
+    private static final int CHOOSE_IMAGE = 1;
+    private static final int CHOOSE_CAMERA = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -134,7 +145,9 @@ public class AddBookActivity extends AppCompatActivity {
 
     public void openP(View view) {
         openGallery();
+
     }
+
     private void openGallery()
     {
         Intent gallery = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.INTERNAL_CONTENT_URI);
@@ -149,7 +162,7 @@ public class AddBookActivity extends AppCompatActivity {
         //Detects request codes
 
         if(resultCode==RESULT_OK && requestCode == CHOOSE_IMAGE) {
-            selectedImage = data.getData();
+           selectedImage = data.getData();
 
             ali = selectedImage.toString();
             ImageView newBookImg = new ImageView(this);
@@ -185,17 +198,46 @@ public class AddBookActivity extends AppCompatActivity {
                         System.out.println(" +++++++++++ " + dataModel.getFirstName() + " +++++++++++++ "
                                 + dataModel.getImageUrl());
 
-                        if(dataModel.getBookObject()!=null) {
+                        if(dataModel.getBookObject() != null) {
                             bo = dataModel.getBookObject();
                             System.out.println("the bo object is: " + bo.get(0));
                         }
+
                         else bo = new ArrayList<BookObject>();
 
+                        String getIndex = "";
 
-                        bo.add(bookObject);
+
+                      int indexkk = -1;
+                        for(int k = 0 ; k < bo.size(); k++ )
+                        {
+                            if(bo.get(k) == null)
+                            {
+                                getIndex = String.valueOf(k);
+                                indexkk = k;
+                                break;
+
+                            }
+                        }
+
+                        if(indexkk == -1)
+                        {
+                            bo.add(bookObject);
+                            indexkk = bo.size()-1;
+                            getIndex = String.valueOf(indexkk);
+                        }
+                        else {
+                            bo.set(indexkk,bookObject);
+                        }
+
                         dataModel.setBookObject(bo);
                         databaseReference.child("users").child(firebaseAuth.getUid()).setValue(dataModel);
-                        String getIndex = String.valueOf(bo.size()-1);
+
+
+                        System.out.println("the boxxxx isss: " + getIndex);
+
+                        System.out.println("img url isss: " + imgUrls + "\nimg string url isss: " + imgStrings);
+
                         pushToCloud(imgUris,imgStrings,getIndex);
                     }
 
@@ -254,7 +296,9 @@ public class AddBookActivity extends AppCompatActivity {
                             Uri downloadUri = task.getResult();
                             // img = downloadUri.toString();
                             String index = String.valueOf(finalI);
+
                             new PutBookPicInDB().execute(id1,index , downloadUri.toString());
+
                             System.out.println("the id1 is: " + id1 + "\nthe index is: " + index );
                             System.out.println("the downloaded uri is: " + downloadUri.toString());
                             //setImageURLstr(downloadUri.toString());
