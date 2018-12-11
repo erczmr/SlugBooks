@@ -43,8 +43,6 @@ public class ExampleAdapter extends RecyclerView.Adapter<ExampleAdapter.ExampleV
         TextView bookClass;
         Button contactButton;
 
-
-
         public ExampleViewHolder(View itemView) {
             super(itemView);
             relativeLayout = itemView.findViewById(R.id.relativelayoutId);

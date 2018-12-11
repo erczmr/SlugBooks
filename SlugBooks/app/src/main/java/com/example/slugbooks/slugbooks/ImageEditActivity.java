@@ -8,6 +8,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
@@ -56,6 +57,7 @@ public class ImageEditActivity extends AppCompatActivity {
     TextView username;
     ImageView profilePic;
     Button back;
+    int imageIndex;
     private LinearLayout lv;
     private LinearLayout.LayoutParams layoutParams;
     private LinearLayout.LayoutParams buttonPram;
@@ -119,7 +121,8 @@ public class ImageEditActivity extends AppCompatActivity {
                                 for (int i = 0; i < img.size(); i++) {
                                     if (img.get(i) != null) {
                                         final String bookImg = img.get(i);
-
+                                       // imageIndex = i;
+                                        Log.i("Image Index: " , String.valueOf(imageIndex));
 
                                         Button bt = new Button(ImageEditActivity.this);
                                         Typeface face = getResources().getFont(R.font.bebasneue);
@@ -149,26 +152,53 @@ public class ImageEditActivity extends AppCompatActivity {
 
                                         lastIndex = bj.getImges().size() - 1;
                                         final int finalI = i;
+                                        Log.i("final i: ",String.valueOf(finalI));
+
                                         bt.setOnClickListener(new View.OnClickListener() {
                                             @Override
                                             public void onClick(View v) {
+                                                int j = imageIndex;
+                                                Log.i("checkkkkkki",String.valueOf(j));
+                                                Log.i("final i2: ",String.valueOf(finalI));
                                                 if (firebaseAuth.getUid() != null) {
 
                                                     dataModel = dataSnapshot.child(firebaseAuth.getUid()).getValue(DataModel.class);
 
                                                     if (dataModel.getBookObject() != null) {
                                                         bookObjects = dataModel.getBookObject();
+                                                        Log.i("check","helooooooooo1");
 
                                                         if (bookObjects.get(index).getImges() != null) {
+                                                            Log.i("check","helooooooooo2");
                                                             bookImgStr = bookObjects.get(index).getImges();
-                                                            bookImgStr.set(finalI, null);
-                                                            lv.removeView(lh);
+                                                            String str;
+                                                            Log.i("our i is",String.valueOf(imageIndex));
+                                                            Log.i("array size", String.valueOf(bookImgStr.size()));
+                                                            for(int i = finalI ; i < bookImgStr.size()-1;i++) {
+                                                                Log.i("check","helooooooooo3");
+                                                                //  bookImgStr = bookObjects.get(index).getImges();
+                                                                // bookImgStr.set(finalI, null);
 
-                                                            bookObjects.get(index).setImges(bookImgStr);
+                                                                /*if(bookImgStr.get(i+1) == null)
+                                                                {
+                                                                    bookImgStr.set(i, null);
+                                                                }
+                                                                else {*/
+                                                                Log.i("bookimgstr",bookImgStr.get(i));
+                                                                Log.i("indexbook",String.valueOf(i));
+                                                                str = bookImgStr.get(i+1);
 
-                                                            dataModel.setBookObject(bookObjects);
+                                                                bookImgStr.set(i, str);
+                                                            }
+                                                            bookImgStr.set(bookImgStr.size()-1,null );
+                                                                lv.removeView(lh);
 
-                                                            databaseReference.child("users").child(firebaseAuth.getUid()).setValue(dataModel);
+                                                                bookObjects.get(index).setImges(bookImgStr);
+
+                                                                dataModel.setBookObject(bookObjects);
+
+                                                                databaseReference.child("users").child(firebaseAuth.getUid()).setValue(dataModel);
+
                                                         }
 
                                                         dataModel.setBookObject(bookObjects);

@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Typeface;
 import android.net.Uri;
+import android.os.health.SystemHealthManager;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.BottomNavigationView;
@@ -16,6 +17,7 @@ import android.support.v7.widget.RecyclerView;
 import android.text.Spannable;
 import android.text.style.ForegroundColorSpan;
 import android.text.style.RelativeSizeSpan;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -179,9 +181,15 @@ public class HomeActivity extends AppCompatActivity {
             @Override
             public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
                 for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+
+                    Log.i("dataSnapShot",dataSnapshot.getValue().toString());
+
                     final DataModel user = snapshot.getValue(DataModel.class);
 
+                   // Log.i("userID",user.getEmail());
+
                     assert user != null;
+                    assert user.getBookObject() != null;
 
                     if (user.getUserID() != null && !user.getUserID().equals(firebaseAuth.getUid())) {
                         mUsers.add(user);
@@ -192,9 +200,13 @@ public class HomeActivity extends AppCompatActivity {
 
                             System.out.println("the username issss: " + usern);
                             System.out.println("the user id isss ++++++: " + iduser);
-                            for (int i = 0; i < bo.size(); i++) {
-                                if (bo.get(i) != null) {
-                                    final BookObject bookObject = bo.get(i);
+
+                           // int i = 0;
+
+                            for (BookObject bk : bo) {
+                                Log.i("bkValue", bk.getAuthor());
+                                if (bk != null) {
+                                    final BookObject bookObject = bk;
 
                                     if (bookObject.getAuthor() == null) bookObject.setAuthor("N/A");
                                     if (bookObject.getBookname() == null)
@@ -202,7 +214,12 @@ public class HomeActivity extends AppCompatActivity {
                                     if (bookObject.getClassStr() == null)
                                         bookObject.setAuthor("N/A");
                                     dataModelArrayList.add(bookObject);
-                                    ind = i;
+                                    Log.i("bkarrayval", bk.getBookname());
+
+                                    //find the index
+                                    Log.i("index of bk", String.valueOf(bo.indexOf(bk)));
+
+                                    ind = bo.indexOf(bk);
                                     userIdArrayList.add(user.getUserID());
                                     usernameArrayList.add(user.getUsername());
                                     //usern = user.getUsername();
@@ -210,6 +227,8 @@ public class HomeActivity extends AppCompatActivity {
 
 
                                 }
+
+                                else continue;
 
                             }
                         }
