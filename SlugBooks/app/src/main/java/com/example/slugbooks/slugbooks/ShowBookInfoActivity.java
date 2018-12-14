@@ -180,14 +180,14 @@ public class ShowBookInfoActivity extends AppCompatActivity {
             //System.out.println("the bitmap in view function is: " + bt.toString());
             LinearLayout lh = new LinearLayout(ShowBookInfoActivity.this);
             lh.setOrientation(LinearLayout.HORIZONTAL);
-
+            int index = 0;
             // img.setImageDrawable(getResources().getDrawable(findViewById(R.drawable.com_facebook_button_icon_white)));
             if (bj.getImges() != null) {
                 for(int k = 0 ; k < bj.getImges().size(); k++) {
                     ImageView img = new ImageView(ShowBookInfoActivity.this);
                     List<String> imgStrings = bj.getImges();
 
-                    int index = 0;
+
 
 
                     while (imgStrings.get(index) == null) {
@@ -195,6 +195,8 @@ public class ShowBookInfoActivity extends AppCompatActivity {
 
                     }
                     Picasso.get().load(imgStrings.get(index)).into(img);
+
+                    index++;
                     //new DownloadImageTask(img).execute(imgStrings.get(0));
                     //new DownloadImageTask(img).execute(urlsr);
                     img.setLayoutParams(layoutParams);
